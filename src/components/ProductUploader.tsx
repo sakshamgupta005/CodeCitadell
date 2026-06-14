@@ -2,9 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { createProduct } from "@/lib/api";
-
-type UploadType = "pdf" | "text" | "url";
 
 export function ProductUploader() {
   const router = useRouter();
@@ -15,22 +14,12 @@ export function ProductUploader() {
   const [category, setCategory] = useState("Electronics");
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [uploadType, setUploadType] = useState<UploadType>("pdf");
-  const [docFile, setDocFile] = useState<File | null>(null);
-  const [docTitle, setDocTitle] = useState("");
-  const [docText, setDocText] = useState("");
-  const [docUrl, setDocUrl] = useState("");
 
   function reset() {
     setName("");
     setCategory("Electronics");
     setDescription("");
     setImageUrl("");
-    setUploadType("pdf");
-    setDocFile(null);
-    setDocTitle("");
-    setDocText("");
-    setDocUrl("");
     setError("");
   }
 
@@ -43,19 +32,6 @@ export function ProductUploader() {
       return;
     }
 
-    if (uploadType === "pdf" && !docFile) {
-      setError("Choose a PDF or switch the document type.");
-      return;
-    }
-    if (uploadType === "text" && !docText.trim()) {
-      setError("Paste document text or switch the document type.");
-      return;
-    }
-    if (uploadType === "url" && !docUrl.trim()) {
-      setError("Enter a document URL or switch the document type.");
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       const product = await createProduct({
@@ -65,7 +41,6 @@ export function ProductUploader() {
         image_url: imageUrl.trim() || "https://images.unsplash.com/photo-1558618666-fcd25c85cd64",
       });
 
-      await uploadKnowledge(product.id);
       reset();
       setIsOpen(false);
       router.refresh();
@@ -77,49 +52,17 @@ export function ProductUploader() {
     }
   }
 
-  async function uploadKnowledge(productId: string) {
-    let response: Response;
-
-    if (uploadType === "pdf" && docFile) {
-      const formData = new FormData();
-      formData.append("file", docFile);
-      response = await fetch(`/api/products/${productId}/knowledge/pdf`, {
-        method: "POST",
-        body: formData,
-      });
-    } else if (uploadType === "text") {
-      const formData = new FormData();
-      formData.append("text", docText);
-      formData.append("title", docTitle.trim() || "Uploaded document");
-      response = await fetch(`/api/products/${productId}/knowledge/text`, {
-        method: "POST",
-        body: formData,
-      });
-    } else {
-      response = await fetch(`/api/products/${productId}/knowledge/url`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: docUrl.trim(), title: docTitle.trim() || docUrl.trim() }),
-      });
-    }
-
-    if (!response.ok) {
-      const data = await response.json().catch(() => ({}));
-      throw new Error(data?.detail || "Product was created, but document upload failed.");
-    }
-  }
-
   return (
     <>
       <button className="mock-dash-add-btn" onClick={() => setIsOpen(true)} type="button">
         + Add product
       </button>
 
-      {isOpen && (
+      {isOpen && typeof window !== "undefined" && createPortal(
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h2 className="modal-title">Add product and document</h2>
+              <h2 className="modal-title">⚡ Register New Product</h2>
               <button
                 className="modal-close"
                 onClick={() => {
@@ -128,16 +71,26 @@ export function ProductUploader() {
                 }}
                 type="button"
               >
-                x
+                ✕
               </button>
             </div>
 
             <form onSubmit={handleSubmit}>
-              {error && <div className="form-error">{error}</div>}
+              {error && (
+                <div style={{ color: "var(--red)", fontSize: 12, marginBottom: 12, border: "1px solid rgba(239,68,68,0.2)", padding: 8, borderRadius: 6, background: "rgba(239,68,68,0.05)" }}>
+                  {error}
+                </div>
+              )}
 
               <div className="form-group">
                 <label className="form-label">Product name</label>
-                <input className="form-input" onChange={(event) => setName(event.target.value)} value={name} />
+                <input 
+                  className="form-input" 
+                  onChange={(event) => setName(event.target.value)} 
+                  placeholder="e.g. Moss Router X1"
+                  value={name} 
+                  required
+                />
               </div>
 
               <div className="form-group">
@@ -154,71 +107,37 @@ export function ProductUploader() {
 
               <div className="form-group">
                 <label className="form-label">Description</label>
-                <textarea className="form-textarea" onChange={(event) => setDescription(event.target.value)} value={description} />
+                <textarea 
+                  className="form-textarea" 
+                  onChange={(event) => setDescription(event.target.value)} 
+                  placeholder="Enter a brief product overview..."
+                  value={description} 
+                  required
+                />
               </div>
 
               <div className="form-group">
-                <label className="form-label">Image URL optional</label>
-                <input className="form-input" onChange={(event) => setImageUrl(event.target.value)} value={imageUrl} />
+                <label className="form-label">Image URL (Optional)</label>
+                <input 
+                  className="form-input" 
+                  onChange={(event) => setImageUrl(event.target.value)} 
+                  placeholder="https://images.unsplash.com/photo-..."
+                  value={imageUrl} 
+                />
               </div>
-
-              <div className="form-group">
-                <label className="form-label">Document type</label>
-                <select
-                  className="form-select"
-                  onChange={(event) => setUploadType(event.target.value as UploadType)}
-                  value={uploadType}
-                >
-                  <option value="pdf">PDF file</option>
-                  <option value="text">Text document</option>
-                  <option value="url">Document URL</option>
-                </select>
-              </div>
-
-              {uploadType === "pdf" && (
-                <div className="form-group">
-                  <label className="form-label">PDF or document</label>
-                  <input
-                    accept=".pdf,.txt,.md,.doc,.docx"
-                    className="form-input"
-                    onChange={(event) => setDocFile(event.target.files?.[0] ?? null)}
-                    type="file"
-                  />
-                </div>
-              )}
-
-              {uploadType !== "pdf" && (
-                <div className="form-group">
-                  <label className="form-label">Document title</label>
-                  <input className="form-input" onChange={(event) => setDocTitle(event.target.value)} value={docTitle} />
-                </div>
-              )}
-
-              {uploadType === "text" && (
-                <div className="form-group">
-                  <label className="form-label">Document text</label>
-                  <textarea className="form-textarea" onChange={(event) => setDocText(event.target.value)} value={docText} />
-                </div>
-              )}
-
-              {uploadType === "url" && (
-                <div className="form-group">
-                  <label className="form-label">Document URL</label>
-                  <input className="form-input" onChange={(event) => setDocUrl(event.target.value)} type="url" value={docUrl} />
-                </div>
-              )}
 
               <div className="modal-actions">
                 <button className="btn-secondary" onClick={() => setIsOpen(false)} type="button">
                   Cancel
                 </button>
                 <button className="btn-primary" disabled={isSubmitting} type="submit">
-                  {isSubmitting ? "Adding..." : "Add product"}
+                  {isSubmitting ? "Registering..." : "Add product"}
                 </button>
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

@@ -764,5 +764,100 @@
     "created_at": "2026-06-14T19:07:46.296144+00:00",
     "updated_at": "2026-06-14T19:08:07.594325+00:00",
     "investigation_reasoning": "The user's request is ambiguous, but as a diagnostic assistant, I must treat the 'Moss Router X1' as the subject of inquiry. Based on the provided documentation, common issues involve mesh pairing failures indicated by amber LED patterns or connectivity drops due to channel congestion. I am narrowing the focus to these areas because they represent the primary troubleshooting paths defined in the Mesh Pairing and Troubleshooting guides."
+  },
+  "172a660c-ff65-465d-b6df-511994b915b6": {
+    "id": "172a660c-ff65-465d-b6df-511994b915b6",
+    "product_id": "moss-router-x1",
+    "issue_description": "Moss Router X1",
+    "answers": [],
+    "latest_question": "What is the current color and behavior of the LED light on your Moss Router X1 (e.g., solid amber, pulsing amber, or flashing blue)?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Outdated firmware version",
+      "Physical distance/interference issues"
+    ],
+    "next_step": "Perform a factory reset on the secondary node by holding the reset button for 10 seconds.",
+    "recommended_action": "Bring the node within 5-10 feet of the main router and attempt the pairing process again after the reset.",
+    "created_at": "2026-06-14T19:48:22.465431+00:00",
+    "updated_at": "2026-06-14T19:48:27.834569+00:00",
+    "investigation_reasoning": "The Moss Router X1 uses a mesh system where a rapidly pulsing amber LED specifically indicates a synchronization failure between the main router and a secondary node. Based on the documentation, this is often resolved by ensuring the units are in close proximity during setup, performing a factory reset, or verifying that both units are running the same firmware version to prevent compatibility conflicts."
+  },
+  "ee1f1417-49ab-441a-9625-19c59372b1ba": {
+    "id": "ee1f1417-49ab-441a-9625-19c59372b1ba",
+    "product_id": "hhh",
+    "issue_description": "My hhh has a blue blinking light, what is the cause?",
+    "answers": [],
+    "latest_question": "Is the unit currently placed in an enclosed space, or is it near a heat source like a radiator or direct sunlight?",
+    "probable_causes": [
+      "Overheated CPU",
+      "Poor ventilation",
+      "High ambient temperature"
+    ],
+    "next_step": "Relocate the device to a cooler, well-ventilated area.",
+    "recommended_action": "Move the hhh unit to a cooler area to allow the CPU temperature to normalize.",
+    "created_at": "2026-06-14T20:34:02.059528+00:00",
+    "updated_at": "2026-06-14T20:34:09.492216+00:00",
+    "investigation_reasoning": "The blue blinking light on your hhh unit is explicitly identified in the product manual as an E9 error code, which indicates that the internal CPU is overheating. My diagnostic process focuses on thermal management, as this error suggests the device is unable to dissipate heat effectively in its current environment."
+  },
+  "3e26494f-1e97-42a3-9cf1-66642752763e": {
+    "id": "3e26494f-1e97-42a3-9cf1-66642752763e",
+    "product_id": "hhh",
+    "issue_description": "What does a green blinking light on hhh mean?",
+    "answers": [],
+    "latest_question": "After performing a restart, does the light return to a solid state, or does it continue to blink?",
+    "probable_causes": [
+      "Insufficient documentation evidence."
+    ],
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Restart the product to clear the low memory error.",
+    "created_at": "2026-06-14T20:36:26.645249+00:00",
+    "updated_at": "2026-06-14T20:36:40.624190+00:00",
+    "investigation_reasoning": "According to the hhh product manual, a green blinking light corresponds to error code E10, which indicates that the device is experiencing a low memory state. This is a common operational status that typically requires a simple power cycle to clear the system cache and restore normal functionality."
+  },
+  "1f674d2b-19fd-4790-947d-df203cb6ee36": {
+    "id": "1f674d2b-19fd-4790-947d-df203cb6ee36",
+    "product_id": "hhh",
+    "issue_description": "My hhh has a blue blinking light, what is the cause?",
+    "answers": [],
+    "latest_question": "Is the hhh unit currently placed in an area with restricted airflow or near a heat source?",
+    "probable_causes": [
+      "Overheated CPU"
+    ],
+    "next_step": "Relocate the unit to a cooler, well-ventilated area.",
+    "recommended_action": "Place the hhh in a cool room to allow the CPU to return to its operating temperature.",
+    "created_at": "2026-06-14T20:37:52.565813+00:00",
+    "updated_at": "2026-06-14T20:37:57.054659+00:00",
+    "investigation_reasoning": "Based on the acme_manual.pdf, a blue blinking light on the hhh unit corresponds to error code E9, which indicates that the CPU is overheating. My diagnostic process focuses on thermal management, as the documentation explicitly links this specific light pattern to temperature-related performance issues."
+  },
+  "20a2452d-266b-47bc-ab78-a09fc4449e25": {
+    "id": "20a2452d-266b-47bc-ab78-a09fc4449e25",
+    "product_id": "hhh",
+    "issue_description": "My hhh has a blue blinking light, what is the cause?",
+    "answers": [],
+    "latest_question": "Is the hhh unit currently placed in an area with direct sunlight, poor ventilation, or near another heat-generating appliance?",
+    "probable_causes": [
+      "Overheated CPU"
+    ],
+    "next_step": "Relocate the hhh unit to a cooler, well-ventilated room.",
+    "recommended_action": "Place the unit in a cool room to allow the CPU to return to its normal operating temperature.",
+    "created_at": "2026-06-14T20:38:16.776117+00:00",
+    "updated_at": "2026-06-14T20:38:20.246787+00:00",
+    "investigation_reasoning": "According to the acme_manual.pdf for the hhh unit, a blue blinking light corresponds specifically to error code E9, which indicates that the device's CPU has overheated. This suggests the unit is currently operating outside of its recommended thermal environment."
+  },
+  "06cc5197-4624-4d17-ade7-d62585f034e2": {
+    "id": "06cc5197-4624-4d17-ade7-d62585f034e2",
+    "product_id": "hhh",
+    "issue_description": "I have a green blinking light on my device hhh. What should I do?",
+    "answers": [],
+    "latest_question": "After performing the restart, does the light return to a solid state or does it continue to blink?",
+    "probable_causes": [
+      "Low memory",
+      "System process hang"
+    ],
+    "next_step": "Power cycle the device",
+    "recommended_action": "Restart the product by unplugging it from the power source for 30 seconds and plugging it back in.",
+    "created_at": "2026-06-14T20:38:25.664150+00:00",
+    "updated_at": "2026-06-14T20:38:29.358070+00:00",
+    "investigation_reasoning": "The green blinking light on the hhh device corresponds to error code E10, which is explicitly documented as a low memory state. My diagnostic process focuses on clearing the current volatile memory state to restore normal operation, as this is the standard recovery procedure for this specific error code."
   }
 }

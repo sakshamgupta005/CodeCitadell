@@ -60,6 +60,7 @@ class LLMService:
                 "follow_up_question": "What exact behavior do you observe right before the issue happens?",
                 "next_step": "Collect one more symptom and compare it against the referenced documentation.",
                 "recommended_action": "Review the retrieved product documentation before taking corrective action.",
+                "cited_sources": None,
             }
 
         return {
@@ -72,6 +73,7 @@ class LLMService:
             or "Collect one more symptom and compare it against the referenced documentation.",
             "recommended_action": str(parsed.get("recommended_action") or "").strip()
             or "Review the retrieved product documentation before taking corrective action.",
+            "cited_sources": parsed.get("cited_sources") if isinstance(parsed.get("cited_sources"), list) else None,
         }
 
     async def diagnose_global_issue(
@@ -93,16 +95,24 @@ class LLMService:
 
         instructions = (
             "You are a global support router and diagnostic assistant. Analyze the user's issue and search the retrieved "
-            "context to identify which product they are asking about. "
-            "You MUST return a single, valid JSON object with the following keys:\n"
-            '- "detected_product_id": the product_id of the matching product, or null if none match\n'
-            '- "detected_product_name": the name of the matching product, or null if none match\n'
-            '- "investigation_reasoning": a paragraph of 2-3 sentences explaining which product matches the symptom and why, based on the documentation\n'
-            '- "probable_causes": a list of short strings showing likely causes\n'
-            '- "follow_up_question": a question asking the user if they want to select the detected product, or clarifying their model\n'
-            '- "next_step": a step description (e.g. "Select product for diagnostics")\n'
-            '- "recommended_action": "Click Select to open the diagnostic assistant for this product"\n'
-            "Ensure the output starts with '{' and ends with '}'. Do not wrap the JSON in markdown code blocks. Do not add any text before or after the JSON."
+            "context to identify which product they are asking about.\n"
+            "First, determine if the question is educational/conceptual (e.g., 'What is Moss?', 'How does mesh networking work?').\n"
+            "If it is educational/conceptual:\n"
+            "  - Set 'detected_product_id' and 'detected_product_name' to the matching product, or null if it spans multiple products.\n"
+            "  - Set 'investigation_reasoning' to a friendly, comprehensive explanation of the concept based on the retrieved documentation.\n"
+            "  - Set 'probable_causes' to an empty list [].\n"
+            "  - Set 'follow_up_question' to a clarifying question asking if they want to learn more details or troubleshoot a specific issue.\n"
+            "  - Set 'next_step' to 'Conceptual routing'.\n"
+            "  - Set 'recommended_action' to 'Learn more from the documentation'.\n"
+            "If it is a diagnostic problem (e.g., node won't connect, jammed printer):\n"
+            "  - Set 'detected_product_id' to the product_id of the matching product, or null if none match.\n"
+            "  - Set 'detected_product_name' to the name of the matching product, or null if none match.\n"
+            "  - Set 'investigation_reasoning' to a paragraph of 2-3 sentences explaining which product matches the symptom and why.\n"
+            "  - Set 'probable_causes' to likely causes.\n"
+            "  - Set 'follow_up_question' to a targeted clarifying question.\n"
+            "  - Set 'next_step' to a step description.\n"
+            "  - Set 'recommended_action' to 'Click Select to open the diagnostic assistant for this product'.\n\n"
+            "You MUST return a single, valid JSON object with these keys. Do not wrap the JSON in markdown code blocks. Do not add any text before or after the JSON."
         )
 
         answer = await self._generate_text(
@@ -120,6 +130,7 @@ class LLMService:
                 "follow_up_question": "Which of our products are you referring to?",
                 "next_step": "Identify product",
                 "recommended_action": "Select a product from the list to begin specific diagnostics.",
+                "cited_sources": None,
             }
 
         return {
@@ -130,6 +141,7 @@ class LLMService:
             "follow_up_question": str(parsed.get("follow_up_question") or "").strip(),
             "next_step": str(parsed.get("next_step") or "").strip(),
             "recommended_action": str(parsed.get("recommended_action") or "").strip(),
+            "cited_sources": parsed.get("cited_sources") if isinstance(parsed.get("cited_sources"), list) else None,
         }
 
     async def _generate_text(self, instructions: str, prompt: str, temperature: float = 0.1) -> str:
@@ -186,15 +198,21 @@ class LLMService:
     @staticmethod
     def _diagnostic_instructions() -> str:
         return (
-            "You are a professional product support hardware engineer and diagnostic assistant. "
-            "Your task is to perform diagnostic troubleshooting on a product using only the retrieved documentation "
-            "and session history. Be methodical, like a technician testing evidence.\n"
-            "You MUST return a single, valid JSON object with the following keys:\n"
-            '- "probable_causes": a list of 2-4 short strings representing the most likely causes of the issue based on documentation\n'
-            '- "investigation_reasoning": a paragraph of 2-3 sentences explaining your diagnostic thought process. Reference specific guides and findings to explain why you are narrowing down or suspecting these causes, without guessing prematurely.\n'
-            '- "follow_up_question": a single targeted clarifying question to narrow down or eliminate causes (e.g. asking about status lights, symptom behavior, or physical state)\n'
-            '- "next_step": a short description of the next physical diagnostic check the user should perform\n'
-            '- "recommended_action": a specific, actionable check or fix from the documentation for the user to try\n'
+            "You are a professional product support hardware engineer, educator, and diagnostic assistant.\n"
+            "Analyze the user's input and classify the intent into one of the following:\n"
+            "1. Educational/Conceptual/General (e.g., 'What is Moss?', 'What is mesh networking?', 'How does it work?'):\n"
+            "   - Set 'probable_causes' to an empty list [].\n"
+            "   - Set 'investigation_reasoning' to a friendly, natural, and comprehensive explanation of the concept or product, based strictly on the retrieved documentation.\n"
+            "   - Set 'follow_up_question' to a helpful follow-up question related to the concept or asking if they have a diagnostic problem.\n"
+            "   - Set 'next_step' to 'Conceptual inquiry'.\n"
+            "   - Set 'recommended_action' to 'Learn more from the documentation'.\n"
+            "2. Diagnostic/Troubleshooting (e.g., 'My mesh node won't connect', 'LaserJet has a paper jam'):\n"
+            "   - Set 'probable_causes' to a list of 2-4 short strings representing the most likely causes based on documentation.\n"
+            "   - Set 'investigation_reasoning' to a paragraph of 2-3 sentences explaining your diagnostic thought process, referencing specific guides and findings to explain why you are narrowing down or suspecting these causes, without guessing prematurely.\n"
+            "   - Set 'follow_up_question' to a targeted clarifying question (e.g., status lights, symptom behavior, or physical state).\n"
+            "   - Set 'next_step' to the next physical check the user should perform.\n"
+            "   - Set 'recommended_action' to a specific check or fix from the documentation.\n\n"
+            "You MUST return a single, valid JSON object with the keys 'probable_causes', 'investigation_reasoning', 'follow_up_question', 'next_step', and 'recommended_action'.\n"
             "Ensure the output starts with '{' and ends with '}'. Do not wrap the JSON in markdown code blocks. Do not add any text before or after the JSON."
         )
 

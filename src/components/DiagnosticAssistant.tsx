@@ -11,6 +11,7 @@ type Message = {
   snippet?: string | null;
   section?: string | null;
   page?: string | null;
+  citations?: DiagnosticReference[];
   followUp?: string;
   detectedProductId?: string | null;
   detectedProductName?: string | null;
@@ -31,7 +32,20 @@ export function DiagnosticAssistant({
   const [input, setInput] = useState(initialIssue ?? "");
   const [isLoading, setIsLoading] = useState(false);
   const [diagnostic, setDiagnostic] = useState<DiagnosticResponse | null>(null);
+  const [dynamicDocs, setDynamicDocs] = useState<any[]>([]);
   
+  // Load dynamic knowledge documents for this product
+  useEffect(() => {
+    if (product) {
+      void fetch(`/api/products/${product.id}/knowledge`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) setDynamicDocs(data);
+        })
+        .catch(err => console.error("Failed to load diagnostic manuals", err));
+    }
+  }, [product]);
+
   const [messages, setMessages] = useState<Message[]>(() => {
     if (product) {
       if (initialIssue) {
@@ -168,6 +182,7 @@ export function DiagnosticAssistant({
           snippet: payload.documentation_references[0]?.snippet || null,
           section: payload.documentation_references[0]?.section || null,
           page: payload.documentation_references[0]?.page || null,
+          citations: payload.documentation_references,
           followUp: payload.follow_up_question,
           detectedProductId: payload.detected_product_id,
           detectedProductName: payload.detected_product_name,
@@ -212,7 +227,11 @@ export function DiagnosticAssistant({
         <InvestigationThread 
           activeStep={diagnostic ? 4 : initialIssue ? 3 : 2} 
           isGlobal={!product}
+          product={product}
+          dynamicDocs={dynamicDocs}
+          onSubmit={submit}
         />
+        
         <section className="mock-diag-chat">
           <div className="mock-diag-chat-header">
             <div className="mock-diag-product-badge">
@@ -279,13 +298,26 @@ export function DiagnosticAssistant({
             </div>
           </form>
         </section>
+        
         <AnalysisPanel causes={causes} diagnostic={diagnostic} isGlobal={!product} />
       </div>
     </>
   );
 }
 
-function InvestigationThread({ activeStep, isGlobal }: { activeStep: number; isGlobal: boolean }) {
+function InvestigationThread({ 
+  activeStep, 
+  isGlobal, 
+  product, 
+  dynamicDocs,
+  onSubmit 
+}: { 
+  activeStep: number; 
+  isGlobal: boolean; 
+  product: ProductView | null;
+  dynamicDocs: any[];
+  onSubmit: (text: string) => void;
+}) {
   const steps = isGlobal ? [
     ["Symptom Intake", "Analyzing global problem description."],
     ["Cross-Product Search", "Scanning documentation across registered products."],
@@ -302,6 +334,80 @@ function InvestigationThread({ activeStep, isGlobal }: { activeStep: number; isG
 
   return (
     <aside className="mock-diag-left">
+      {/* Product Summary Card (Critical Issue 7) */}
+      {product && (
+        <div className="mock-product-details-card" style={{
+          marginBottom: "16px",
+          padding: "14px",
+          borderRadius: "10px",
+          background: "var(--bg-elevated)",
+          border: "1px solid var(--border)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ fontSize: "28px" }}>{product.emoji}</div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: "13.5px", fontWeight: 700, color: "var(--text-primary)" }}>{product.name}</h3>
+              <span style={{ fontSize: "10px", color: "var(--text-muted)", background: "rgba(255,255,255,0.05)", padding: "1px 5px", borderRadius: "3px" }}>
+                {product.category}
+              </span>
+            </div>
+          </div>
+          <p style={{ fontSize: "11px", color: "var(--text-secondary)", margin: "4px 0", lineHeight: "1.4" }}>
+            {product.description}
+          </p>
+          
+          {/* Suggested Issues */}
+          <div style={{ marginTop: "6px" }}>
+            <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "4px" }}>Suggested Issues</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+              {product.commonIssues?.slice(0, 3).map(issue => (
+                <button 
+                  key={issue} 
+                  type="button" 
+                  onClick={() => onSubmit(issue)}
+                  style={{
+                    textAlign: "left",
+                    padding: "4px 6px",
+                    fontSize: "10.5px",
+                    background: "rgba(255,255,255,0.02)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "5px",
+                    color: "var(--text-secondary)",
+                    cursor: "pointer",
+                    transition: "all 0.15s"
+                  }}
+                  className="suggested-issue-btn"
+                >
+                  🔍 {issue}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Indexed Manuals */}
+          <div style={{ marginTop: "6px" }}>
+            <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "4px" }}>Indexed Manuals</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {product.documentation?.slice(0, 2).map((doc, i) => (
+                <div key={`static-${i}`} style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "10.5px", color: "var(--text-secondary)" }}>
+                  <span>{doc.icon}</span>
+                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={doc.name}>{doc.name}</span>
+                </div>
+              ))}
+              {dynamicDocs.map((doc, i) => (
+                <div key={`dynamic-${i}`} style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "10.5px", color: "var(--text-secondary)" }}>
+                  <span>{doc.type === "pdf" ? "📄" : doc.type === "url" ? "🌐" : "📝"}</span>
+                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={doc.title}>{doc.title}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mock-diag-left-header">
         <div className="mock-diag-left-title">Diagnostic Process</div>
         <div className="mock-diag-status" style={isGlobal ? { background: "var(--violet-glow)", color: "var(--violet-light)", borderColor: "rgba(124,58,237,0.3)" } : undefined}>
@@ -342,29 +448,47 @@ function ChatMessage({ message }: { message: Message }) {
         <div className={`mock-bubble ${isUser ? "user" : "ai"}`} style={{ width: "100%" }}>
           <div style={{ whiteSpace: "pre-wrap" }}>{message.text}</div>
           
-          {message.citation && (
-            <div style={{
-              marginTop: "12px",
-              padding: "10px 12px",
-              background: "var(--bg-elevated)",
-              border: "1px solid var(--border)",
-              borderLeft: "3px solid var(--violet)",
-              borderRadius: "8px",
-              fontSize: "12px",
-              lineHeight: "1.4"
-            }}>
-              <div style={{ fontWeight: 700, display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
-                <span style={{ color: "var(--text-primary)" }}>📖 {message.citation}</span>
-                <span style={{ color: "var(--text-muted)", fontSize: "11px" }}>
-                  {message.section ? `${message.section}` : ""}
-                  {message.page ? ` · Page ${message.page}` : ""}
-                </span>
-              </div>
-              {message.snippet && (
-                <div style={{ color: "var(--text-secondary)", fontStyle: "italic", fontSize: "11.5px", marginTop: "4px" }}>
-                  "{message.snippet}"
+          {/* Multiple Citations Evidence block (Critical Issue 8) */}
+          {message.citations && message.citations.length > 0 && (
+            <div style={{ marginTop: "12px" }}>
+              <details style={{
+                background: "var(--bg-elevated)",
+                border: "1px solid var(--border)",
+                borderRadius: "8px",
+                overflow: "hidden"
+              }}>
+                <summary style={{
+                  padding: "8px 12px",
+                  fontSize: "11.5px",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  color: "var(--violet-light)",
+                  userSelect: "none"
+                }}>
+                  📖 View Documentation Evidence ({message.citations.length})
+                </summary>
+                <div style={{ padding: "8px 12px", display: "flex", flexDirection: "column", gap: "8px", borderTop: "1px solid var(--border)" }}>
+                  {message.citations.map((ref, i) => (
+                    <div key={i} style={{
+                      paddingBottom: i < (message.citations?.length ?? 0) - 1 ? "8px" : "0",
+                      borderBottom: i < (message.citations?.length ?? 0) - 1 ? "1px dashed var(--border)" : "none"
+                    }}>
+                      <div style={{ fontWeight: 700, display: "flex", justifyContent: "space-between", marginBottom: "4px", fontSize: "11px" }}>
+                        <span style={{ color: "var(--text-primary)" }}>📘 {ref.title}</span>
+                        <span style={{ color: "var(--text-muted)", fontSize: "10px" }}>
+                          {ref.section ? `${ref.section}` : ""}
+                          {ref.page ? ` · Page ${ref.page}` : ""}
+                        </span>
+                      </div>
+                      {ref.snippet && (
+                        <div style={{ color: "var(--text-secondary)", fontStyle: "italic", fontSize: "11px", marginTop: "2px" }}>
+                          "{ref.snippet}"
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              )}
+              </details>
             </div>
           )}
 

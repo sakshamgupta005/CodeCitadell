@@ -1,0 +1,3 @@
+Acme Hub v2 troubleshooting manual:
+Error code E1: Red blinking light. Cause: Overheated power supply. Fix: Power off for 10 minutes.
+Error code E2: Blue blinking light. Cause: WAN link disconnected. Fix: Re-plug internet cable.
