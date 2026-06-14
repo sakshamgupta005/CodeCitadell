@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FixPilot — Frontend Design Specification | CodeCitadel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Fraunces:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg-base:       #0A0B0F;
+    --bg-surface:    #111318;
+    --bg-elevated:   #181C24;
+    --bg-overlay:    #1E2330;
+    --border:        #252B3B;
+    --border-subtle: #1A1F2E;
+    --indigo:        #4F46E5;
+    --indigo-light:  #6366F1;
+    --indigo-glow:   rgba(79,70,229,0.18);
+    --teal:          #0D9488;
+    --teal-glow:     rgba(13,148,136,0.15);
+    --amber:         #F59E0B;
+    --amber-glow:    rgba(245,158,11,0.15);
+    --red:           #EF4444;
+    --green:         #10B981;
+    --text-primary:  #F8FAFC;
+    --text-secondary:#8B9EB7;
+    --text-muted:    #4A5568;
+    --font-ui:       'Inter', sans-serif;
+    --font-mono:     'JetBrains Mono', monospace;
+    --font-display:  'Fraunces', serif;
+    --radius-sm:     6px;
+    --radius-md:     10px;
+    --radius-lg:     16px;
+    --radius-xl:     24px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SPEC CHROME ── */
+  .spec-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(10,11,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .spec-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 15px; letter-spacing: -0.3px;
+  }
+  .spec-logo-icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: linear-gradient(135deg, var(--indigo), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+  .spec-badge {
+    font-size: 11px; font-weight: 500; font-family: var(--font-mono);
+    background: var(--indigo-glow); color: var(--indigo-light);
+    border: 1px solid rgba(99,102,241,0.3);
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .spec-nav {
+    display: flex; align-items: center; gap: 4px;
+  }
+  .spec-nav a {
+    color: var(--text-secondary); text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    padding: 5px 10px; border-radius: var(--radius-sm);
+    transition: all 0.15s;
+  }
+  .spec-nav a:hover { color: var(--text-primary); background: var(--bg-elevated); }
+
+  /* ── SIDEBAR TOC ── */
+  .layout {
+    display: flex; padding-top: 56px;
+  }
+  .toc {
+    width: 240px; min-height: calc(100vh - 56px);
+    position: sticky; top: 56px; height: calc(100vh - 56px);
+    overflow-y: auto; border-right: 1px solid var(--border);
+    padding: 24px 0;
+    flex-shrink: 0;
+  }
+  .toc-section { padding: 0 16px 8px; }
+  .toc-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    color: var(--text-muted); text-transform: uppercase;
+    padding: 8px 8px 6px;
+  }
+  .toc a {
+    display: block; font-size: 13px; font-weight: 500;
+    color: var(--text-secondary); text-decoration: none;
+    padding: 5px 8px; border-radius: var(--radius-sm);
+    transition: all 0.15s;
+  }
+  .toc a:hover { color: var(--text-primary); background: var(--bg-elevated); }
+  .toc a.active { color: var(--indigo-light); background: var(--indigo-glow); }
+
+  /* ── MAIN CONTENT ── */
+  .content {
+    flex: 1; min-width: 0;
+    padding: 48px 56px;
+    max-width: 1100px;
+  }
+
+  /* ── SECTION ARCHITECTURE ── */
+  .page-section {
+    margin-bottom: 80px;
+    padding-bottom: 80px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .page-section:last-child { border-bottom: none; }
+
+  .section-eyebrow {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px;
+  }
+  .eyebrow-num {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    color: var(--indigo-light);
+    background: var(--indigo-glow); border: 1px solid rgba(99,102,241,0.25);
+    padding: 2px 7px; border-radius: 4px;
+  }
+  .eyebrow-tag {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.8px;
+    color: var(--text-muted); text-transform: uppercase;
+  }
+
+  h1.page-title {
+    font-family: var(--font-display); font-size: 42px; font-weight: 900;
+    letter-spacing: -1.5px; line-height: 1.1; color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+  h2.section-title {
+    font-size: 26px; font-weight: 700; letter-spacing: -0.6px;
+    color: var(--text-primary); margin-bottom: 8px;
+  }
+  h3.sub-title {
+    font-size: 17px; font-weight: 600; letter-spacing: -0.3px;
+    color: var(--text-primary); margin-bottom: 8px;
+  }
+  .page-desc {
+    font-size: 16px; color: var(--text-secondary); max-width: 640px;
+    line-height: 1.7; margin-bottom: 36px;
+  }
+
+  /* ── TOKEN SYSTEM ── */
+  .token-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px; margin-bottom: 32px;
+  }
+  .token-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .token-swatch { height: 56px; }
+  .token-info { padding: 10px 12px; background: var(--bg-surface); }
+  .token-name { font-size: 11px; font-weight: 700; color: var(--text-secondary); }
+  .token-hex { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+
+  .type-sample {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 20px 24px; margin-bottom: 12px;
+  }
+  .type-label { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+  /* ── WIREFRAME BLOCKS ── */
+  .wireframe-container {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 28px;
+  }
+  .wireframe-bar {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+    background: var(--bg-elevated);
+  }
+  .wf-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .wf-title { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-left: 8px; font-family: var(--font-mono); }
+
+  /* ── MOCK UI COMPONENTS ── */
+  .mock-ui {
+    padding: 24px;
+  }
+
+  /* NAVIGATION MOCK */
+  .mock-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 52px;
+    background: rgba(10,11,15,0.95); border: 1px solid var(--border);
+    border-radius: var(--radius-md); margin-bottom: 16px;
+  }
+  .mock-nav-logo {
+    display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px;
+  }
+  .mock-logo-mark {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--indigo), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+  .mock-nav-links { display: flex; gap: 4px; }
+  .mock-nav-link {
+    font-size: 13px; font-weight: 500; padding: 5px 10px;
+    border-radius: var(--radius-sm); color: var(--text-secondary);
+  }
+  .mock-nav-link.active { color: var(--text-primary); background: var(--bg-elevated); }
+  .mock-nav-cta {
+    font-size: 12px; font-weight: 600; padding: 6px 14px;
+    border-radius: var(--radius-sm); background: var(--indigo);
+    color: white;
+  }
+
+  /* HERO MOCK */
+  .mock-hero {
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(79,70,229,0.12) 0%, transparent 70%),
+                var(--bg-base);
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 64px 48px; text-align: center; position: relative; overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .mock-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, var(--bg-base));
+    pointer-events: none;
+  }
+  .mock-hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; font-family: var(--font-mono);
+    color: var(--teal); background: var(--teal-glow);
+    border: 1px solid rgba(13,148,136,0.3); border-radius: 20px;
+    padding: 4px 12px; margin-bottom: 20px;
+  }
+  .mock-hero-badge::before { content: '●'; font-size: 8px; }
+  .mock-hero-h1 {
+    font-family: var(--font-display); font-size: 52px; font-weight: 900;
+    letter-spacing: -2px; line-height: 1.05; color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+  .mock-hero-h1 span {
+    background: linear-gradient(135deg, var(--indigo-light), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .mock-hero-sub {
+    font-size: 17px; color: var(--text-secondary); max-width: 480px;
+    margin: 0 auto 32px; line-height: 1.6;
+  }
+  .mock-hero-search {
+    display: flex; align-items: center; gap: 0;
+    max-width: 520px; margin: 0 auto 24px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+  }
+  .mock-search-icon { padding: 0 14px; color: var(--text-muted); font-size: 14px; }
+  .mock-search-input {
+    flex: 1; padding: 13px 0; font-size: 14px; font-family: var(--font-ui);
+    background: none; border: none; color: var(--text-secondary);
+  }
+  .mock-search-btn {
+    padding: 10px 20px; margin: 5px; background: var(--indigo);
+    border-radius: 10px; font-size: 13px; font-weight: 600; color: white;
+  }
+  .mock-hero-tags { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .mock-hero-tag {
+    font-size: 11px; font-weight: 500; padding: 4px 10px;
+    border-radius: 20px; border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  /* PRODUCT CARD GRID */
+  .mock-product-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    margin-bottom: 16px;
+  }
+  .mock-product-card {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); overflow: hidden;
+    transition: all 0.2s;
+  }
+  .mock-product-card:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-2px); }
+  .mock-product-img {
+    height: 110px; display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    background: linear-gradient(135deg, var(--bg-elevated), var(--bg-overlay));
+    border-bottom: 1px solid var(--border);
+  }
+  .mock-product-body { padding: 14px; }
+  .mock-product-cat {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+    color: var(--indigo-light); margin-bottom: 4px;
+  }
+  .mock-product-name { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .mock-product-company { font-size: 11px; color: var(--text-muted); }
+  .mock-product-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-top: 1px solid var(--border);
+    background: var(--bg-elevated);
+  }
+  .mock-product-docs { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+  .mock-fix-btn {
+    font-size: 11px; font-weight: 600; padding: 4px 10px;
+    background: var(--indigo-glow); color: var(--indigo-light);
+    border: 1px solid rgba(99,102,241,0.3); border-radius: var(--radius-sm);
+  }
+
+  /* DIAGNOSTIC PAGE MOCK */
+  .mock-diagnostic {
+    display: grid; grid-template-columns: 260px 1fr 220px;
+    gap: 0; min-height: 540px;
+    background: var(--bg-base); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+  }
+
+  /* Left: Investigation Thread */
+  .mock-diag-left {
+    border-right: 1px solid var(--border);
+    background: var(--bg-surface); padding: 20px 0;
+  }
+  .mock-diag-left-header {
+    padding: 0 16px 16px; border-bottom: 1px solid var(--border);
+  }
+  .mock-diag-left-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+  .mock-diag-status {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; color: var(--teal);
+    background: var(--teal-glow); border: 1px solid rgba(13,148,136,0.3);
+    padding: 3px 8px; border-radius: 4px;
+  }
+  .mock-diag-status::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal);
+    animation: pulse-teal 1.5s infinite;
+  }
+  @keyframes pulse-teal {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(0.8); }
+  }
+  .mock-thread { padding: 16px 0; }
+  .mock-thread-item {
+    display: flex; gap: 0; padding: 0 16px; margin-bottom: 4px;
+  }
+  .mock-thread-line-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    width: 24px; flex-shrink: 0; position: relative;
+  }
+  .mock-thread-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 2px solid; flex-shrink: 0; margin-top: 3px; z-index: 1;
+  }
+  .mock-thread-dot.done { background: var(--indigo); border-color: var(--indigo); }
+  .mock-thread-dot.active { background: var(--teal); border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-glow); }
+  .mock-thread-dot.pending { background: transparent; border-color: var(--border); }
+  .mock-thread-connector {
+    width: 1px; flex: 1; background: var(--border); margin-top: 2px; margin-bottom: 2px;
+  }
+  .mock-thread-connector.done { background: var(--indigo); }
+  .mock-thread-body { flex: 1; padding: 0 0 16px 10px; }
+  .mock-thread-step { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); }
+  .mock-thread-step.active { color: var(--teal); }
+  .mock-thread-step.done { color: var(--indigo-light); }
+  .mock-thread-text { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+
+  /* Center: Chat */
+  .mock-diag-chat {
+    display: flex; flex-direction: column; background: var(--bg-base);
+  }
+  .mock-diag-chat-header {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg-surface);
+  }
+  .mock-diag-product-badge {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .mock-diag-product-icon {
+    width: 30px; height: 30px; border-radius: 7px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .mock-diag-product-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .mock-diag-product-mfg { font-size: 11px; color: var(--text-muted); }
+  .mock-diag-sessions {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);
+  }
+  .mock-chat-msgs { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+
+  .mock-msg { display: flex; gap: 10px; }
+  .mock-msg.user { flex-direction: row-reverse; }
+  .mock-avatar {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .mock-avatar.ai {
+    background: linear-gradient(135deg, var(--indigo), var(--teal));
+    color: white;
+  }
+  .mock-avatar.user { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary); }
+
+  .mock-bubble {
+    max-width: 80%; padding: 11px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5;
+  }
+  .mock-bubble.ai {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    color: var(--text-primary); border-radius: 4px 12px 12px 12px;
+  }
+  .mock-bubble.user {
+    background: var(--indigo); color: white;
+    border-radius: 12px 4px 12px 12px;
+  }
+  .mock-bubble-citation {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-family: var(--font-mono); font-weight: 500;
+    color: var(--indigo-light); background: var(--indigo-glow);
+    border: 1px solid rgba(99,102,241,0.2); padding: 2px 6px; border-radius: 3px;
+    margin-top: 6px;
+  }
+  .mock-followup {
+    margin-top: 10px; padding: 10px 12px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-left: 2px solid var(--amber); border-radius: 6px;
+    font-size: 12px; color: var(--text-secondary);
+  }
+  .mock-followup-label { font-size: 10px; font-weight: 700; color: var(--amber); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+
+  .mock-chat-input-area {
+    padding: 16px 20px; border-top: 1px solid var(--border);
+    background: var(--bg-surface);
+  }
+  .mock-chat-input-row {
+    display: flex; gap: 10px; align-items: flex-end;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 10px 14px;
+  }
+  .mock-chat-input {
+    flex: 1; font-size: 13px; color: var(--text-secondary); font-family: var(--font-ui);
+    background: none; border: none;
+  }
+  .mock-send-btn {
+    width: 32px; height: 32px; border-radius: 8px; background: var(--indigo);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0; cursor: pointer;
+  }
+
+  /* Right: Analysis Panel */
+  .mock-diag-right {
+    border-left: 1px solid var(--border);
+    background: var(--bg-surface); padding: 16px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .mock-panel-section { }
+  .mock-panel-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 10px;
+  }
+  .mock-cause-item {
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px; margin-bottom: 6px;
+  }
+  .mock-cause-name { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+  .mock-cause-bar-wrap { background: var(--bg-overlay); border-radius: 2px; height: 4px; margin-bottom: 4px; }
+  .mock-cause-bar { height: 4px; border-radius: 2px; }
+  .mock-cause-conf { font-size: 10px; font-family: var(--font-mono); color: var(--text-muted); }
+  .mock-cause-conf span { color: var(--amber); }
+
+  .mock-inspect-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px; background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); margin-bottom: 6px;
+  }
+  .mock-inspect-num {
+    width: 18px; height: 18px; border-radius: 50%; background: var(--indigo-glow);
+    border: 1px solid rgba(99,102,241,0.3); font-size: 9px; font-weight: 700;
+    color: var(--indigo-light); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .mock-inspect-text { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+
+  .mock-doc-ref {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px; background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); margin-bottom: 6px; cursor: pointer;
+  }
+  .mock-doc-ref:hover { border-color: var(--indigo); }
+  .mock-doc-icon { font-size: 14px; flex-shrink: 0; }
+  .mock-doc-info { min-width: 0; }
+  .mock-doc-title { font-size: 11px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mock-doc-page { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+
+  /* DASHBOARD MOCK */
+  .mock-dashboard {
+    display: grid; grid-template-columns: 200px 1fr;
+    min-height: 480px; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+  }
+  .mock-dash-sidebar {
+    background: var(--bg-surface); border-right: 1px solid var(--border);
+    padding: 20px 12px;
+  }
+  .mock-dash-brand {
+    display: flex; align-items: center; gap: 8px; padding: 0 8px 20px;
+    font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .mock-dash-nav-item {
+    display: flex; align-items: center; gap: 8px; padding: 7px 8px;
+    border-radius: var(--radius-sm); font-size: 12px; font-weight: 500;
+    color: var(--text-secondary); margin-bottom: 2px; cursor: pointer;
+  }
+  .mock-dash-nav-item:hover, .mock-dash-nav-item.active {
+    background: var(--bg-elevated); color: var(--text-primary);
+  }
+  .mock-dash-nav-item.active { color: var(--indigo-light); background: var(--indigo-glow); }
+  .mock-dash-icon { font-size: 13px; }
+
+  .mock-dash-main { background: var(--bg-base); padding: 24px; }
+  .mock-dash-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .mock-dash-heading { font-size: 18px; font-weight: 700; }
+  .mock-dash-add-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; background: var(--indigo);
+    border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; color: white;
+  }
+  .mock-stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .mock-stat {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 14px;
+  }
+  .mock-stat-value { font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--text-primary); margin-bottom: 2px; }
+  .mock-stat-value.indigo { color: var(--indigo-light); }
+  .mock-stat-value.teal { color: var(--teal); }
+  .mock-stat-value.amber { color: var(--amber); }
+  .mock-stat-label { font-size: 11px; color: var(--text-muted); }
+
+  .mock-product-table { width: 100%; }
+  .mock-table-header {
+    display: grid; grid-template-columns: 1fr 80px 80px 80px 60px;
+    padding: 8px 14px; font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .mock-table-row {
+    display: grid; grid-template-columns: 1fr 80px 80px 80px 60px;
+    padding: 12px 14px; border-bottom: 1px solid var(--border-subtle);
+    align-items: center;
+  }
+  .mock-table-row:hover { background: var(--bg-surface); }
+  .mock-table-name { font-size: 13px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+  .mock-table-cell { font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono); }
+  .mock-status-badge {
+    display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .mock-status-badge.live { background: rgba(16,185,129,0.1); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+  .mock-status-badge.indexing { background: var(--amber-glow); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+  .mock-table-actions { display: flex; gap: 4px; }
+  .mock-action-btn { font-size: 11px; color: var(--text-muted); padding: 3px 6px; border-radius: 4px; background: var(--bg-elevated); cursor: pointer; }
+
+  /* UPLOAD MOCK */
+  .mock-upload-area {
+    border: 2px dashed var(--border); border-radius: var(--radius-lg);
+    padding: 48px; text-align: center;
+    transition: all 0.2s; cursor: pointer;
+    background: var(--bg-surface); margin-bottom: 16px;
+  }
+  .mock-upload-area:hover, .mock-upload-area.active {
+    border-color: var(--indigo);
+    background: var(--indigo-glow);
+  }
+  .mock-upload-icon { font-size: 36px; margin-bottom: 12px; }
+  .mock-upload-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .mock-upload-sub { font-size: 13px; color: var(--text-muted); }
+  .mock-upload-sub span { color: var(--indigo-light); font-weight: 500; }
+
+  .mock-upload-items { display: flex; flex-direction: column; gap: 8px; }
+  .mock-upload-item {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 12px 16px;
+  }
+  .mock-upload-file-icon { font-size: 20px; flex-shrink: 0; }
+  .mock-upload-file-info { flex: 1; min-width: 0; }
+  .mock-upload-file-name { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .mock-upload-progress-wrap { background: var(--bg-overlay); border-radius: 2px; height: 3px; }
+  .mock-upload-progress-bar { height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--indigo), var(--teal)); }
+  .mock-upload-file-status { font-size: 11px; font-family: var(--font-mono); flex-shrink: 0; }
+  .upload-done { color: var(--green); }
+  .upload-indexing { color: var(--amber); }
+  .upload-uploading { color: var(--indigo-light); }
+
+  /* PRODUCT DETAIL MOCK */
+  .mock-product-detail {
+    display: grid; grid-template-columns: 1fr 280px;
+    gap: 0; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+  }
+  .mock-detail-main { padding: 32px; background: var(--bg-base); }
+  .mock-detail-img-area {
+    height: 200px; background: linear-gradient(135deg, var(--bg-elevated), var(--bg-overlay));
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 56px; margin-bottom: 24px; position: relative;
+  }
+  .mock-detail-img-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 10px; font-weight: 600; padding: 3px 8px;
+    border-radius: 4px; background: rgba(16,185,129,0.15); color: var(--green);
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+  .mock-detail-cat { font-size: 11px; font-weight: 700; color: var(--indigo-light); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .mock-detail-name { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; color: var(--text-primary); margin-bottom: 8px; }
+  .mock-detail-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 24px; }
+  .mock-detail-docs-section { margin-bottom: 24px; }
+  .mock-detail-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px; }
+  .mock-doc-list { display: flex; flex-direction: column; gap: 8px; }
+  .mock-doc-entry {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px; cursor: pointer;
+  }
+  .mock-doc-entry:hover { border-color: var(--indigo); }
+  .mock-doc-entry-icon { font-size: 16px; }
+  .mock-doc-entry-name { font-size: 12px; font-weight: 600; color: var(--text-primary); flex: 1; }
+  .mock-doc-entry-meta { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+
+  .mock-detail-sidebar {
+    border-left: 1px solid var(--border); background: var(--bg-surface);
+    padding: 24px;
+  }
+  .mock-troubleshoot-cta {
+    background: linear-gradient(135deg, var(--indigo), rgba(79,70,229,0.7));
+    border: 1px solid rgba(99,102,241,0.4); border-radius: var(--radius-md);
+    padding: 20px; text-align: center; margin-bottom: 20px; cursor: pointer;
+  }
+  .mock-trouble-icon { font-size: 28px; margin-bottom: 8px; }
+  .mock-trouble-title { font-size: 14px; font-weight: 700; color: white; margin-bottom: 4px; }
+  .mock-trouble-sub { font-size: 11px; color: rgba(255,255,255,0.6); }
+  .mock-info-item { margin-bottom: 12px; }
+  .mock-info-key { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 2px; }
+  .mock-info-val { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+
+  /* ── SPEC PROSE ── */
+  .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .spec-card {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 20px;
+  }
+  .spec-card h4 { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+  .spec-card p, .spec-card li {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  }
+  .spec-card ul { padding-left: 16px; }
+  .spec-card li { margin-bottom: 4px; }
+
+  .spec-rule {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--indigo); border-radius: var(--radius-sm);
+    padding: 14px 18px; margin-bottom: 12px; font-size: 13px; color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .spec-rule strong { color: var(--text-primary); }
+  .spec-rule.teal { border-left-color: var(--teal); }
+  .spec-rule.amber { border-left-color: var(--amber); }
+  .spec-rule.green { border-left-color: var(--green); }
+
+  .component-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; font-family: var(--font-mono);
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    color: var(--text-secondary); padding: 2px 8px; border-radius: 4px; margin: 2px;
+  }
+
+  .flow-steps {
+    display: flex; gap: 0; align-items: stretch; margin-bottom: 24px;
+    overflow-x: auto; padding-bottom: 8px;
+  }
+  .flow-step {
+    display: flex; align-items: center; gap: 0; flex-shrink: 0;
+  }
+  .flow-step-box {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px; text-align: center;
+    min-width: 120px;
+  }
+  .flow-step-num { font-size: 10px; font-weight: 700; color: var(--indigo-light); font-family: var(--font-mono); margin-bottom: 4px; }
+  .flow-step-label { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+  .flow-arrow {
+    width: 28px; height: 1px; background: var(--border); flex-shrink: 0;
+    position: relative;
+  }
+  .flow-arrow::after {
+    content: '→'; position: absolute; right: -5px; top: -9px;
+    font-size: 14px; color: var(--text-muted);
+  }
+
+  /* ── HERO INTRO ── */
+  .spec-hero {
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(79,70,229,0.15) 0%, transparent 70%);
+    border: 1px solid var(--border); border-radius: var(--radius-xl);
+    padding: 56px 48px; margin-bottom: 64px; text-align: center; position: relative; overflow: hidden;
+  }
+  .spec-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, var(--bg-base));
+  }
+  .spec-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--indigo-light); margin-bottom: 16px;
+  }
+  .spec-hero h1 {
+    font-family: var(--font-display); font-size: 56px; font-weight: 900;
+    letter-spacing: -2px; line-height: 1.05; color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+  .spec-hero h1 .grad {
+    background: linear-gradient(135deg, var(--indigo-light) 0%, var(--teal) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .spec-hero p {
+    font-size: 18px; color: var(--text-secondary); max-width: 560px;
+    margin: 0 auto 28px; line-height: 1.7;
+  }
+  .spec-hero-meta {
+    display: flex; align-items: center; justify-content: center; gap: 24px;
+    font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);
+    position: relative;
+  }
+  .spec-hero-meta-dot { color: var(--border); }
+
+  /* MOBILE NAV MOCK */
+  .mock-mobile-nav {
+    display: flex; align-items: center; justify-content: space-around;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 10px 0;
+  }
+  .mock-mobile-nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-size: 10px; color: var(--text-muted); padding: 0 16px;
+  }
+  .mock-mobile-nav-item.active { color: var(--indigo-light); }
+  .mock-mobile-nav-icon { font-size: 18px; }
+
+  /* Utility */
+  .mt8 { margin-top: 8px; }
+  .mt16 { margin-top: 16px; }
+  .mt24 { margin-top: 24px; }
+  .mt32 { margin-top: 32px; }
+  .mb8 { margin-bottom: 8px; }
+  .mb16 { margin-bottom: 16px; }
+  .mb24 { margin-bottom: 24px; }
+  .mb32 { margin-bottom: 32px; }
+
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(79,70,229,0.08), rgba(13,148,136,0.08));
+    border: 1px solid rgba(99,102,241,0.2); border-radius: var(--radius-md);
+    padding: 20px 24px; margin-bottom: 24px;
+  }
+  .highlight-box p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+  .highlight-box strong { color: var(--indigo-light); }
+
+  @media (max-width: 900px) {
+    .toc { display: none; }
+    .content { padding: 24px; }
+    .spec-grid { grid-template-columns: 1fr; }
+    .mock-diag-right { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="spec-header">
+  <div class="spec-logo">
+    <div class="spec-logo-icon">⚡</div>
+    <span>FixPilot</span>
+    <span class="spec-badge">DESIGN SPEC v1.0</span>
+  </div>
+  <nav class="spec-nav">
+    <a href="#tokens">Tokens</a>
+    <a href="#landing">Landing</a>
+    <a href="#marketplace">Marketplace</a>
+    <a href="#detail">Product Detail</a>
+    <a href="#diagnostic">Diagnostic</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#upload">Upload</a>
+    <a href="#nav">Navigation</a>
+  </nav>
+  <div class="spec-badge">CodeCitadel · Hackathon 2024</div>
+</header>
+
+<div class="layout">
+<!-- SIDEBAR TOC -->
+<aside class="toc">
+  <div class="toc-section">
+    <div class="toc-label">Foundation</div>
+    <a href="#tokens">Design Tokens</a>
+    <a href="#typography">Typography</a>
+    <a href="#rationale">Design Rationale</a>
+  </div>
+  <div class="toc-section">
+    <div class="toc-label">Pages</div>
+    <a href="#landing">01 Landing Page</a>
+    <a href="#marketplace">02 Marketplace</a>
+    <a href="#detail">03 Product Detail</a>
+    <a href="#diagnostic">04 Diagnostic</a>
+    <a href="#dashboard">05 Dashboard</a>
+    <a href="#upload">06 Upload Flow</a>
+    <a href="#nav">07 Navigation</a>
+  </div>
+  <div class="toc-section">
+    <div class="toc-label">System</div>
+    <a href="#components">Components</a>
+    <a href="#interactions">Interactions</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="content">
+
+<!-- HERO -->
+<div class="spec-hero">
+  <div class="spec-hero-eyebrow">⚡ FixPilot · Frontend Design Specification</div>
+  <h1>Built to <span class="grad">Impress</span><br/>on Demo Day</h1>
+  <p>A complete design system for an AI-powered product support platform. Dark-first, premium SaaS aesthetics, built for judges who decide in seconds.</p>
+  <div class="spec-hero-meta">
+    <span>Team: CodeCitadel</span>
+    <span class="spec-hero-meta-dot">·</span>
+    <span>Stack: Next.js + TypeScript + Tailwind + shadcn/ui</span>
+    <span class="spec-hero-meta-dot">·</span>
+    <span>7 Pages · 1 Design System</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+  SECTION 0: DESIGN TOKENS
+═══════════════════════════════════════════ -->
+<section class="page-section" id="tokens">
+  <div class="section-eyebrow">
+    <span class="eyebrow-num">00</span>
+    <span class="eyebrow-tag">Foundation</span>
+  </div>
+  <h2 class="section-title">Design Tokens & System</h2>
+  <p class="page-desc">Every color, typeface, and spacing decision flows from this token system. Implement these as CSS custom properties and Tailwind config extensions for consistency across all 7 pages.</p>
+
+  <h3 class="sub-title mb8">Color Palette</h3>
+  <div class="token-grid">
+    <div class="token-card">
+      <div class="token-swatch" style="background:#0A0B0F"></div>
+      <div class="token-info"><div class="token-name">bg-base</div><div class="token-hex">#0A0B0F</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#111318"></div>
+      <div class="token-info"><div class="token-name">bg-surface</div><div class="token-hex">#111318</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#181C24"></div>
+      <div class="token-info"><div class="token-name">bg-elevated</div><div class="token-hex">#181C24</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#1E2330"></div>
+      <div class="token-info"><div class="token-name">bg-overlay</div><div class="token-hex">#1E2330</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#4F46E5"></div>
+      <div class="token-info"><div class="token-name">indigo (primary)</div><div class="token-hex">#4F46E5</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#0D9488"></div>
+      <div class="token-info"><div class="token-name">teal (diagnostic)</div><div class="token-hex">#0D9488</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#F59E0B"></div>
+      <div class="token-info"><div class="token-name">amber (warning)</div><div class="token-hex">#F59E0B</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#F8FAFC"></div>
+      <div class="token-info"><div class="token-name">text-primary</div><div class="token-hex">#F8FAFC</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#8B9EB7"></div>
+      <div class="token-info"><div class="token-name">text-secondary</div><div class="token-hex">#8B9EB7</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#4A5568"></div>
+      <div class="token-info"><div class="token-name">text-muted</div><div class="token-hex">#4A5568</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#252B3B"></div>
+      <div class="token-info"><div class="token-name">border</div><div class="token-hex">#252B3B</div></div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#10B981"></div>
+      <div class="token-info"><div class="token-name">green (success)</div><div class="token-hex">#10B981</div></div>
+    </div>
+  </div>
+
+  <h3 class="sub-title mb8" id="typography">Typography System</h3>
+  <div class="type-sample">
+    <div class="type-label">Display Face — Fraunces (Hero Headlines Only)</div>
+    <div style="font-family:'Fraunces',serif; font-size:36px; font-weight:900; letter-spacing:-1.5px; color:var(--text-primary)">AI-Powered Diagnosis</div>
+    <div style="font-size:11px; color:var(--text-muted); margin-top:4px; font-family:var(--font-mono)">font-family: Fraunces · weight: 900 · letter-spacing: -1.5px · Use: hero h1 only</div>
+  </div>
+  <div class="type-sample">
+    <div class="type-label">UI Face — Inter (All UI Text)</div>
+    <div style="font-size:18px; font-weight:700; color:var(--text-primary); margin-bottom:4px">Section Heading · 700</div>
+    <div style="font-size:15px; font-weight:500; color:var(--text-secondary); margin-bottom:4px">Body text and descriptions · 500 · Use for all conversational content in the platform.</div>
+    <div style="font-size:12px; font-weight:600; color:var(--text-muted)">Eyebrow Label · 600 · UPPERCASE · letter-spacing: 1px</div>
+    <div style="font-size:11px; color:var(--text-muted); margin-top:8px; font-family:var(--font-mono)">font-family: Inter · Scale: 11/12/13/14/15/17/18/24/26px</div>
+  </div>
+  <div class="type-sample">
+    <div class="type-label">Mono Face — JetBrains Mono (Data, Citations, Codes)</div>
+    <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--indigo-light); margin-bottom:4px">Session: #DX-2047 · Confidence: 78% · p.32</div>
+    <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--teal)">CAUSE_ANALYSIS · INDEXING_COMPLETE · ROOT_CAUSE</div>
+    <div style="font-size:11px; color:var(--text-muted); margin-top:8px; font-family:var(--font-mono)">font-family: JetBrains Mono · Use: stats, citations, status codes, percentages, IDs</div>
+  </div>
+
+  <h3 class="sub-title mb8 mt24" id="rationale">Design Rationale</h3>
+  <div class="highlight-box">
+    <p><strong>The signature element</strong> of FixPilot is the Diagnostic Page's living <strong>Investigation Thread</strong> — a vertical timeline on the left rail that builds in real-time as the AI reasons through possible causes. It makes the <em>thinking process</em> visible, not just the conclusion. This is what separates FixPilot from any chatbot wrapper. Every other design choice is quiet and disciplined to let this element be the memorable thing.</p>
+  </div>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <h4>Why dark-first?</h4>
+      <p>Technical audiences (engineers, field technicians) associate dark UI with professionalism and precision — the same reason Figma, GitHub, Linear, and VS Code default dark. It also makes the indigo/teal accent colors pop at maximum contrast.</p>
+    </div>
+    <div class="spec-card">
+      <h4>Why Fraunces only for heroes?</h4>
+      <p>A display serif in one place creates contrast and character without feeling like a design accident. Using it everywhere would dilute it. The tension between editorial display type and tight mono data type signals "premium tech tool."</p>
+    </div>
+    <div class="spec-card">
+      <h4>Why teal for diagnostic states?</h4>
+      <p>Teal is semantically distinct from indigo (navigation) and amber (warnings). It reads as "active investigation" — clinical, precise, alive. The pulsing teal indicator on the investigation thread gives the page biological energy.</p>
+    </div>
+    <div class="spec-card">
+      <h4>Why mono font for data?</h4>
+      <p>JetBrains Mono for percentages, citations, and session IDs signals that this data is precise and machine-generated — not marketing copy. It builds trust in the AI's outputs by visually encoding "this is technical truth."</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+  SECTION 1: LANDING PAGE
+═══════════════════════════════════════════ -->
+<section class="page-section" id="landing">
+  <div class="section-eyebrow">
+    <span class="eyebrow-num">01</span>
+    <span class="eyebrow-tag">Page</span>
+  </div>
+  <h2 class="section-title">Landing Page</h2>
+  <p class="page-desc">The landing page has one job: make judges immediately understand what FixPilot is and why it's impressive — in under 8 seconds. Every section either demonstrates value or pushes toward the demo.</p>
+
+  <h3 class="sub-title mb8">Live Mockup — Hero Section</h3>
+  <div class="wireframe-container">
+    <div class="wireframe-bar">
+      <div class="wf-dot" style="background:#FF5F57"></div>
+      <div class="wf-dot" style="background:#FFBD2E"></div>
+      <div class="wf-dot" style="background:#28C840"></div>
+      <div class="wf-title">fixpilot.io — Landing Page</div>
+    </div>
+    <div class="mock-ui">
+      <!-- Nav -->
+      <div class="mock-nav">
+        <div class="mock-nav-logo"><div class="mock-logo-mark">⚡</div> FixPilot</div>
+        <div class="mock-nav-links">
+          <div class="mock-nav-link active">Products</div>
+          <div class="mock-nav-link">For Companies</div>
+          <div class="mock-nav-link">Docs</div>
+          <div class="mock-nav-link">Pricing</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div style="font-size:12px;font-weight:500;color:var(--text-secondary);cursor:pointer;">Sign in</div>
+          <div class="mock-nav-cta">Get started →</div>
+        </div>
+      </div>
+      <!-- Hero -->
+      <div class="mock-hero">
+        <div class="mock-hero-badge">Moss-Powered Retrieval · Now Live</div>
+        <div class="mock-hero-h1">Fix anything.<br/><span>Know why.</span></div>
+        <div class="mock-hero-sub">Upload your product docs. FixPilot becomes an expert technician that diagnoses real problems — not just search results.</div>
+        <div class="mock-hero-search">
+          <div class="mock-search-icon">🔍</div>
+          <div class="mock-search-input">Search products, manuals, symptoms…</div>
+          <div class="mock-search-btn">Diagnose</div>
+        </div>
+        <div class="mock-hero-tags">
+          <div class="mock-hero-tag">🖨 HP LaserJet Pro</div>
+          <div class="mock-hero-tag">❄️ Daikin Split AC</div>
+          <div class="mock-hero-tag">⚙️ Bosch Dishwasher</div>
+          <div class="mock-hero-tag">🔧 Caterpillar 320</div>
+          <div class="mock-hero-tag">+ 2,400 more</div>
+        </div>
+      </div>
+      <!-- Social proof strip -->
+      <div style="display:flex;gap:24px;justify-content:center;align-items:center;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:16px;">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Trusted by</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);">Honeywell</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);">Siemens</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);">3M Industrial</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);">Bosch Home</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);">Caterpillar</div>
+      </div>
+      <!-- Feature cards row -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;padding:18px;">
+          <div style="font-size:22px;margin-bottom:8px;">🧠</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">Expert Diagnosis</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Asks the right questions. Eliminates causes. Finds the root.</div>
+        </div>
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-left:2px solid var(--indigo);border-radius:10px;padding:18px;">
+          <div style="font-size:22px;margin-bottom:8px;">📚</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">Cited from Docs</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Every answer traced back to page and paragraph in your manuals.</div>
+        </div>
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;padding:18px;">
+          <div style="font-size:22px;margin-bottom:8px;">⚡</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">Moss Retrieval</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Semantic search across PDFs, videos, and URLs — instantly indexed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h3 class="sub-title mb8">Layout Hierarchy</h3>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <h4>Sections (top to bottom)</h4>
+      <ul>
+        <li>Sticky navigation bar</li>
+        <li>Hero — headline + search bar + trending tags</li>
+        <li>Social proof / brand logos strip</li>
+        <li>Feature trio — 3-column cards</li>
+        <li>Demo screenshot — full-width diagnostic preview</li>
+        <li>How it works — 3-step horizontal flow</li>
+        <li>For Companies CTA — dual-column split</li>
+        <li>Footer</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Visual Hierarchy Rules</h4>
+      <ul>
+        <li>Hero h1 in Fraunces 900 — largest element on page</li>
+        <li>Radial indigo glow behind hero to focus eye</li>
+        <li>Search bar is the primary action — always centered</li>
+        <li>Trending tags below search reduce friction (one-tap entry)</li>
+        <li>Feature cards use left-border accent on the highlighted one</li>
+        <li>CTA section gradient background signals page end</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub-title mb8 mt16">User Flow</h3>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-step-box"><div class="flow-step-num">01</div><div class="flow-step-label">Land on page</div></div>
+      <div class="flow-arrow"></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-box"><div class="flow-step-num">02</div><div class="flow-step-label">Read hero h1</div></div>
+      <div class="flow-arrow"></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-box"><div class="flow-step-num">03</div><div class="flow-step-label">Search or tag tap</div></div>
+      <div class="flow-arrow"></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-box"><div class="flow-step-num">04</div><div class="flow-step-label">→ Marketplace</div></div>
+      <div class="flow-arrow"></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-box"><div class="flow-step-num">05</div><div class="flow-step-label">→ Product Detail</div></div>
+      <div class="flow-arrow"></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-box"><div class="flow-step-num">06</div><div class="flow-step-label">→ Diagnostic</div></div>
+    </div>
+  </div>
+
+  <h3 class="sub-title mb8">Key Components</h3>
+  <div class="tag-row">
+    <span class="component-tag">&lt;HeroSearch /&gt;</span>
+    <span class="component-tag">&lt;TrendingTags /&gt;</span>
+    <span class="component-tag">&lt;LogoStrip /&gt;</span>
+    <span class="component-tag">&lt;FeatureCard /&gt;</span>
+    <span class="component-tag">&lt;DiagnosticPreview /&gt;</span>
+    <span class="component-tag">&lt;HowItWorksStep /&gt;</span>
+    <span class="component-tag">&lt;CompanyCTA /&gt;</span>
+  </div>
+
+  <div class="spec-rule mt16">
+    <strong>Design Rationale:</strong> The headline "Fix anything. Know why." works because it's two promises in three words each. The second line is the differentiator — not just "fix it" but explain it. The search bar, not a CTA button, is the primary action. This respects user intent: they have a problem already. Don't make them click twice.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+  SECTION 2: MARKETPLACE
+═══════════════════════════════════════════ -->
+<section class="page-section" id="marketplace">
+  <div class="section-eyebrow">
+    <span class="eyebrow-num">02</span>
+    <span class="eyebrow-tag">Page</span>
+  </div>
+  <h2 class="section-title">Product Marketplace</h2>
+  <p class="page-desc">The marketplace is the browsing hub. Products should feel like a catalog — organized, searchable, and immediately diagnostic-ready. Every product card is a launchpad to a solution.</p>
+
+  <h3 class="sub-title mb8">Live Mockup</h3>
+  <div class="wireframe-container">
+    <div class="wireframe-bar">
+      <div class="wf-dot" style="background:#FF5F57"></div>
+      <div class="wf-dot" style="background:#FFBD2E"></div>
+      <div class="wf-dot" style="background:#28C840"></div>
+      <div class="wf-title">fixpilot.io/marketplace</div>
+    </div>
+    <div class="mock-ui">
+      <!-- Toolbar -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="flex:1;display:flex;align-items:center;gap:0;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:0 14px;">
+          <span style="color:var(--text-muted);margin-right:10px;">🔍</span>
+          <span style="font-size:13px;color:var(--text-muted);padding:11px 0;">Search 2,400+ products…</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <div style="padding:8px 12px;background:var(--indigo-glow);border:1px solid rgba(99,102,241,0.3);border-radius:6px;font-size:12px;color:var(--indigo-light);font-weight:600;">All</div>
+          <div style="padding:8px 12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text-secondary);">🏭 Industrial</div>
+          <div style="padding:8px 12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text-secondary);">🏠 Appliances</div>
+          <div style="padding:8px 12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text-secondary);">💻 Electronics</div>
+          <div style="padding:8px 12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text-secondary);">🚗 Automotive</div>
+          <div style="padding:8px 12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text-secondary);">❄️ HVAC</div>
+        </div>
+      </div>
+      <!-- Section label -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);">🔥 Trending This Week</div>
+        <div style="font-size:12px;color:var(--indigo-light);cursor:pointer;">View all →</div>
+      </div>
+      <div class="mock-product-grid">
+        <div class="mock-product-card">
+          <div class="mock-product-img">🖨</div>
+          <div class="mock-product-body">
+            <div class="mock-product-cat">Electronics</div>
+            <div class="mock-product-name">HP LaserJet Pro M404n</div>
+            <div class="mock-product-company">HP Inc. · Model 2021</div>
+          </div>
+          <div class="mock-product-footer">
+            <div class="mock-product-docs">📄 12 docs</div>
+            <div class="mock-fix-btn">Diagnose →</div>
+          </div>
+        </div>
+        <div class="mock-product-card" style="border-color:rgba(99,102,241,0.4);">
+          <div class="mock-product-img">❄️</div>
+          <div class="mock-product-body">
+            <div class="mock-product-cat">HVAC</div>
+            <div class="mock-product-name">Daikin FTXM35TVMA</div>
+            <div class="mock-product-company">Daikin Industries</div>
+          </div>
+          <div class="mock-product-footer">
+            <div class="mock-product-docs">📄 8 docs</div>
+            <div class="mock-fix-btn">Diagnose →</div>
+          </div>
+        </div>
+        <div class="mock-product-card">
+          <div class="mock-product-img">⚙️</div>
+          <div class="mock-product-body">
+            <div class="mock-product-cat">Industrial</div>
+            <div class="mock-product-name">Caterpillar 320 GC</div>
+            <div class="mock-product-company">Caterpillar Inc.</div>
+          </div>
+          <div class="mock-product-footer">
+            <div class="mock-product-docs">📄 24 docs</div>
+            <div class="mock-fix-btn">Diagnose →</div>
+          </div>
+        </div>
+      </div>
+      <!-- Recently added -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:8px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);">🆕 Recently Added</div>
+        <div style="font-size:12px;color:var(--indigo-light);cursor:pointer;">View all →</div>
+      </div>
+      <div class="mock-product-grid">
+        <div class="mock-product-card">
+          <div class="mock-product-img">🍳</div>
+          <div class="mock-product-body">
+            <div class="mock-product-cat">Appliances</div>
+            <div class="mock-product-name">Bosch Series 8 Induction</div>
+            <div class="mock-product-company">Bosch Home · Added 2h ago</div>
+          </div>
+          <div class="mock-product-footer">
+            <div class="mock-product-docs">📄 6 docs</div>
+            <div class="mock-fix-btn">Diagnose →</div>
+          </div>
+        </div>
+        <div class="mock-product-card">
+          <div class="mock-product-img">🔧</div>
+          <div class="mock-product-body">
+            <div class="mock-product-cat">Industrial</div>
+            <div class="mock-product-name">Siemens S7-1200 PLC</div>
+            <div class="mock-product-company">Siemens AG · Added 5h ago</div>
+          </div>
+          <div class="mock-product-footer">
+            <div class="mock-product-docs">📄 18 docs</div>
+            <div class="mock-fix-btn">Diagnose →</div>
+          </div>
+        </div>
+        <div class="mock-product-card">
+          <div class="mock-product-img">🚗</div>
+          <div class="mock-product-body">
+            <div class="mock-product-cat">Automotive</div>
+            <div class="mock-product-name">Ford F-150 2023 Raptor</div>
+            <div class="mock-product-company">Ford Motor Co · Added 1d ago</div>
+          </div>
+          <div class="mock-product-footer">
+            <div class="mock-product-docs">📄 32 docs</div>
+            <div class="mock-fix-btn">Diagnose →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <h4>Layout Structure</h4>
+      <ul>
+        <li>Full-width sticky search bar at top</li>
+        <li>Horizontal scrollable category filter pills below</li>
+        <li>Result count + sort control right-aligned</li>
+        <li>"Trending" labeled section — 3-col grid</li>
+        <li>"Recently Added" labeled section — 3-col grid</li>
+        <li>Pagination or infinite scroll at bottom</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Product Card Anatomy</h4>
+      <ul>
+        <li>Top: emoji/image area in gradient bg (110px tall)</li>
+        <li>Category eyebrow in indigo (small caps)</li>
+        <li>Product name in 600 weight</li>
+        <li>Company + model year in muted text</li>
+        <li>Footer: doc count left, "Diagnose →" button right</li>
+        <li>Hover: lift + indigo border glow</li>
+        <li>Selected: persistent indigo border</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="spec-rule mt16">
+    <strong>Design Rationale:</strong> The "Diagnose →" button on every card is the entire page's purpose — it's not buried in a detail view. The trending section reduces decision fatigue. The category pills are horizontal-scroll (not vertical sidebar) to keep the grid tall and reduce vertical scroll depth for judges doing a fast demo.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+  SECTION 3: PRODUCT DETAIL PAGE
+═══════════════════════════════════════════ -->
+<section class="page-section" id="detail">
+  <div class="section-eyebrow">
+    <span class="eyebrow-num">03</span>
+    <span class="eyebrow-tag">Page</span>
+  </div>
+  <h2 class="section-title">Product Detail Page</h2>
+  <p class="page-desc">The detail page builds confidence before diagnosis. Users understand what they're about to troubleshoot: the product, its docs, and its resources. The "Start Diagnosis" CTA is unmissable in the right sidebar.</p>
+
+  <h3 class="sub-title mb8">Live Mockup</h3>
+  <div class="wireframe-container">
+    <div class="wireframe-bar">
+      <div class="wf-dot" style="background:#FF5F57"></div>
+      <div class="wf-dot" style="background:#FFBD2E"></div>
+      <div class="wf-dot" style="background:#28C840"></div>
+      <div class="wf-title">fixpilot.io/products/hp-laserjet-pro-m404n</div>
+    </div>
+    <div class="mock-ui">
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">← Back to Marketplace › Electronics › HP LaserJet Pro M404n</div>
+      <div class="mock-product-detail">
+        <div class="mock-detail-main">
+          <div class="mock-detail-img-area">
+            🖨
+            <div class="mock-detail-img-badge">✓ Verified Docs</div>
+          </div>
+          <div class="mock-detail-cat">Electronics · Printers</div>
+          <div class="mock-detail-name">HP LaserJet Pro M404n</div>
+          <div class="mock-detail-desc">A high-speed monochrome laser printer designed for small to medium workgroups. Supports USB 2.0 and Gigabit Ethernet connectivity. Rated for 80,000 pages/month duty cycle.</div>
+
+          <div class="mock-detail-docs-section">
+            <div class="mock-detail-section-title">Documentation · 12 Resources</div>
+            <div class="mock-doc-list">
+              <div class="mock-doc-entry">
+                <div class="mock-doc-entry-icon">📘</div>
+                <div class="mock-doc-entry-name">User Guide & Quick Reference</div>
+                <div class="mock-doc-entry-meta">PDF · 148 pages · Indexed</div>
+              </div>
+              <div class="mock-doc-entry" style="border-color:var(--indigo);">
+                <div class="mock-doc-entry-icon">🔧</div>
+                <div class="mock-doc-entry-name">HP Service & Repair Manual</div>
+                <div class="mock-doc-entry-meta">PDF · 312 pages · Indexed</div>
+              </div>
+              <div class="mock-doc-entry">
+                <div class="mock-doc-entry-icon">🎬</div>
+                <div class="mock-doc-entry-name">Paper Jam Troubleshooting (Video)</div>
+                <div class="mock-doc-entry-meta">MP4 · 8 min · Indexed</div>
+              </div>
+              <div class="mock-doc-entry">
+                <div class="mock-doc-entry-icon">🌐</div>
+                <div class="mock-doc-entry-name">HP Support Knowledge Base</div>
+                <div class="mock-doc-entry-meta">URL · 2,400 articles · Indexed</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="mock-detail-section-title">Common Issues</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <div style="padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text-secondary);">Paper jam</div>
+              <div style="padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text-secondary);">Faded print</div>
+              <div style="padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text-secondary);">Network offline</div>
+              <div style="padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text-secondary);">Toner low error</div>
+              <div style="padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text-secondary);">Print spooler stuck</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mock-detail-sidebar">
+          <div class="mock-troubleshoot-cta">
+            <div class="mock-trouble-icon">🧠</div>
+            <div class="mock-trouble-title">Start Diagnosis</div>
+            <div class="mock-trouble-sub">AI technician ready · Avg. 3 min to root cause</div>
+          </div>
+
+          <div style="border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:16px;background:var(--bg-elevated);">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:8px;">Indexed Resources</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <div style="font-size:12px;color:var(--text-secondary);">Documents</div>
+              <div style="font-family:var(--font-mono);font-size:12px;color:var(--teal);">8</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <div style="font-size:12px;color:var(--text-secondary);">Videos</div>
+              <div style="font-family:var(--font-mono);font-size:12px;color:var(--teal);">3</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-size:12px;color:var(--text-secondary);">URLs</div>
+              <div style="font-family:var(--font-mono);font-size:12px;color:var(--teal);">1</div>
+            </div>
+          </div>
+
+          <div class="mock-info-item"><div class="mock-info-key">Manufacturer</div><div class="mock-info-val">HP Inc.</div></div>
+          <div class="mock-info-item"><div class="mock-info-key">Model Year</div><div class="mock-info-val">2021 – Present</div></div>
+          <div class="mock-info-item"><div class="mock-info-key">Category</div><div class="mock-info-val">Monochrome Laser Printer</div></div>
+          <div class="mock-info-item"><div class="mock-info-key">Diagnostic Sessions</div><div class="mock-info-val" style="font-family:var(--font-mono);color:var(--indigo-light);">4,281</div></div>
+          <div class="mock-info-item"><div class="mock-info-key">Avg. Resolution Rate</div><div class="mock-info-val" style="font-family:var(--font-mono);color:var(--green);">87%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <h4>Layout: 2-Column Split</h4>
+      <ul>
+        <li>Left main (70%): image, description, docs, common issues</li>
+        <li>Right sidebar (30%): diagnosis CTA, index stats, product info</li>
+        <li>Sidebar is sticky — CTA never scrolls away</li>
+        <li>Breadcrumb navigation at top of page</li>
+        <li>Docs list shows format icon, name, page count, index status</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Sidebar CTA Hierarchy</h4>
+      <ul>
+        <li>"Start Diagnosis" button: gradient bg, large, centered, icon</li>
+        <li>Avg. time to root cause below — reduces user hesitation</li>
+        <li>Indexed resource count panel — shows AI has read the docs</li>
+        <li>Product information below — manufacturer, model, stats</li>
+        <li>Resolution rate in green mono font — trust signal</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="spec-rule teal">
+    <strong>Interaction:</strong> Clicking any tag in "Common Issues" pre-fills the diagnostic chat with that symptom description and immediately navigates to the Diagnostic page. This single interaction removes friction for the most common user journey and is highly demoable for judges.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+  SECTION 4: DIAGNOSTIC ASSISTANT (CORE)
+═══════════════════════════════════════════ -->
+<section class="page-section" id="diagnostic">
+  <div class="section-eyebrow">
+    <span class="eyebrow-num">04</span>
+    <span class="eyebrow-tag">Core Feature · Most Important</span>
+  </div>
+  <h2 class="section-title">Diagnostic Assistant</h2>
+  <p class="page-desc">This is the heart of FixPilot. Three columns: the Investigation Thread (AI reasoning made visible), the Chat (conversation), and the Analysis Panel (live evidence). Together they make a judge feel like they're watching a real technician work.</p>
+
+  <div class="highlight-box">
+    <p><strong>The Investigation Thread is the signature element.</strong> It's a vertical timeline on the left that grows and updates in real-time as the AI narrows its analysis. Each step in the diagnostic process — symptom intake, cause generation, question phase, inspection, elimination, root cause — appears as a node on the thread, with a pulsing teal dot showing the current stage. This makes AI reasoning <em>visible</em>, not just a loading spinner.</p>
+  </div>
+
+  <h3 class="sub-title mb8">Live Mockup — Full Three-Column Layout</h3>
+  <div class="wireframe-container">
+    <div class="wireframe-bar">
+      <div class="wf-dot" style="background:#FF5F57"></div>
+      <div class="wf-dot" style="background:#FFBD2E"></div>
+      <div class="wf-dot" style="background:#28C840"></div>
+      <div class="wf-title">fixpilot.io/diagnose/dx-2047 — HP LaserJet Pro M404n</div>
+    </div>
+    <div class="mock-diagnostic">
+
+      <!-- LEFT: Investigation Thread -->
+      <div class="mock-diag-left">
+        <div class="mock-diag-left-header">
+          <div class="mock-diag-left-title">Investigation Thread</div>
+          <div class="mock-diag-status">Analyzing · Phase 3</div>
+        </div>
+        <div class="mock-thread">
+
+          <!-- Step 1: Done -->
+          <div class="mock-thread-item">
+            <div class="mock-thread-line-wrap">
+              <div class="mock-thread-dot done"></div>
+              <div class="mock-thread-connector done"></div>
+            </div>
+            <div class="mock-thread-body">
+              <div class="mock-thread-step done">Symptom Intake</div>
+              <div class="mock-thread-text">Faded print + "Low toner" light off. Intermittent.</div>
+            </div>
+          </div>
+
+          <!-- Step 2: Done -->
+          <div class="mock-thread-item">
+            <div class="mock-thread-line-wrap">
+              <div class="mock-thread-dot done"></div>
+              <div class="mock-thread-connector done"></div>
+            </div>
+            <div class="mock-thread-body">
+              <div class="mock-thread-step done">Cause Generation</div>
+              <div class="mock-thread-text">4 possible causes identified from manuals.</div>
+            </div>
+          </div>
+
+          <!-- Step 3: Active -->
+          <div class="mock-thread-item">
+            <div class="mock-thread-line-wrap">
+              <div class="mock-thread-dot active"></div>
+              <div class="mock-thread-connector"></div>
+            </div>
+            <div class="mock-thread-body">
+              <div class="mock-thread-step active">Question Phase</div>
+              <div class="mock-thread-text">Clarifying pattern and print frequency to narrow causes.</div>
+            </div>
+          </div>
+
+          <!-- Step 4: Pending -->
+          <div class="mock-thread-item">
+            <div class="mock-thread-line-wrap">
+              <div class="mock-thread-dot pending"></div>
+              <div class="mock-thread-connector"></div>
+            </div>
+            <div class="mock-thread-body">
+              <div class="mock-thread-step">Inspection</div>
+              <div class="mock-thread-text">Awaiting question answers…</div>
+            </div>
+          </div>
+
+          <!-- Step 5: Pending -->
+          <div class="mock-thread-item">
+            <div class="mock-thread-line-wrap">
+              <div class="mock-thread-dot pending"></div>
+              <div class="mock-thread-connector"></div>
+            </div>
+            <div class="mock-thread-body">
+              <div class="mock-thread-step">Cause Elimination</div>
+              <div class="mock-thread-text">—</div>
+            </div>
+          </div>
+
+          <!-- Step 6: Pending -->
+          <div class="mock-thread-item">
+            <div class="mock-thread-line-wrap">
+              <div class="mock-thread-dot pending"></div>
+              <div class="mock-thread-connector"></div>
+            </div>
+            <div class="mock-thread-body">
+              <div class="mock-thread-step">Root Cause</div>
+              <div class="mock-thread-text">—</div>
+            </div>
+          </div>
+
+          <!-- Step 7: Pending -->
+          <div class="mock-thread-item">
+            <div class="mock-thread-line-wrap">
+              <div class="mock-thread-dot pending"></div>
+            </div>
+            <div class="mock-thread-body">
+              <div class="mock-thread-step">Resolution</div>
+              <div class="mock-thread-text">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER: Chat -->
+      <div class="mock-diag-chat">
+        <div class="mock-diag-chat-header">
+          <div class="mock-diag-product-badge">
+            <div class="mock-diag-product-icon">🖨</div>
+            <div>
+              <div class="mock-diag-product-name">HP LaserJet Pro M404n</div>
+              <div class="mock-diag-product-mfg">HP Inc. · Session #DX-2047</div>
+            </div>
+          </div>
+          <div class="mock-diag-sessions">
+            <span style="color:var(--teal);">●</span> Live · 4,281 sessions
+          </div>
+        </div>
+
+        <div class="mock-chat-msgs">
+          <!-- AI opening -->
+          <div class="mock-msg">
+            <div class="mock-avatar ai">🧠</div>
+            <div class="mock-bubble ai">
+              I'm analyzing the HP LaserJet Pro M404n. Tell me exactly what you're seeing — describe the print quality issue in as much detail as you can: when it happens, what the output looks like, and any error lights.
+            </div>
+          </div>
+
+          <!-- User response -->
+          <div class="mock-msg user">
+            <div class="mock-avatar user">U</div>
+            <div class="mock-bubble user">
+              The prints are really faded and washed out on random pages. The toner light isn't on. It's not every page — maybe 1 in 4 prints is bad.
+            </div>
+          </div>
+
+          <!-- AI diagnosis message -->
+          <div class="mock-msg">
+            <div class="mock-avatar ai">🧠</div>
+            <div>
+              <div class="mock-bubble ai">
+                Understood. Intermittent fading with no toner warning narrows this significantly. I'm tracking four possible causes: drum unit contamination, fuser temperature inconsistency, toner cartridge defect, or paper moisture. The intermittent pattern rules out total toner depletion.
+                <div class="mock-bubble-citation">📄 Service Manual p.47 · Fuser Troubleshooting</div>
+              </div>
+              <div class="mock-followup">
+                <div class="mock-followup-label">⚡ Follow-up needed</div>
+                Does the fading appear in horizontal bands across the page, or is it random light patches throughout the entire page?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mock-chat-input-area">
+          <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+            <div style="padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--text-secondary);cursor:pointer;">Horizontal bands</div>
+            <div style="padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--text-secondary);cursor:pointer;">Random light patches</div>
+            <div style="padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--text-secondary);cursor:pointer;">Faded edges only</div>
+          </div>
+          <div class="mock-chat-input-row">
+            <div class="mock-chat-input">Describe what you observe…</div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <span style="font-size:14px;color:var(--text-muted);">📎</span>
+              <div class="mock-send-btn">↑</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Analysis Panel -->
+      <div class="mock-diag-right">
+        <div class="mock-panel-section">
+          <div class="mock-panel-title">Suspected Causes</div>
+
+          <div class="mock-cause-item">
+            <div class="mock-cause-name">Drum contamination</div>
+            <div class="mock-cause-bar-wrap">
+              <div class="mock-cause-bar" style="width:72%;background:var(--amber);"></div>
+            </div>
+            <div class="mock-cause-conf">Confidence: <span>72%</span></div>
+          </div>
+
+          <div class="mock-cause-item">
+            <div class="mock-cause-name">Fuser temperature</div>
+            <div class="mock-cause-bar-wrap">
+              <div class="mock-cause-bar" style="width:58%;background:var(--indigo);"></div>
+            </div>
+            <div class="mock-cause-conf">Confidence: <span style="color:var(--indigo-light);">58%</span></div>
+          </div>
+
+          <div class="mock-cause-item">
+            <div class="mock-cause-name">Toner defect</div>
+            <div class="mock-cause-bar-wrap">
+              <div class="mock-cause-bar" style="width:31%;background:var(--text-muted);"></div>
+            </div>
+            <div class="mock-cause-conf">Confidence: <span style="color:var(--text-muted);">31%</span></div>
+          </div>
+
+          <div class="mock-cause-item" style="opacity:0.5;">
+            <div class="mock-cause-name" style="text-decoration:line-through;color:var(--text-muted);">Paper moisture</div>
+            <div class="mock-cause-bar-wrap">
+              <div class="mock-cause-bar" style="width:5%;background:var(--text-muted);"></div>
+            </div>
+            <div class="mock-cause-conf"><span style="color:var(--red);">✕ Eliminated</span></div>
+          </div>
+        </div>
+
+        <div class="mock-panel-section">
+          <div class="mock-panel-title">Recommended Inspections</div>
+          <div class="mock-inspect-item">
+            <div class="mock-inspect-num">1</div>
+            <div class="mock-inspect-text">Print a drum test page via Settings > Reports</div>
+          </div>
+          <div class="mock-inspect-item">
+            <div class="mock-inspect-num">2</div>
+            <div class="mock-inspect-text">Remove drum unit, check for streaks on green drum surface</div>
+          </div>
+        </div>
+
+        <div class="mock-panel-section">
+          <div class="mock-panel-title">Source Citations</div>
+          <div class="mock-doc-ref">
+            <div class="mock-doc-icon">📘</div>
+            <div class="mock-doc-info">
+              <div class="mock-doc-title">Service Manual</div>
+              <div class="mock-doc-page">pp. 47–49 · Drum Unit</div>
+            </div>
+          </div>
+          <div class="mock-doc-ref">
+            <div class="mock-doc-icon">📘</div>
+            <div class="mock-doc-info">
+              <div class="mock-doc-title">User Guide</div>
+              <div class="mock-doc-page">p. 112 · Fuser Assembly</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <h4>Left Column: Investigation Thread</h4>
+      <ul>
+        <li>Fixed 260px width sidebar</li>
+        <li>Vertical timeline with dot-connector pattern</li>
+        <li>3 dot states: done (indigo filled), active (teal pulsing), pending (empty border)</li>
+        <li>3 connector states: done (indigo line), active (teal), pending (border color)</li>
+        <li>Steps: Symptom Intake → Cause Generation → Question Phase → Inspection → Elimination → Root Cause → Resolution</li>
+        <li>Each step shows its summary text when complete</li>
+        <li>Active step label in teal, done in indigo</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Center Column: Chat Interface</h4>
+      <ul>
+        <li>Flex column: header → messages → input</li>
+        <li>AI avatar: gradient circle (indigo→teal), shows 🧠</li>
+        <li>AI bubbles: bg-surface background, left-rounded corner square</li>
+        <li>User bubbles: indigo bg, right-rounded corner square</li>
+        <li>Citation chips below AI messages in mono font</li>
+        <li>Follow-up question: amber left-border callout below bubble</li>
+        <li>Quick-reply chips above input for common answers</li>
+        <li>Input bar: attachment icon + send button</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Right Column: Analysis Panel</h4>
+      <ul>
+        <li>220px wide fixed sidebar</li>
+        <li>Three sections: Suspected Causes / Inspections / Citations</li>
+        <li>Cause bars: horizontal progress bars color-coded by confidence (amber=high, indigo=medium, gray=low)</li>
+        <li>Eliminated causes shown struck-through with red ✕</li>
+        <li>Inspection steps numbered in indigo circles</li>
+        <li>Source citations are tappable links to doc viewer</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Visual Communication Strategy</h4>
+      <ul>
+        <li><strong>Investigation:</strong> Teal pulsing dot = active thinking</li>
+        <li><strong>Diagnosis:</strong> Confidence bars update after each answer</li>
+        <li><strong>Root cause:</strong> Final thread node glows indigo on completion</li>
+        <li><strong>Expertise:</strong> Mono font on all data signals precision</li>
+        <li><strong>Elimination:</strong> Struck-through cause with red dot = deduction</li>
+        <li><strong>Sources:</strong> Every claim has a clickable citation chip</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="spec-rule amber mt16">
+    <strong>Hackathon Demo Tip:</strong> For the demo, pre-load the diagnostic session with the first two steps already complete so judges immediately see the Investigation Thread in an active state. The visual impression of a system already thinking is worth 30 seconds of explanation.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+  SECTION 5: COMPANY DASHBOARD
+═══════════════════════════════════════════ -->
+<section class="page-section" id="dashboard">
+  <div class="section-eyebrow">
+    <span class="eyebrow-num">05</span>
+    <span class="eyebrow-tag">Page</span>
+  </div>
+  <h2 class="section-title">Company Dashboard</h2>
+  <p class="page-desc">The B2B side of FixPilot. Companies manage their products and indexed documentation. Design priority: make the indexed doc count highly visible — it's the proof that the platform has done work.</p>
+
+  <h3 class="sub-title mb8">Live Mockup</h3>
+  <div class="wireframe-container">
+    <div class="wireframe-bar">
+      <div class="wf-dot" style="background:#FF5F57"></div>
+      <div class="wf-dot" style="background:#FFBD2E"></div>
+      <div class="wf-dot" style="background:#28C840"></div>
+      <div class="wf-title">fixpilot.io/dashboard — Bosch Home Appliances</div>
+    </div>
+    <div class="mock-ui">
+      <div class="mock-dashboard">
+
+        <!-- Sidebar -->
+        <div class="mock-dash-sidebar">
+          <div class="mock-dash-brand">
+            <div class="mock-logo-mark" style="width:20px;height:20px;font-size:10px;">⚡</div>
+            FixPilot
+          </div>
+          <div class="mock-dash-nav-item active"><span class="mock-dash-icon">📊</span> Overview</div>
+          <div class="mock-dash-nav-item"><span class="mock-dash-icon">📦</span> Products</div>
+          <div class="mock-dash-nav-item"><span class="mock-dash-icon">📄</span> Documents</div>
+          <div class="mock-dash-nav-item"><span class="mock-dash-icon">📈</span> Analytics</div>
+          <div class="mock-dash-nav-item"><span class="mock-dash-icon">⚙️</span> Settings</div>
+          <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);margin-left:-12px;margin-right:-12px;padding-left:12px;padding-right:12px;margin-top:16px;">
+            <div class="mock-dash-nav-item"><span class="mock-dash-icon">🆘</span> Support</div>
+            <div style="padding:8px;margin-top:8px;background:var(--bg-base);border:1px solid var(--border);border-radius:6px;">
+              <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Bosch Home</div>
+              <div style="font-size:11px;font-weight:600;color:var(--text-secondary);">Pro Plan</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main -->
+        <div class="mock-dash-main">
+          <div class="mock-dash-topbar">
+            <div>
+              <div class="mock-dash-heading">Overview</div>
+              <div style="font-size:12px;color:var(--text-muted);">Bosch Home Appliances · bosch-home</div>
+            </div>
+            <div class="mock-dash-add-btn">+ Add Product</div>
+          </div>
+
+          <div class="mock-stat-row">
+            <div class="mock-stat">
+              <div class="mock-stat-value indigo">14</div>
+              <div class="mock-stat-label">Products Listed</div>
+            </div>
+            <div class="mock-stat">
+              <div class="mock-stat-value teal">1,847</div>
+              <div class="mock-stat-label">Docs Indexed</div>
+            </div>
+            <div class="mock-stat">
+              <div class="mock-stat-value amber">8,302</div>
+              <div class="mock-stat-label">Diagnostic Sessions</div>
+            </div>
+            <div class="mock-stat">
+              <div class="mock-stat-value" style="color:var(--green);">91%</div>
+              <div class="mock-stat-label">Resolution Rate</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div style="font-size:13px;font-weight:600;color:var(--text-primary);">Your Products</div>
+            <div style="font-size:12px;color:var(--text-muted);">Showing 3 of 14</div>
+          </div>
+
+          <div class="mock-product-table">
+            <div class="mock-table-header">
+              <div>Product</div>
+              <div>Docs</div>
+              <div>Sessions</div>
+              <div>Status</div>
+              <div></div>
+            </div>
+            <div class="mock-table-row">
+              <div class="mock-table-name"><span style="font-size:16px;">🍳</span> Bosch Series 8 Induction</div>
+              <div class="mock-table-cell">48</div>
+              <div class="mock-table-cell">2,104</div>
+              <div class="mock-table-cell"><span class="mock-status-badge live">Live</span></div>
+              <div class="mock-table-actions"><div class="mock-action-btn">Edit</div><div class="mock-action-btn">+Doc</div></div>
+            </div>
+            <div class="mock-table-row">
+              <div class="mock-table-name"><span style="font-size:16px;">🫧</span> Bosch Serie 6 Dishwasher</div>
+              <div class="mock-table-cell">31</div>
+              <div class="mock-table-cell">1,892</div>
+              <div class="mock-table-cell"><span class="mock-status-badge live">Live</span></div>
+              <div class="mock-table-actions"><div class="mock-action-btn">Edit</div><div class="mock-action-btn">+Doc</div></div>
+            </div>
+            <div class="mock-table-row">
+              <div class="mock-table-name"><span style="font-size:16px;">🌀</span> Bosch WAX32EH0GB Washer</div>
+              <div class="mock-table-cell">12</div>
+              <div class="mock-table-cell">—</div>
+              <div class="mock-table-cell"><span class="mock-status-badge indexing">Indexing</span></div>
+              <div class="mock-table-actions"><div class="mock-action-btn">Edit</div><div class="mock-action-btn">+Doc</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <h4>Sidebar Navigation (200px)</h4>
+      <ul>
+        <li>Brand logo + company name at top</li>
+        <li>Nav items: Overview, Products, Documents, Analytics, Settings</li>
+        <li>Active state: indigo background + left border accent</li>
+        <li>Company plan badge pinned at bottom</li>
+        <li>Support link before bottom</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Stats Row — Most Important</h4>
+      <ul>
+        <li>4 KPI cards in a single row</li>
+        <li>Each stat: large mono number (color-coded) + small label</li>
+        <li>Indexed Docs in teal — the core platform value proof</li>
+        <li>Resolution Rate in green — outcomes matter</li>
+        <li>Diagnostic Sessions in amber — usage proof</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Product Table Design</h4>
+      <ul>
+        <li>5 columns: Product name / Docs / Sessions / Status / Actions</li>
+        <li>Row hover: bg-surface background</li>
+        <li>Status: "Live" (green) or "Indexing" (amber pulsing)</li>
+        <li>Action buttons: Edit, +Doc (inline)</li>
+        <li>Emoji icon before product name for quick visual scan</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Empty State Design</h4>
+      <ul>
+        <li>No products yet: centered illustration + "Add your first product"</li>
+        <li>Product added but no docs: amber callout "Add documentation"</li>
+        <li>Docs uploading: progress animation in table row</li>
+        <li>All indexed: green confirmation badge</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+  SECTION 6: UPLOAD FLOW
+═══════════════════════════════════════════ -->
+<section class="page-section" id="upload">
+  <div class="section-eyebrow">
+    <span class="eyebrow-num">06</span>
+    <span class="eyebrow-tag">Page</span>
+  </div>
+  <h2 class="section-title">Upload Flow</h2>
+  <p class="page-desc">The upload experience must be satisfying and confidence-building. Companies need to trust that their documents are being properly ingested. Show progress, show indexing status, and celebrate completion.</p>
+
+  <h3 class="sub-title mb8">Live Mockup</h3>
+  <div class="wireframe-container">
+    <div class="wireframe-bar">
+      <div class="wf-dot" style="background:#FF5F57"></div>
+      <div class="wf-dot" style="background:#FFBD2E"></div>
+      <div class="wf-dot" style="background:#28C840"></div>
+      <div class="wf-title">fixpilot.io/dashboard/upload — Bosch Series 8 Induction</div>
+    </div>
+    <div class="mock-ui">
+      <!-- Tab selector -->
+      <div style="display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:20px;width:fit-content;">
+        <div style="padding:8px 16px;background:var(--indigo-glow);border-right:1px solid var(--border);font-size:12px;font-weight:600;color:var(--indigo-light);">📄 PDF / Doc</div>
+        <div style="padding:8px 16px;border-right:1px solid var(--border);font-size:12px;font-weight:500;color:var(--text-muted);">🎬 Video</div>
+        <div style="padding:8px 16px;border-right:1px solid var(--border);font-size:12px;font-weight:500;color:var(--text-muted);">🌐 URL</div>
+        <div style="padding:8px 16px;font-size:12px;font-weight:500;color:var(--text-muted);">🖼 Image</div>
+      </div>
+
+      <!-- Dropzone -->
+      <div class="mock-upload-area">
+        <div class="mock-upload-icon">📁</div>
+        <div class="mock-upload-title">Drop PDFs or documents here</div>
+        <div class="mock-upload-sub">or <span>click to browse</span> · PDF, DOCX, TXT, MD up to 50MB each</div>
+      </div>
+
+      <!-- Upload items -->
+      <div class="mock-upload-items">
+        <div class="mock-upload-item">
+          <div class="mock-upload-file-icon">📘</div>
+          <div class="mock-upload-file-info">
+            <div class="mock-upload-file-name">BoschSeries8_ServiceManual.pdf</div>
+            <div class="mock-upload-progress-wrap">
+              <div class="mock-upload-progress-bar" style="width:100%;"></div>
+            </div>
+          </div>
+          <div class="mock-upload-file-status upload-done">✓ Indexed</div>
+        </div>
+
+        <div class="mock-upload-item">
+          <div class="mock-upload-file-icon">📄</div>
+          <div class="mock-upload-file-info">
+            <div class="mock-upload-file-name">BoschSeries8_QuickGuide.pdf</div>
+            <div class="mock-upload-progress-wrap">
+              <div class="mock-upload-progress-bar" style="width:100%;background:var(--amber);"></div>
+            </div>
+          </div>
+          <div class="mock-upload-file-status upload-indexing">⟳ Indexing…</div>
+        </div>
+
+        <div class="mock-upload-item">
+          <div class="mock-upload-file-icon">📊</div>
+          <div class="mock-upload-file-info">
+            <div class="mock-upload-file-name">FaultCodes_ErrorReference.xlsx</div>
+            <div class="mock-upload-progress-wrap">
+              <div class="mock-upload-progress-bar" style="width:62%;"></div>
+            </div>
+          </div>
+          <div class="mock-upload-file-status upload-uploading">62%</div>
+        </div>
+
+        <div class="mock-upload-item" style="opacity:0.5;border-style:dashed;">
+          <div class="mock-upload-file-icon">📋</div>
+          <div class="mock-upload-file-info">
+            <div class="mock-upload-file-name">InstallationGuide_v2.pdf</div>
+            <div class="mock-upload-progress-wrap">
+              <div class="mock-upload-progress-bar" style="width:0%;"></div>
+            </div>
+          </div>
+          <div class="mock-upload-file-status" style="color:var(--text-muted);">Queued</div>
+        </div>
+      </div>
+
+      <!-- URL input tab (for reference) -->
+      <div style="margin-top:16px;background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:8px;">Add URL Resource</div>
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;padding:9px 12px;font-size:13px;color:var(--text-muted);">https://support.bosch-home.com/…</div>
+          <div style="padding:9px 16px;background:var(--indigo);border-radius:6px;font-size:12px;font-weight:600;color:white;cursor:pointer;">Index URL</div>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">FixPilot will crawl and index this page and its linked documentation.</div>
+      </div>
+
+      <!-- Progress summary -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding:12px 16px;background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;">
+        <div style="font-size:12px;color:var(--text-secondary);">4 files · 1 indexed · 1 indexing · 1 uploading · 1 queued</div>
+        <div style="font-size:12px;font-weight:600;color:var(--indigo-light);">View in Dashboard →</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <h4>Upload Method Tabs</h4>
+      <ul>
+        <li>Tab bar: PDF/Doc · Video · URL · Image</li>
+        <li>Active tab: indigo glow background</li>
+        <li>Each tab shows a different upload interface below</li>
+        <li>URL tab: text input + "Index URL" button</li>
+        <li>Video tab: dropzone + YouTube/Vimeo link option</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>File Item States</h4>
+      <ul>
+        <li><strong>Queued:</strong> dashed border, 0% bar, gray label</li>
+        <li><strong>Uploading:</strong> indigo progress bar, percentage label</li>
+        <li><strong>Processing:</strong> amber bar at 100%, "Processing…"</li>
+        <li><strong>Indexing:</strong> amber spinner label, amber bar</li>
+        <li><strong>Done:</strong> full bar in indigo-teal gradient, green ✓</li>
+        <li><strong>Error:</strong> red border, red ✗ with error message</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="spec-rule green">
+    <strong>Satisfaction Design:</strong> When all files reach "Indexed" state, show a full-width success banner: "All 4 resources indexed. Your product is now diagnosis-ready." with a "View Product" button. This moment is emotionally satisfying and is worth demoing explicitly — it's the payoff of the upload flow.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+  SECTION 7: NAVIGATION SYSTEM
+═══════════════════════════════════════════ -->
+<section class="page-section" id="nav">
+  <div class="section-eyebrow">
+    <span class="eyebrow-num">07</span>
+    <span class="eyebrow-tag">System</span>
+  </div>
+  <h2 class="section-title">Navigation System</h2>
+  <p class="page-desc">FixPilot has two audiences (consumers and companies) and two navigation modes (top bar for public pages, sidebar for dashboard). Both share the same visual language but serve different information architectures.</p>
+
+  <h3 class="sub-title mb8">Public Header (Consumer-Facing)</h3>
+  <div class="wireframe-container mb16">
+    <div class="wireframe-bar">
+      <div class="wf-dot" style="background:#FF5F57"></div>
+      <div class="wf-title">Public Navigation</div>
+    </div>
+    <div class="mock-ui">
+      <div class="mock-nav" style="margin-bottom:0;">
+        <div class="mock-nav-logo"><div class="mock-logo-mark">⚡</div> FixPilot</div>
+        <div class="mock-nav-links">
+          <div class="mock-nav-link">Products</div>
+          <div class="mock-nav-link">For Companies</div>
+          <div class="mock-nav-link">Pricing</div>
+          <div class="mock-nav-link">Docs</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div style="font-size:12px;font-weight:500;color:var(--text-secondary);">Sign in</div>
+          <div class="mock-nav-cta">Start for free</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-title mb8">Mobile Bottom Navigation</h3>
+  <div class="wireframe-container mb16">
+    <div class="wireframe-bar">
+      <div class="wf-dot" style="background:#FF5F57"></div>
+      <div class="wf-title">Mobile Navigation (≤768px)</div>
+    </div>
+    <div class="mock-ui" style="max-width:360px;">
+      <div class="mock-mobile-nav">
+        <div class="mock-mobile-nav-item"><div class="mock-mobile-nav-icon">🏠</div><div>Home</div></div>
+        <div class="mock-mobile-nav-item active"><div class="mock-mobile-nav-icon">🔍</div><div>Products</div></div>
+        <div class="mock-mobile-nav-item"><div class="mock-mobile-nav-icon">🧠</div><div>Diagnose</div></div>
+        <div class="mock-mobile-nav-item"><div class="mock-mobile-nav-icon">📊</div><div>Dashboard</div></div>
+        <div class="mock-mobile-nav-item"><div class="mock-mobile-nav-icon">👤</div><div>Account</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec-grid">
+    <div class="spec-card">
+      <h4>Public Header Specs</h4>
+      <ul>
+        <li>Height: 56px, sticky top-0</li>
+        <li>Background: rgba(10,11,15,0.85) + backdrop-blur(20px)</li>
+        <li>Border-bottom: 1px solid border token</li>
+        <li>Logo: wordmark + icon mark left</li>
+        <li>Links: text-secondary, hover → bg-elevated</li>
+        <li>CTA: indigo bg, right side, "Start for free"</li>
+        <li>Signed-in state: replace links with user avatar dropdown</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Dashboard Sidebar Specs</h4>
+      <ul>
+        <li>Width: 200px on desktop, collapsible to 52px icon-only</li>
+        <li>Background: bg-surface, border-right</li>
+        <li>Company brand at top (logo + name)</li>
+        <li>Nav items: 40px height, 8px border-radius</li>
+        <li>Active: indigo-glow bg + indigo-light text</li>
+        <li>Collapse trigger: icon at bottom</li>
+        <li>Mobile: drawer from left, full width overlay</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Mobile Navigation</h4>
+      <ul>
+        <li>Fixed bottom bar on screens ≤768px</li>
+        <li>5 items: Home, Products, Diagnose, Dashboard, Account</li>
+        <li>Active: indigo label + slightly larger icon</li>
+        <li>Safe area padding for notch-aware devices</li>
+        <li>Blur background (same as header)</li>
+        <li>Diagnose tab uses teal accent (diagnostic color)</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Diagnostic Page Nav</h4>
+      <ul>
+        <li>Minimal top bar: product name + session ID only</li>
+        <li>No full nav links — maximum screen for 3-column layout</li>
+        <li>Back chevron → returns to Product Detail</li>
+        <li>Session ID in mono font top-right</li>
+        <li>Export/Share button in header (session transcript)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+  SECTION 8: SHARED COMPONENTS
+═══════════════════════════════════════════ -->
+<section class="page-section" id="components">
+  <div class="section-eyebrow">
+    <span class="eyebrow-num">08</span>
+    <span class="eyebrow-tag">System</span>
+  </div>
+  <h2 class="section-title">Shared Components & Interactions</h2>
+  <p class="page-desc">These components appear across multiple pages. Define them once in shadcn/ui with token-based variants.</p>
+
+  <div class="spec-grid">
+    <div class="spec-card">
+      <h4>Button Variants</h4>
+      <ul>
+        <li><strong>Primary:</strong> bg-indigo, white text, hover: brightness(1.1)</li>
+        <li><strong>Secondary:</strong> bg-elevated, border, text-primary</li>
+        <li><strong>Ghost:</strong> transparent, text-secondary, hover: bg-elevated</li>
+        <li><strong>Danger:</strong> bg-red/10, red text, border-red/20</li>
+        <li><strong>Success:</strong> bg-green/10, green text</li>
+        <li>All: 8px border-radius, 500 weight, 12–13px font-size</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Status Badge Variants</h4>
+      <ul>
+        <li><strong>Live:</strong> green bg/10, green text, green border/20</li>
+        <li><strong>Indexing:</strong> amber bg/10, amber text — with pulse dot</li>
+        <li><strong>Processing:</strong> indigo bg/10, indigo text</li>
+        <li><strong>Error:</strong> red bg/10, red text</li>
+        <li><strong>Draft:</strong> bg-elevated, text-muted</li>
+        <li>All: 10px font, 700 weight, 3px border-radius, uppercase</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Input Fields</h4>
+      <ul>
+        <li>Background: bg-elevated</li>
+        <li>Border: border token, focus → indigo</li>
+        <li>Placeholder: text-muted</li>
+        <li>Text: text-primary</li>
+        <li>Error: red border + error message below</li>
+        <li>Font-size: 14px, line-height: 1.5</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <h4>Toast Notifications</h4>
+      <ul>
+        <li>Position: bottom-right, z-50</li>
+        <li>Success: left border green, green icon</li>
+        <li>Error: left border red, red icon</li>
+        <li>Info: left border indigo, indigo icon</li>
+        <li>Auto-dismiss: 4s, slide-out animation</li>
+        <li>Background: bg-surface, border</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub-title mb8 mt16" id="interactions">Interaction Principles</h3>
+  <div class="spec-rule">
+    <strong>Hover states:</strong> All interactive elements have a defined hover: either background shift (bg-surface → bg-elevated), border color change (→ indigo at 40% opacity), or transform (cards: translateY(-2px)). Never rely on cursor change alone.
+  </div>
+  <div class="spec-rule teal">
+    <strong>Loading states:</strong> Never show a blank screen. Use skeleton loaders that match the shape of the content. The Diagnostic page chat uses a typing indicator (3-dot pulse in teal) while AI responds.
+  </div>
+  <div class="spec-rule amber">
+    <strong>Motion:</strong> Use CSS transitions at 150–200ms ease for micro-interactions. The Investigation Thread nodes use a 300ms fade-in as they appear. Avoid animating things the user didn't trigger — the teal pulse on the active node is the only ambient animation.
+  </div>
+  <div class="spec-rule green">
+    <strong>Responsive breakpoints:</strong> Desktop-first but fully mobile-optimized. At ≤768px: sidebar nav collapses to bottom tab bar; 3-column diagnostic collapses to stacked tabs (Chat primary, Investigation and Analysis as swipeable panels); product grid collapses to 1-column.
+  </div>
+
+  <!-- Final Note -->
+  <div style="margin-top:48px;padding:32px;background:linear-gradient(135deg,rgba(79,70,229,0.1),rgba(13,148,136,0.1));border:1px solid rgba(99,102,241,0.2);border-radius:var(--radius-xl);text-align:center;">
+    <div style="font-size:22px;margin-bottom:12px;">⚡</div>
+    <div style="font-family:'Fraunces',serif;font-size:26px;font-weight:900;letter-spacing:-0.5px;color:var(--text-primary);margin-bottom:8px;">Built to win.</div>
+    <div style="font-size:14px;color:var(--text-secondary);max-width:480px;margin:0 auto;">FixPilot's design is anchored by a single insight: <em>watching a system think</em> is more impressive than watching it answer. The Investigation Thread makes the AI's reasoning visible. That's the demo. That's the win.</div>
+    <div style="margin-top:16px;font-size:11px;font-family:var(--font-mono);color:var(--text-muted);">CodeCitadel · FixPilot Frontend Spec v1.0</div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+// Active TOC link on scroll
+const sections = document.querySelectorAll('.page-section');
+const tocLinks = document.querySelectorAll('.toc a');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
