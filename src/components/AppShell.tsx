@@ -2,24 +2,40 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 const navItems = [
   { href: "/marketplace", label: "Products" },
-  { href: "/dashboard", label: "For Companies" },
-  { href: "/diagnostic", label: "Diagnose" },
+  { href: "/dashboard",   label: "For Companies" },
+  { href: "/diagnostic",  label: "Diagnose" },
 ];
 
 const mobileItems = [
   { href: "/marketplace", icon: "🏠", label: "Home" },
   { href: "/marketplace", icon: "🔍", label: "Products" },
-  { href: "/diagnostic", icon: "🧠", label: "Diagnose" },
-  { href: "/dashboard", icon: "📊", label: "Dashboard" },
-  { href: "/dashboard", icon: "👤", label: "Account" },
+  { href: "/diagnostic",  icon: "🧠", label: "Diagnose" },
+  { href: "/dashboard",   icon: "📊", label: "Dashboard" },
+  { href: "/dashboard",   icon: "👤", label: "Account" },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  // Sync theme from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("fp-theme") as "dark" | "light" | null;
+      if (stored) setTheme(stored);
+    } catch { /* ignore */ }
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("fp-theme", next); } catch { /* ignore */ }
+  };
 
   return (
     <div className="app-shell">
@@ -29,6 +45,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="mock-logo-mark">⚡</span>
             FixPilot
           </Link>
+
           <div className="mock-nav-links">
             {navItems.map((item) => (
               <Link
@@ -40,12 +57,25 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Link>
             ))}
           </div>
-          <Link className="mock-nav-cta" href="/dashboard">
-            Start for free
-          </Link>
+
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <button
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            >
+              {theme === "dark" ? "☀️" : "🌙"}
+            </button>
+            <Link className="mock-nav-cta" href="/dashboard">
+              Start for free
+            </Link>
+          </div>
         </nav>
+
         {children}
       </main>
+
       <nav className="mock-mobile-nav" aria-label="Mobile navigation">
         {mobileItems.map((item) => (
           <Link

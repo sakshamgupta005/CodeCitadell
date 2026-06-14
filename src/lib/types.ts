@@ -17,6 +17,8 @@ export type ProductView = Product & {
   year: string;
   productType: string;
   featured?: boolean;
+  commonIssues?: string[];
+  documentation?: Array<{ icon: string; name: string; meta: string; featured?: boolean }>;
 };
 
 export type ImportStatus = {

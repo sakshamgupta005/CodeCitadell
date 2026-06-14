@@ -21,7 +21,7 @@ export function ProductDetailView({ product }: { product: ProductView }) {
           <section className="mock-detail-docs-section">
             <div className="mock-detail-section-title">Documentation · {product.docs} Resources</div>
             <div className="mock-doc-list">
-              {documentation.map((document) => (
+              {(product.documentation || []).map((document) => (
                 <div
                   className={`mock-doc-entry ${document.featured ? "featured" : ""}`}
                   key={document.name}
@@ -37,7 +37,7 @@ export function ProductDetailView({ product }: { product: ProductView }) {
           <section>
             <div className="mock-detail-section-title">Common Issues</div>
             <div className="issue-row">
-              {commonIssues.map((issue) => (
+              {(product.commonIssues || []).map((issue) => (
                 <Link
                   className="issue-pill"
                   href={`/diagnostic?productId=${product.id}&issue=${encodeURIComponent(issue)}`}

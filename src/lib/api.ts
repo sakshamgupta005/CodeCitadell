@@ -61,8 +61,32 @@ export async function getProduct(productId: string): Promise<ProductView | null>
 
 export async function getImportStatus(): Promise<ImportStatusResponse | null> {
   try {
-    return await fetchJson<ImportStatusResponse>("/import/status");
+    const url = typeof window === "undefined" ? `${API_BASE_URL}/import/status` : "/api/import/status";
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) return null;
+    return await response.json() as Promise<ImportStatusResponse>;
   } catch {
     return null;
   }
+}
+
+export async function createProduct(payload: {
+  id?: string;
+  name: string;
+  category: string;
+  description: string;
+  image_url: string;
+}): Promise<Product> {
+  const response = await fetch("/api/products", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData?.detail || `Failed to create product: ${response.status}`);
+  }
+
+  return response.json() as Promise<Product>;
 }

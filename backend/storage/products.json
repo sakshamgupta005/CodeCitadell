@@ -1,5 +1,47 @@
 [
   {
+    "id": "hp-laserjet-pro-m404n",
+    "name": "HP LaserJet Pro M404n",
+    "category": "Electronics",
+    "description": "A high-speed monochrome laser printer designed for small to medium workgroups. Supports USB 2.0 and Gigabit Ethernet connectivity. Rated for 80,000 pages/month duty cycle.",
+    "image_url": "https://images.unsplash.com/photo-1563206767-5b18f218e8de"
+  },
+  {
+    "id": "daikin-ftxm35tvma",
+    "name": "Daikin FTXM35TVMA",
+    "category": "HVAC",
+    "description": "Wall mounted split air conditioner with inverter controls, humidity management, and service diagnostics.",
+    "image_url": "https://images.unsplash.com/photo-1621905252507-b354bc25edac"
+  },
+  {
+    "id": "caterpillar-320-gc",
+    "name": "Caterpillar 320 GC",
+    "category": "Industrial",
+    "description": "Hydraulic excavator with electronic monitoring, fault codes, and planned maintenance documentation.",
+    "image_url": "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b"
+  },
+  {
+    "id": "bosch-series-8-induction",
+    "name": "Bosch Series 8 Induction",
+    "category": "Appliances",
+    "description": "Premium induction cooktop with touch controls, power management, and safety lock diagnostics.",
+    "image_url": "https://images.unsplash.com/photo-1556911220-e15b29be8c8f"
+  },
+  {
+    "id": "siemens-s7-1200-plc",
+    "name": "Siemens S7-1200 PLC",
+    "category": "Industrial",
+    "description": "Compact industrial PLC for automation systems with hardware diagnostics and module status references.",
+    "image_url": "https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6"
+  },
+  {
+    "id": "ford-f-150-2023-raptor",
+    "name": "Ford F-150 2023 Raptor",
+    "category": "Automotive",
+    "description": "Performance pickup with service manuals, drivetrain diagnostics, and maintenance procedures.",
+    "image_url": "https://images.unsplash.com/photo-1605558202076-1692af9a01b4"
+  },
+  {
     "id": "moss-router-x1",
     "name": "Moss Router X1",
     "category": "Networking",
@@ -19,5 +61,12 @@
     "category": "IoT Sensors",
     "description": "Wireless temperature sensor with long-life battery and mobile alerts.",
     "image_url": "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
+  },
+  {
+    "id": "aeroforce-router-pro",
+    "name": "AeroForce Router Pro",
+    "category": "Networking",
+    "description": "High power tri-band router supporting Wi-Fi 7.",
+    "image_url": "https://images.unsplash.com/photo-1606904825846-647eb07f5be2"
   }
 ]

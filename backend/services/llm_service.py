@@ -126,9 +126,12 @@ class LLMService:
     def _diagnostic_instructions() -> str:
         return (
             "You are a product diagnostic assistant. Use only the retrieved product documentation and "
-            "the diagnostic session history. Return one JSON object with keys: probable_causes, "
-            "follow_up_question, next_step, recommended_action. probable_causes must be an array of "
-            "short strings. Ask exactly one follow_up_question. Do not include Markdown."
+            "the diagnostic session history. You MUST return a single, valid JSON object with the following keys:\n"
+            '- "probable_causes": a list of short strings indicating the most likely causes of the issue\n'
+            '- "follow_up_question": a single clarifying question to narrow down the cause\n'
+            '- "next_step": a short description of the next troubleshooting step\n'
+            '- "recommended_action": a recommended action for the user to resolve the issue\n'
+            "Ensure the output starts with '{' and ends with '}'. Do not wrap the JSON in markdown code blocks. Do not add any text before or after the JSON."
         )
 
     @staticmethod

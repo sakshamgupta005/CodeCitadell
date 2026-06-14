@@ -36,6 +36,27 @@ class DiagnosticService:
             history=history,
             top_k=payload.top_k,
         )
+
+        if not documents:
+            latest_question = "No supporting documentation was found in Moss for this product issue."
+            next_step = "No supporting documentation found in Moss."
+            recommended_action = "Please upload product manuals or support guides to index them into the Moss knowledge base."
+            self.store.update_diagnostic_session(
+                session_id=str(session["id"]),
+                probable_causes=[],
+                latest_question=latest_question,
+                next_step=next_step,
+                recommended_action=recommended_action,
+            )
+            return DiagnosticResponse(
+                session_id=str(session["id"]),
+                probable_causes=[],
+                follow_up_question=latest_question,
+                next_step=next_step,
+                recommended_action=recommended_action,
+                documentation_references=[],
+            )
+
         diagnosis = await self.llm_service.diagnose_product_issue(
             product_name=product.name,
             issue_description=issue_description,

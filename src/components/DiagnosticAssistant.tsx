@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { DiagnosticResponse, ProductView } from "@/lib/types";
 
 type Message = {
@@ -23,29 +23,36 @@ export function DiagnosticAssistant({
   const [input, setInput] = useState(initialIssue ?? "");
   const [isLoading, setIsLoading] = useState(false);
   const [diagnostic, setDiagnostic] = useState<DiagnosticResponse | null>(null);
-  const [messages, setMessages] = useState<Message[]>(() => [
-    {
-      role: "ai",
-      text: `I'm analyzing the ${product.name}. Tell me exactly what you're seeing: when it happens, what the output looks like, and any error lights.`,
-    },
-    ...(initialIssue
-      ? [
-          {
-            role: "user" as const,
-            text: initialIssue,
-          },
-        ]
-      : []),
-    {
-      role: "ai",
-      text:
-        "Intermittent symptoms narrow this significantly. I am tracking likely causes against indexed product documentation and will ask targeted follow-up questions.",
-      citation: "📄 Service Manual · Troubleshooting",
-      followUp: initialIssue
-        ? "Does the problem appear in a repeatable pattern, or does it show up randomly?"
-        : "Describe the symptom in as much detail as you can.",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    if (initialIssue) {
+      return [
+        {
+          role: "ai",
+          text: `I'm analyzing the ${product.name}. Tell me exactly what you're seeing: when it happens, what the output looks like, and any error lights.`,
+        },
+      ];
+    } else {
+      return [
+        {
+          role: "ai",
+          text: `I'm analyzing the ${product.name}. Tell me exactly what you're seeing: when it happens, what the output looks like, and any error lights.`,
+        },
+        {
+          role: "ai",
+          text:
+            "Intermittent symptoms narrow this significantly. I am tracking likely causes against indexed product documentation and will ask targeted follow-up questions.",
+          citation: "📄 Service Manual · Troubleshooting",
+          followUp: "Describe the symptom in as much detail as you can.",
+        },
+      ];
+    }
+  });
+
+  useEffect(() => {
+    if (initialIssue && !sessionId && messages.length === 1) {
+      void submit(initialIssue);
+    }
+  }, [initialIssue]);
 
   const causes = useMemo(() => {
     if (diagnostic?.probable_causes.length) {
@@ -84,6 +91,12 @@ export function DiagnosticAssistant({
           answer: sessionId ? trimmed : undefined,
         }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData?.detail || `API error: ${response.status}`);
+      }
+
       const payload = (await response.json()) as DiagnosticResponse;
       setDiagnostic(payload);
       setSessionId(payload.session_id);
@@ -98,14 +111,14 @@ export function DiagnosticAssistant({
           followUp: payload.follow_up_question,
         },
       ]);
-    } catch {
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : "Connection failed";
       setMessages((current) => [
         ...current,
         {
           role: "ai",
-          text:
-            "I could not reach the diagnostic API, so I am holding the current analysis state. Check that the FastAPI backend is running on port 8000.",
-          followUp: "Try again once the backend is available.",
+          text: `Diagnostic API call failed: ${errorMsg}. Please ensure the backend is running and healthy.`,
+          followUp: "Try submitting again once the service is available.",
         },
       ]);
     } finally {

@@ -28,7 +28,7 @@ class Settings:
     github_max_pages: int = int(os.getenv("GITHUB_MAX_PAGES", "3"))
     github_timeout_seconds: int = int(os.getenv("GITHUB_TIMEOUT_SECONDS", "20"))
 
-    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
     gemini_timeout_seconds: int = int(os.getenv("GEMINI_TIMEOUT_SECONDS", "30"))
     max_context_chars: int = int(os.getenv("MAX_CONTEXT_CHARS", "14000"))
 

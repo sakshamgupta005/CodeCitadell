@@ -1,0 +1,50 @@
+{
+  "product:aeroforce-router-pro:text:d92cc36485aa2afe3dcac962:1": {
+    "id": "product:aeroforce-router-pro:text:d92cc36485aa2afe3dcac962:1",
+    "text": "Product ID: aeroforce-router-pro\nProduct: AeroForce Router Pro\nCategory: Networking\nDocument: Test Title\n\nTest document content.",
+    "metadata": {
+      "source": "product_knowledge",
+      "type": "text",
+      "product_id": "aeroforce-router-pro",
+      "product_name": "AeroForce Router Pro",
+      "product_category": "Networking",
+      "title": "Test Title",
+      "source_id": "d92cc36485aa2afe3dcac962",
+      "chunk_index": "1",
+      "chunk_count": "1",
+      "created_at": "2026-06-14T13:19:23.088204+00:00"
+    }
+  },
+  "product:aeroforce-router-pro:text:1efb605782db4ecdbf8f4977:1": {
+    "id": "product:aeroforce-router-pro:text:1efb605782db4ecdbf8f4977:1",
+    "text": "Product ID: aeroforce-router-pro\nProduct: AeroForce Router Pro\nCategory: Networking\nDocument: My Title\n\nHello world content",
+    "metadata": {
+      "source": "product_knowledge",
+      "type": "text",
+      "product_id": "aeroforce-router-pro",
+      "product_name": "AeroForce Router Pro",
+      "product_category": "Networking",
+      "title": "My Title",
+      "source_id": "1efb605782db4ecdbf8f4977",
+      "chunk_index": "1",
+      "chunk_count": "1",
+      "created_at": "2026-06-14T14:37:21.853786+00:00"
+    }
+  },
+  "product:aeroforce-router-pro:text:1d63f2051d8dc2a3cb8421a1:1": {
+    "id": "product:aeroforce-router-pro:text:1d63f2051d8dc2a3cb8421a1:1",
+    "text": "Product ID: aeroforce-router-pro\nProduct: AeroForce Router Pro\nCategory: Networking\nDocument: AeroForce Wi-Fi 7 FAQ\n\nAeroForce Wi-Fi 7 Router supports the new multi-link operation (MLO) protocol. If MLO fails to associate, toggle the MLO compatibility mode switch in the wireless admin panel under Advanced > Wireless 7 Settings. The status indicator on the top panel will turn violet when Wi-Fi 7 MLO is active.",
+    "metadata": {
+      "source": "product_knowledge",
+      "type": "text",
+      "product_id": "aeroforce-router-pro",
+      "product_name": "AeroForce Router Pro",
+      "product_category": "Networking",
+      "title": "AeroForce Wi-Fi 7 FAQ",
+      "source_id": "1d63f2051d8dc2a3cb8421a1",
+      "chunk_index": "1",
+      "chunk_count": "1",
+      "created_at": "2026-06-14T14:39:45.761349+00:00"
+    }
+  }
+}

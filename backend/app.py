@@ -59,6 +59,11 @@ async def unhandled_error_handler(_: Request, exc: Exception) -> JSONResponse:
 
 @app.get("/health", tags=["system"])
 async def health() -> dict[str, str]:
+    import inspect
+    from services.moss_service import MossService
+    print("--- ACTIVE MOSS SERVICE SOURCE ---")
+    print(inspect.getsource(MossService.add_documents))
+    print("----------------------------------")
     return {"status": "ok"}
 
 

@@ -1,1 +1,688 @@
-{}
+{
+  "98d10e17-1616-4d6e-ae82-8a5b93b91655": {
+    "id": "98d10e17-1616-4d6e-ae82-8a5b93b91655",
+    "product_id": "moss-router-x1",
+    "issue_description": "The router powers on but drops Wi-Fi every few minutes.",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T10:43:01.958936+00:00",
+    "updated_at": "2026-06-14T10:43:07.768768+00:00"
+  },
+  "2d2c3969-d441-4bcb-8635-a64a25dc2b7c": {
+    "id": "2d2c3969-d441-4bcb-8635-a64a25dc2b7c",
+    "product_id": "moss-router-x1",
+    "issue_description": "The router status light pulses amber and drops connection.",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T10:43:59.580397+00:00",
+    "updated_at": "2026-06-14T10:43:59.601171+00:00"
+  },
+  "17d3fc66-d343-4f0d-92da-050657933ed6": {
+    "id": "17d3fc66-d343-4f0d-92da-050657933ed6",
+    "product_id": "moss-router-x1",
+    "issue_description": "The router status light pulses amber and drops connection.",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T10:53:33.641972+00:00",
+    "updated_at": "2026-06-14T10:53:33.655226+00:00"
+  },
+  "15141d04-b45e-4cfd-890a-25eaf37fe593": {
+    "id": "15141d04-b45e-4cfd-890a-25eaf37fe593",
+    "product_id": "moss-router-x1",
+    "issue_description": "The router status light pulses amber and drops connection.",
+    "answers": [],
+    "latest_question": "Have you recently updated the firmware on your Moss Router X1?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Outdated router firmware",
+      "Wi-Fi interference from adjacent channels"
+    ],
+    "next_step": "Update the router firmware.",
+    "recommended_action": "Update the router firmware immediately to address the hardware synchronization failure indicated by the pulsing amber light.",
+    "created_at": "2026-06-14T10:54:30.168603+00:00",
+    "updated_at": "2026-06-14T10:54:42.837501+00:00"
+  },
+  "b4c34099-ec71-4ab9-9ac4-6cb89ffed0ab": {
+    "id": "b4c34099-ec71-4ab9-9ac4-6cb89ffed0ab",
+    "product_id": "moss-router-x1",
+    "issue_description": "The router status light pulses amber.",
+    "answers": [],
+    "latest_question": "Have you attempted to update the router's firmware yet?",
+    "probable_causes": [
+      "Hardware synchronization failure"
+    ],
+    "next_step": "Update the router firmware immediately.",
+    "recommended_action": "Update the Moss Router X1 firmware.",
+    "created_at": "2026-06-14T10:54:53.413945+00:00",
+    "updated_at": "2026-06-14T10:54:57.983636+00:00"
+  },
+  "0a601ee4-b4c7-45c3-81b9-622382cb59a3": {
+    "id": "0a601ee4-b4c7-45c3-81b9-622382cb59a3",
+    "product_id": "moss-router-x1",
+    "issue_description": "The router powers on but drops Wi-Fi every few minutes.",
+    "answers": [],
+    "latest_question": "What is the color and state of the router's status light?",
+    "probable_causes": [
+      "Wi-Fi interference from adjacent channels",
+      "Outdated router firmware"
+    ],
+    "next_step": "Check the router's current firmware version.",
+    "recommended_action": "Update the router's firmware.",
+    "created_at": "2026-06-14T11:17:08.550323+00:00",
+    "updated_at": "2026-06-14T11:17:40.321672+00:00"
+  },
+  "80807629-276b-4214-88cf-cd9ae260a95c": {
+    "id": "80807629-276b-4214-88cf-cd9ae260a95c",
+    "product_id": "hp-laserjet-pro-m404n",
+    "issue_description": "The printer does not power on",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T11:18:47.523760+00:00",
+    "updated_at": "2026-06-14T11:18:50.622689+00:00"
+  },
+  "5659959a-a5ee-4fac-9f68-49911d1620ad": {
+    "id": "5659959a-a5ee-4fac-9f68-49911d1620ad",
+    "product_id": "hp-laserjet-pro-m404n",
+    "issue_description": "The printer does not power on",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T11:19:46.659672+00:00",
+    "updated_at": "2026-06-14T11:19:50.910868+00:00"
+  },
+  "b38d9215-f240-46c7-b92d-6527037a3a7d": {
+    "id": "b38d9215-f240-46c7-b92d-6527037a3a7d",
+    "product_id": "moss-router-x1",
+    "issue_description": "The router powers on but drops Wi-Fi every few minutes.",
+    "answers": [],
+    "latest_question": "What is the color and behavior of the router's status light?",
+    "probable_causes": [
+      "Wi-Fi interference from adjacent channels",
+      "Outdated router firmware"
+    ],
+    "next_step": "Please observe the router's status light and describe its color and behavior.",
+    "recommended_action": "Providing this information will help us determine the most appropriate next steps, such as updating firmware or adjusting Wi-Fi channels.",
+    "created_at": "2026-06-14T11:23:33.059987+00:00",
+    "updated_at": "2026-06-14T11:23:41.877362+00:00"
+  },
+  "e2bc35b8-43fa-4d4f-9e39-75e42c60a8ea": {
+    "id": "e2bc35b8-43fa-4d4f-9e39-75e42c60a8ea",
+    "product_id": "hp-laserjet-pro-m404n",
+    "issue_description": "The WAN light is blinking red.",
+    "answers": [
+      {
+        "question": "No supporting documentation was found in Moss for this product issue.",
+        "answer": "What is dependency injection?",
+        "answered_at": "2026-06-14T11:29:16.763719+00:00"
+      },
+      {
+        "question": "No supporting documentation was found in Moss for this product issue.",
+        "answer": "How do I connect a mesh node?",
+        "answered_at": "2026-06-14T11:45:16.621870+00:00"
+      }
+    ],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T11:27:29.549770+00:00",
+    "updated_at": "2026-06-14T11:45:20.189608+00:00"
+  },
+  "f354322a-8236-41a3-bcf2-1d6813c307a0": {
+    "id": "f354322a-8236-41a3-bcf2-1d6813c307a0",
+    "product_id": "moss-router-x1",
+    "issue_description": "The mesh node connection drops frequently. I need to know what channel width to set.",
+    "answers": [],
+    "latest_question": "What exact behavior do you observe right before the issue happens?",
+    "probable_causes": [
+      "probable_causes: [\"Adjacent channel interference\", \"Outdated router firmware\", \"Mesh nodes placed too close to metal obstructions\"],\nfollow_up_question: \"What is the current channel width setting for your Moss Router X1?\",\nnext_step: \"Access the router's administrator console to adjust the channel width.\",\nrecommended_action: \"Change the channel width from 80MHz to 40MHz or 20MHz to reduce adjacent channel interference. Additionally, ensure mesh nodes are placed at least 15 feet away from metal obstructions and check for firmware updates.\""
+    ],
+    "next_step": "Collect one more symptom and compare it against the referenced documentation.",
+    "recommended_action": "Review the retrieved product documentation before taking corrective action.",
+    "created_at": "2026-06-14T11:49:44.916209+00:00",
+    "updated_at": "2026-06-14T11:49:54.437388+00:00"
+  },
+  "c6b79cdc-cb0e-4099-9b1a-2b841315fb09": {
+    "id": "c6b79cdc-cb0e-4099-9b1a-2b841315fb09",
+    "product_id": "moss-router-x1",
+    "issue_description": "The mesh node connection drops frequently. I need to know what channel width to set.",
+    "answers": [],
+    "latest_question": "Have you checked if the router's firmware is up to date, or if there are any metal obstructions within 15 feet of the mesh nodes?",
+    "probable_causes": [
+      "Adjacent channel interference",
+      "Outdated router firmware"
+    ],
+    "next_step": "Log in to the router's administrator console and navigate to the wireless settings to change the channel width.",
+    "recommended_action": "Change the channel width from 80MHz to 40MHz or 20MHz to reduce adjacent channel interference.",
+    "created_at": "2026-06-14T11:50:09.921565+00:00",
+    "updated_at": "2026-06-14T11:50:18.281176+00:00"
+  },
+  "f5b78c3f-7531-443d-b095-fac126289082": {
+    "id": "f5b78c3f-7531-443d-b095-fac126289082",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "What is the status light on the mesh node doing?",
+    "probable_causes": [
+      "The mesh node is not in close enough proximity to the main router for initial pairing.",
+      "There is a hardware synchronization failure between the mesh node and the main router.",
+      "The mesh node and main router have mismatched firmware versions."
+    ],
+    "next_step": "Bring the mesh node to the same room as the main router, within 5-10 feet, to ensure optimal conditions for pairing.",
+    "recommended_action": "Perform a factory reset on the mesh node by holding the reset button for 10 seconds, then attempt the pairing process again.",
+    "created_at": "2026-06-14T11:52:49.103661+00:00",
+    "updated_at": "2026-06-14T11:53:02.851973+00:00"
+  },
+  "ed1055d8-db1b-4541-939b-a2f0fa711b6c": {
+    "id": "ed1055d8-db1b-4541-939b-a2f0fa711b6c",
+    "product_id": "moss-router-x1",
+    "issue_description": "Router keeps disconnecting every few minutes",
+    "answers": [],
+    "latest_question": "Does the router's status light pulse amber?",
+    "probable_causes": [
+      "Wi-Fi interference from adjacent channels",
+      "Outdated router firmware"
+    ],
+    "next_step": "Observe the router's status light.",
+    "recommended_action": "Log in to the router admin portal (http://192.168.1.1), navigate to Wireless Settings, and change the 2.4GHz channel to 1, 6, or 11, and the 5GHz channel to 36, 44, or 149. Additionally, reduce the channel width from 80MHz to 40MHz or 20MHz.",
+    "created_at": "2026-06-14T11:53:02.851973+00:00",
+    "updated_at": "2026-06-14T11:53:12.784309+00:00"
+  },
+  "07e39f97-832b-4be6-a8e1-99f487caa4a1": {
+    "id": "07e39f97-832b-4be6-a8e1-99f487caa4a1",
+    "product_id": "moss-router-x1",
+    "issue_description": "Amber light is blinking",
+    "answers": [],
+    "latest_question": "Is the amber light blinking on the main router or a satellite mesh node?",
+    "probable_causes": [
+      "Synchronization failure",
+      "Critical firmware warning",
+      "Lost connection to the main unit (if it is a satellite mesh node)"
+    ],
+    "next_step": "Identify the type of unit (main router or satellite node) that is blinking amber to determine the specific cause and resolution.",
+    "recommended_action": "If the blinking unit is a satellite mesh node, move it closer to the main router to re-establish connection.",
+    "created_at": "2026-06-14T11:53:12.786086+00:00",
+    "updated_at": "2026-06-14T11:53:32.914858+00:00"
+  },
+  "88968a50-517c-4bc4-8a8d-330a8c266365": {
+    "id": "88968a50-517c-4bc4-8a8d-330a8c266365",
+    "product_id": "moss-router-x1",
+    "issue_description": "How do I add another mesh node?",
+    "answers": [],
+    "latest_question": "Have you already powered on the secondary node, and if so, what is the current status of its LED indicator?",
+    "probable_causes": [
+      "User is unfamiliar with the procedure for adding a secondary mesh node to the Moss Router X1 system."
+    ],
+    "next_step": "Follow the wireless node pairing procedure outlined in the product documentation.",
+    "recommended_action": "To add a secondary node, first place it in the same room as the main Moss Router X1, within 5-10 feet. Power on the secondary node and wait for its LED to turn solid amber, then pulse amber slowly. In the mobile app, tap 'Add Mesh Node'. Press the sync button on the back of the main router for 3 seconds until its LED pulses blue. Next, press the sync button on the secondary node. The nodes will pair, and the secondary node LED will flash green to confirm pairing.",
+    "created_at": "2026-06-14T11:53:32.914858+00:00",
+    "updated_at": "2026-06-14T11:53:39.822943+00:00"
+  },
+  "832bf5f2-6091-43c4-8788-f2cfd1f084b5": {
+    "id": "832bf5f2-6091-43c4-8788-f2cfd1f084b5",
+    "product_id": "moss-router-x1",
+    "issue_description": "How do I update firmware?",
+    "answers": [],
+    "latest_question": "Are you looking to enable automatic updates or perform a manual update?",
+    "probable_causes": [
+      "User is seeking general instructions on how to update firmware.",
+      "User wants to ensure their device is running the latest firmware version."
+    ],
+    "next_step": "Based on your preference, we can provide detailed instructions for either enabling automatic updates or performing a manual firmware update.",
+    "recommended_action": "The Moss Router X1 supports automatic over-the-air (OTA) updates by default, which check for new firmware every night at 3:00 AM. Alternatively, you can perform a manual update by downloading the firmware file and uploading it via the router's web admin portal.",
+    "created_at": "2026-06-14T11:53:39.822943+00:00",
+    "updated_at": "2026-06-14T11:53:47.497106+00:00"
+  },
+  "c481c1b0-b9bc-495a-8e42-26463076d6c4": {
+    "id": "c481c1b0-b9bc-495a-8e42-26463076d6c4",
+    "product_id": "hp-laserjet-pro-m404n",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T11:56:37.707833+00:00",
+    "updated_at": "2026-06-14T11:56:41.241079+00:00"
+  },
+  "aba9e766-04ea-4862-8c26-610525b1302d": {
+    "id": "aba9e766-04ea-4862-8c26-610525b1302d",
+    "product_id": "hp-laserjet-pro-m404n",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T11:57:20.371557+00:00",
+    "updated_at": "2026-06-14T11:57:22.406803+00:00"
+  },
+  "993aa596-ae8b-4761-a061-e132595c227d": {
+    "id": "993aa596-ae8b-4761-a061-e132595c227d",
+    "product_id": "moss-router-x1",
+    "issue_description": "Network offline",
+    "answers": [],
+    "latest_question": "What is the color and state (solid, blinking, off) of the LED status light on the front panel of the main router unit?",
+    "probable_causes": [
+      "The Moss Router X1 may not be correctly connected to your modem.",
+      "The router may not have successfully established an internet connection.",
+      "A Double NAT configuration might be preventing proper network functionality if connected to an ISP gateway."
+    ],
+    "next_step": "Verify that the Ethernet cable is securely connected between the blue Internet port (WAN) of the Moss Router X1 and your modem's LAN port.",
+    "recommended_action": "Ensure all physical connections, especially the Ethernet cable between the router and modem, are secure and clicked into place.",
+    "created_at": "2026-06-14T12:02:33.218745+00:00",
+    "updated_at": "2026-06-14T12:02:49.799663+00:00"
+  },
+  "b7e0513b-99a5-4fb5-86c8-1aca5ac8de5a": {
+    "id": "b7e0513b-99a5-4fb5-86c8-1aca5ac8de5a",
+    "product_id": "moss-router-x1",
+    "issue_description": "Network offline",
+    "answers": [],
+    "latest_question": "What color is the LED status light on the front panel of the main router unit?",
+    "probable_causes": [
+      "Incorrect or loose physical connection between the router and the modem.",
+      "The router has not successfully connected to the Internet.",
+      "Hardware synchronization failure or outdated firmware."
+    ],
+    "next_step": "Ensure the Ethernet cable connecting the blue Internet port (WAN) of the Moss Router X1 to your modem's LAN port is securely connected.",
+    "recommended_action": "Check the physical connections between the router and the modem.",
+    "created_at": "2026-06-14T12:02:36.794034+00:00",
+    "updated_at": "2026-06-14T12:02:49.265261+00:00"
+  },
+  "13c31a4b-3e21-4545-97dc-9e5b4afdac2f": {
+    "id": "13c31a4b-3e21-4545-97dc-9e5b4afdac2f",
+    "product_id": "moss-router-x1",
+    "issue_description": "Faded print",
+    "answers": [],
+    "latest_question": "Is the router experiencing any functional problems, such as connectivity issues or unusual LED indicators?",
+    "probable_causes": [
+      "The provided documentation does not address cosmetic issues such as faded print on the device."
+    ],
+    "next_step": "If the router is experiencing functional problems, please describe them in detail. If the issue is purely cosmetic, it is not covered by the available troubleshooting guides.",
+    "recommended_action": "No specific action can be recommended based on the provided documentation for cosmetic issues.",
+    "created_at": "2026-06-14T12:02:38.766252+00:00",
+    "updated_at": "2026-06-14T12:02:50.209516+00:00"
+  },
+  "7e1b318a-b72c-4935-b89b-390e540a427e": {
+    "id": "7e1b318a-b72c-4935-b89b-390e540a427e",
+    "product_id": "moss-router-x1",
+    "issue_description": "Faded print",
+    "answers": [],
+    "latest_question": null,
+    "probable_causes": [],
+    "next_step": null,
+    "recommended_action": null,
+    "created_at": "2026-06-14T12:02:40.455767+00:00",
+    "updated_at": "2026-06-14T12:02:40.455767+00:00"
+  },
+  "60b0c44d-1a67-4c23-8f04-847d2e62ec7d": {
+    "id": "60b0c44d-1a67-4c23-8f04-847d2e62ec7d",
+    "product_id": "moss-router-x1",
+    "issue_description": "Network offline",
+    "answers": [],
+    "latest_question": "What is the current color and state (solid, blinking, off) of the LED status light on the front panel of your Moss Router X1?",
+    "probable_causes": [
+      "Incorrect or loose physical connection between the Moss Router X1 and your modem.",
+      "No active internet connection from your Internet Service Provider (ISP) or modem.",
+      "Double NAT configuration, which can prevent proper network operation."
+    ],
+    "next_step": "Ensure the Ethernet cable connecting the blue Internet port (WAN) of the Moss Router X1 to your modem's LAN port is securely connected and clicks into place.",
+    "recommended_action": "Perform a factory reset on your Moss Router X1 by pressing and holding the pinhole reset button on the rear panel for 10 seconds while the unit is powered on. Wait 2 minutes for the router to boot with factory defaults.",
+    "created_at": "2026-06-14T12:13:27.934838+00:00",
+    "updated_at": "2026-06-14T12:13:43.845437+00:00"
+  },
+  "ed785cfc-8223-4d6c-84e9-27cb9ff0d78b": {
+    "id": "ed785cfc-8223-4d6c-84e9-27cb9ff0d78b",
+    "product_id": "moss-router-x1",
+    "issue_description": "Network offline",
+    "answers": [],
+    "latest_question": "What is the color and state (solid, blinking, pulsing) of the LED status light on the front panel of your Moss Router X1?",
+    "probable_causes": [
+      "Loose or incorrect Ethernet cable connection between the router and modem.",
+      "No internet signal being received by the Moss Router X1 from your modem/ISP.",
+      "Hardware synchronization failure."
+    ],
+    "next_step": "Check the physical Ethernet cable connection between the Moss Router X1's blue Internet (WAN) port and your modem's LAN port, ensuring it is secure and clicks in place.",
+    "recommended_action": "Perform a power cycle of both your modem and the Moss Router X1. Unplug both devices from power, wait 30 seconds, then plug in the modem first. Once the modem is fully online, plug in the Moss Router X1.",
+    "created_at": "2026-06-14T12:13:32.796188+00:00",
+    "updated_at": "2026-06-14T12:13:43.825062+00:00"
+  },
+  "9367eec5-8979-4b1d-b656-5c692caa7018": {
+    "id": "9367eec5-8979-4b1d-b656-5c692caa7018",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": null,
+    "probable_causes": [],
+    "next_step": null,
+    "recommended_action": null,
+    "created_at": "2026-06-14T12:18:14.958883+00:00",
+    "updated_at": "2026-06-14T12:18:14.958883+00:00"
+  },
+  "b46b6085-d35a-4f6a-9905-abbc62f21e13": {
+    "id": "b46b6085-d35a-4f6a-9905-abbc62f21e13",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": null,
+    "probable_causes": [],
+    "next_step": null,
+    "recommended_action": null,
+    "created_at": "2026-06-14T12:18:26.433867+00:00",
+    "updated_at": "2026-06-14T12:18:26.433867+00:00"
+  },
+  "4fa3aa72-8adf-4792-b9f8-da7e5e5062f3": {
+    "id": "4fa3aa72-8adf-4792-b9f8-da7e5e5062f3",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": null,
+    "probable_causes": [],
+    "next_step": null,
+    "recommended_action": null,
+    "created_at": "2026-06-14T12:18:38.857960+00:00",
+    "updated_at": "2026-06-14T12:18:38.857960+00:00"
+  },
+  "4f74d77f-ea70-4b29-bdbf-95482ab7e215": {
+    "id": "4f74d77f-ea70-4b29-bdbf-95482ab7e215",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": null,
+    "probable_causes": [],
+    "next_step": null,
+    "recommended_action": null,
+    "created_at": "2026-06-14T12:18:50.636097+00:00",
+    "updated_at": "2026-06-14T12:18:50.636097+00:00"
+  },
+  "e45fc7f5-1b9a-4b27-bf73-7745c6997efc": {
+    "id": "e45fc7f5-1b9a-4b27-bf73-7745c6997efc",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": null,
+    "probable_causes": [],
+    "next_step": null,
+    "recommended_action": null,
+    "created_at": "2026-06-14T12:19:32.350157+00:00",
+    "updated_at": "2026-06-14T12:19:32.350157+00:00"
+  },
+  "d1bb9c8f-4a6e-44f9-80ae-839895ceb091": {
+    "id": "d1bb9c8f-4a6e-44f9-80ae-839895ceb091",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "What color is the status light on the secondary node, and is it pulsing or solid?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Firmware version mismatch between nodes",
+      "Node placed too far from the main router during pairing"
+    ],
+    "next_step": "Bring the secondary node within 5-10 feet of the main router and perform a factory reset by holding the reset button for 10 seconds.",
+    "recommended_action": "After resetting, attempt the pairing process again via the mobile app and ensure both units are updated to the latest firmware version.",
+    "created_at": "2026-06-14T12:20:23.031232+00:00",
+    "updated_at": "2026-06-14T12:20:29.754368+00:00"
+  },
+  "bf20999e-9499-426b-9d00-1ed45c5b4fb4": {
+    "id": "bf20999e-9499-426b-9d00-1ed45c5b4fb4",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "What color is the status light on the mesh node, and is it pulsing or solid?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Firmware version mismatch between nodes",
+      "Node placed too far from the main router during pairing"
+    ],
+    "next_step": "Bring the mesh node into the same room as the main router and perform a factory reset by holding the reset button for 10 seconds.",
+    "recommended_action": "After resetting, attempt the pairing process again while ensuring both units are updated to the latest firmware version.",
+    "created_at": "2026-06-14T12:20:36.287134+00:00",
+    "updated_at": "2026-06-14T12:20:50.297391+00:00"
+  },
+  "8c52977e-d758-42fd-a418-463991c97685": {
+    "id": "8c52977e-d758-42fd-a418-463991c97685",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "What color is the status light on the secondary node, and is it pulsing or solid?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Firmware version mismatch between nodes",
+      "Node placed too far from the main router during setup"
+    ],
+    "next_step": "Bring the secondary node within 5-10 feet of the main router and perform a factory reset by holding the reset button for 10 seconds.",
+    "recommended_action": "After resetting, attempt the pairing process again via the mobile app and ensure both devices are updated to the latest firmware version.",
+    "created_at": "2026-06-14T12:21:25.957162+00:00",
+    "updated_at": "2026-06-14T12:21:31.666741+00:00"
+  },
+  "a3ac99ad-adab-48f3-a66b-d1d732c61572": {
+    "id": "a3ac99ad-adab-48f3-a66b-d1d732c61572",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "What color is the status light on the secondary node, and is it pulsing or solid?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Firmware version mismatch between nodes",
+      "Node placed too far from the main router during setup"
+    ],
+    "next_step": "Bring the secondary node within 5-10 feet of the main router and perform a factory reset by holding the reset button for 10 seconds.",
+    "recommended_action": "After resetting, attempt the pairing process again via the mobile app and ensure both devices are updated to the latest firmware version.",
+    "created_at": "2026-06-14T12:44:13.298346+00:00",
+    "updated_at": "2026-06-14T12:44:20.592863+00:00"
+  },
+  "714360a1-6f46-479d-9196-11f2f982e1f0": {
+    "id": "714360a1-6f46-479d-9196-11f2f982e1f0",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "What color is the status light on the mesh node, and is it pulsing or solid?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Firmware version mismatch between nodes",
+      "Node placed too far from the main router during setup"
+    ],
+    "next_step": "Bring the mesh node into the same room as the main router (within 5-10 feet) to ensure a stable pairing environment.",
+    "recommended_action": "Perform a factory reset on the node by holding the reset button for 10 seconds, then attempt the pairing process again via the mobile app.",
+    "created_at": "2026-06-14T13:00:54.471874+00:00",
+    "updated_at": "2026-06-14T13:01:00.677864+00:00"
+  },
+  "9ed68f16-f11e-40e3-b6f2-c535b6e31ad8": {
+    "id": "9ed68f16-f11e-40e3-b6f2-c535b6e31ad8",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "What color is the status light on the secondary node, and is it pulsing or solid?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Firmware version mismatch between nodes",
+      "Node placed too far from the main router during setup"
+    ],
+    "next_step": "Bring the secondary node within 5-10 feet of the main router and perform a factory reset by holding the reset button for 10 seconds.",
+    "recommended_action": "After resetting, attempt the pairing process again via the mobile app, and ensure both units are updated to the latest firmware version.",
+    "created_at": "2026-06-14T13:01:50.659570+00:00",
+    "updated_at": "2026-06-14T13:01:56.562394+00:00"
+  },
+  "88618c98-5d53-46ba-8141-3623d761f6dd": {
+    "id": "88618c98-5d53-46ba-8141-3623d761f6dd",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "What color is the status light on the mesh node, and is it pulsing or solid?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Firmware version mismatch between nodes",
+      "Node placed too far from the main router during pairing"
+    ],
+    "next_step": "Bring the mesh node into the same room as the main router (within 5-10 feet) and perform a factory reset by holding the reset button for 10 seconds.",
+    "recommended_action": "After the factory reset, attempt the pairing process again via the mobile app; if it still fails, connect the node via Ethernet to the main router to force a firmware update.",
+    "created_at": "2026-06-14T13:04:23.546435+00:00",
+    "updated_at": "2026-06-14T13:04:33.593257+00:00"
+  },
+  "d876199a-89be-4541-9e7e-3474760b80e7": {
+    "id": "d876199a-89be-4541-9e7e-3474760b80e7",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect to the main router",
+    "answers": [],
+    "latest_question": "What color is the status light on the mesh node, and is it pulsing or solid?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Firmware version mismatch between nodes",
+      "Node placed too far from the main router during pairing"
+    ],
+    "next_step": "Bring the mesh node into the same room as the main router and perform a factory reset by holding the reset button for 10 seconds.",
+    "recommended_action": "After resetting, attempt the pairing process again while ensuring both units are updated to the latest firmware version.",
+    "created_at": "2026-06-14T13:04:59.916153+00:00",
+    "updated_at": "2026-06-14T13:05:03.977961+00:00"
+  },
+  "b968271d-998e-43b7-b6aa-110f13504f5a": {
+    "id": "b968271d-998e-43b7-b6aa-110f13504f5a",
+    "product_id": "moss-router-x1",
+    "issue_description": "Network offline",
+    "answers": [],
+    "latest_question": "What color is the LED status light on the front panel of your Moss Router X1?",
+    "probable_causes": [
+      "Loose or disconnected WAN Ethernet cable",
+      "Hardware synchronization failure",
+      "Outdated router firmware",
+      "Wi-Fi interference"
+    ],
+    "next_step": "Check the physical connection between your modem's LAN port and the router's blue WAN port.",
+    "recommended_action": "If the light is pulsing amber, update your router firmware immediately; if the light is off or red, ensure all cables are secure and consider performing a factory reset by holding the reset button for 10 seconds.",
+    "created_at": "2026-06-14T13:07:45.804245+00:00",
+    "updated_at": "2026-06-14T13:07:56.119919+00:00"
+  },
+  "ed0bc147-996f-4be6-abb9-05401b986be2": {
+    "id": "ed0bc147-996f-4be6-abb9-05401b986be2",
+    "product_id": "moss-router-x1",
+    "issue_description": "Network offline",
+    "answers": [],
+    "latest_question": "What color is the LED status light on the front panel of your Moss Router X1?",
+    "probable_causes": [
+      "Loose or disconnected WAN Ethernet cable",
+      "Hardware synchronization failure",
+      "Outdated firmware",
+      "Wi-Fi interference"
+    ],
+    "next_step": "Check the physical connection between your modem's LAN port and the router's blue WAN port.",
+    "recommended_action": "If the LED is pulsing amber, update your firmware; if the issue persists, perform a factory reset by holding the reset button for 10 seconds.",
+    "created_at": "2026-06-14T13:07:49.900445+00:00",
+    "updated_at": "2026-06-14T13:07:54.085477+00:00"
+  },
+  "e0b85f0c-c883-4242-bb2c-c342ffbc1e63": {
+    "id": "e0b85f0c-c883-4242-bb2c-c342ffbc1e63",
+    "product_id": "aeroforce-router-pro",
+    "issue_description": "Wi-Fi connection drops",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T14:30:27.639557+00:00",
+    "updated_at": "2026-06-14T14:30:44.660825+00:00"
+  },
+  "c675c0f0-6bf8-4bdb-8463-c5e1d4e91098": {
+    "id": "c675c0f0-6bf8-4bdb-8463-c5e1d4e91098",
+    "product_id": "aeroforce-router-pro",
+    "issue_description": "Wi-Fi connection drops",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T14:30:42.548533+00:00",
+    "updated_at": "2026-06-14T14:30:44.721810+00:00"
+  },
+  "4fd4cd03-48d5-4e9c-b884-8d4257b39ace": {
+    "id": "4fd4cd03-48d5-4e9c-b884-8d4257b39ace",
+    "product_id": "aeroforce-router-pro",
+    "issue_description": "Wi-Fi connection drops",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T14:35:23.217106+00:00",
+    "updated_at": "2026-06-14T14:35:39.588803+00:00"
+  },
+  "60885bee-24c2-434b-aaf0-8600f426aaf4": {
+    "id": "60885bee-24c2-434b-aaf0-8600f426aaf4",
+    "product_id": "aeroforce-router-pro",
+    "issue_description": "Wi-Fi connection drops",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T14:36:26.311613+00:00",
+    "updated_at": "2026-06-14T14:36:36.191387+00:00"
+  },
+  "d7467b2d-73ec-48e7-b120-3743dba1c9c0": {
+    "id": "d7467b2d-73ec-48e7-b120-3743dba1c9c0",
+    "product_id": "aeroforce-router-pro",
+    "issue_description": "MLO compatibility mode switch",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T14:37:38.294058+00:00",
+    "updated_at": "2026-06-14T14:37:45.376672+00:00"
+  },
+  "481253f8-74c2-43c7-9a0d-4e8a24ae7a13": {
+    "id": "481253f8-74c2-43c7-9a0d-4e8a24ae7a13",
+    "product_id": "aeroforce-router-pro",
+    "issue_description": "MLO compatibility mode switch",
+    "answers": [],
+    "latest_question": "No supporting documentation was found in Moss for this product issue.",
+    "probable_causes": [],
+    "next_step": "No supporting documentation found in Moss.",
+    "recommended_action": "Please upload product manuals or support guides to index them into the Moss knowledge base.",
+    "created_at": "2026-06-14T14:38:30.822943+00:00",
+    "updated_at": "2026-06-14T14:38:37.988192+00:00"
+  },
+  "77ce3a59-9c9e-4da4-8ca5-55d2ebfb038c": {
+    "id": "77ce3a59-9c9e-4da4-8ca5-55d2ebfb038c",
+    "product_id": "aeroforce-router-pro",
+    "issue_description": "MLO compatibility mode switch",
+    "answers": [],
+    "latest_question": "Is the status indicator on the top panel currently glowing violet?",
+    "probable_causes": [
+      "MLO association failure",
+      "Incompatibility with legacy Wi-Fi 7 client devices"
+    ],
+    "next_step": "Navigate to the wireless admin panel under Advanced > Wireless 7 Settings.",
+    "recommended_action": "Toggle the MLO compatibility mode switch to resolve the association issue.",
+    "created_at": "2026-06-14T14:39:17.893248+00:00",
+    "updated_at": "2026-06-14T14:39:24.896109+00:00"
+  },
+  "b02e79d0-61c6-4fe2-836f-2d6eb57a4959": {
+    "id": "b02e79d0-61c6-4fe2-836f-2d6eb57a4959",
+    "product_id": "aeroforce-router-pro",
+    "issue_description": "MLO compatibility mode switch",
+    "answers": [],
+    "latest_question": "Is the status indicator on the top panel currently glowing violet?",
+    "probable_causes": [
+      "MLO association failure",
+      "Incompatibility with legacy Wi-Fi 7 client devices"
+    ],
+    "next_step": "Navigate to the wireless admin panel under Advanced > Wireless 7 Settings.",
+    "recommended_action": "Toggle the MLO compatibility mode switch to resolve the association issue.",
+    "created_at": "2026-06-14T14:39:52.386857+00:00",
+    "updated_at": "2026-06-14T14:39:59.054866+00:00"
+  }
+}

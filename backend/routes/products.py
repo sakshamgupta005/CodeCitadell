@@ -53,6 +53,16 @@ async def get_product(product_id: str) -> Product:
     return product_store.get_product(product_id)
 
 
+@router.put("/{product_id}", response_model=Product)
+async def update_product(product_id: str, payload: ProductCreate) -> Product:
+    return product_store.update_product(product_id, payload)
+
+
+@router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_product(product_id: str) -> None:
+    product_store.delete_product(product_id)
+
+
 @router.post("/{product_id}/knowledge/pdf", response_model=ImportResponse)
 async def upload_product_pdf(product_id: str, file: UploadFile = File(...)) -> ImportResponse:
     product = product_store.get_product(product_id)

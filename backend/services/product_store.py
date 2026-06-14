@@ -14,6 +14,48 @@ from services.exceptions import InputValidationError, NotFoundError
 
 SAMPLE_PRODUCTS = [
     Product(
+        id="hp-laserjet-pro-m404n",
+        name="HP LaserJet Pro M404n",
+        category="Electronics",
+        description="A high-speed monochrome laser printer designed for small to medium workgroups. Supports USB 2.0 and Gigabit Ethernet connectivity. Rated for 80,000 pages/month duty cycle.",
+        image_url="https://images.unsplash.com/photo-1563206767-5b18f218e8de",
+    ),
+    Product(
+        id="daikin-ftxm35tvma",
+        name="Daikin FTXM35TVMA",
+        category="HVAC",
+        description="Wall mounted split air conditioner with inverter controls, humidity management, and service diagnostics.",
+        image_url="https://images.unsplash.com/photo-1621905252507-b354bc25edac",
+    ),
+    Product(
+        id="caterpillar-320-gc",
+        name="Caterpillar 320 GC",
+        category="Industrial",
+        description="Hydraulic excavator with electronic monitoring, fault codes, and planned maintenance documentation.",
+        image_url="https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b",
+    ),
+    Product(
+        id="bosch-series-8-induction",
+        name="Bosch Series 8 Induction",
+        category="Appliances",
+        description="Premium induction cooktop with touch controls, power management, and safety lock diagnostics.",
+        image_url="https://images.unsplash.com/photo-1556911220-e15b29be8c8f",
+    ),
+    Product(
+        id="siemens-s7-1200-plc",
+        name="Siemens S7-1200 PLC",
+        category="Industrial",
+        description="Compact industrial PLC for automation systems with hardware diagnostics and module status references.",
+        image_url="https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6",
+    ),
+    Product(
+        id="ford-f-150-2023-raptor",
+        name="Ford F-150 2023 Raptor",
+        category="Automotive",
+        description="Performance pickup with service manuals, drivetrain diagnostics, and maintenance procedures.",
+        image_url="https://images.unsplash.com/photo-1605558202076-1692af9a01b4",
+    ),
+    Product(
         id="moss-router-x1",
         name="Moss Router X1",
         category="Networking",
@@ -96,6 +138,42 @@ class ProductStore:
                 return product
         raise NotFoundError(f"Product not found: {product_id}")
 
+    def update_product(self, product_id: str, payload: ProductCreate) -> Product:
+        with self._lock:
+            products = self._read_products_unlocked()
+            found = False
+            updated_product = None
+            for i, p in enumerate(products):
+                if p.id == product_id:
+                    updated_product = Product(
+                        id=product_id,
+                        name=payload.name.strip(),
+                        category=payload.category.strip(),
+                        description=payload.description.strip(),
+                        image_url=payload.image_url.strip(),
+                    )
+                    products[i] = updated_product
+                    found = True
+                    break
+            if not found:
+                raise NotFoundError(f"Product not found: {product_id}")
+            self._write_json_unlocked(self.products_path, [item.model_dump() for item in products])
+        return updated_product
+
+    def delete_product(self, product_id: str) -> None:
+        with self._lock:
+            products = self._read_products_unlocked()
+            found = False
+            new_products = []
+            for p in products:
+                if p.id == product_id:
+                    found = True
+                else:
+                    new_products.append(p)
+            if not found:
+                raise NotFoundError(f"Product not found: {product_id}")
+            self._write_json_unlocked(self.products_path, [item.model_dump() for item in new_products])
+
     def create_diagnostic_session(self, product_id: str, issue_description: str) -> dict[str, object]:
         session = {
             "id": str(uuid4()),
@@ -167,9 +245,19 @@ class ProductStore:
         return session
 
     def _seed_products_if_needed(self) -> None:
-        if self.products_path.exists() and self.products_path.stat().st_size > 0:
-            return
-        self._write_json_unlocked(self.products_path, [product.model_dump() for product in SAMPLE_PRODUCTS])
+        try:
+            products = self._read_products_unlocked() if (self.products_path.exists() and self.products_path.stat().st_size > 0) else []
+        except Exception:
+            products = []
+        
+        existing_ids = {p.id for p in products}
+        added = False
+        for p in SAMPLE_PRODUCTS:
+            if p.id not in existing_ids:
+                products.append(p)
+                added = True
+        if added or not self.products_path.exists() or self.products_path.stat().st_size == 0:
+            self._write_json_unlocked(self.products_path, [item.model_dump() for item in products])
 
     @staticmethod
     def _ensure_json_file(path: Path, default: object) -> None:
