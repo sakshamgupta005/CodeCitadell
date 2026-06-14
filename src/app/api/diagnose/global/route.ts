@@ -6,6 +6,8 @@ type RequestBody = {
   sessionId?: string;
   issue_description?: string;
   top_k?: number;
+  imageData?: string;
+  imageMimeType?: string;
 };
 
 export async function POST(request: Request) {
@@ -18,6 +20,8 @@ export async function POST(request: Request) {
         issue_description: body.issue_description,
         session_id: body.sessionId,
         top_k: body.top_k || 8,
+        image_data: body.imageData,
+        image_mime_type: body.imageMimeType,
       }),
     });
 

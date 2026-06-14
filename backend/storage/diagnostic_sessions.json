@@ -990,5 +990,308 @@
     "created_at": "2026-06-14T21:16:41.809791+00:00",
     "updated_at": "2026-06-14T21:16:51.561103+00:00",
     "investigation_reasoning": "Based on the documentation provided, 'hhh' is not a physical electronic device or consumer product. Instead, the documents associated with this ID contain the professional portfolio, resume, and academic application materials of a software engineer named Manas Gupta. The files include his employment history at Statusbrew, his academic background at Guru Nanak Dev University, his project experience (such as vital signs monitoring systems and web-based form builders), and letters of recommendation. It appears this ID was used to categorize these personal documents for digital storage or reference."
+  },
+  "d6c454b7-2da3-451b-808d-a0a5d509ecb8": {
+    "id": "d6c454b7-2da3-451b-808d-a0a5d509ecb8",
+    "product_id": "moss-router-x1",
+    "issue_description": "Teach me mesh networking.",
+    "answers": [],
+    "latest_question": "That is the basic concept of how mesh systems function\u2014would you like to know more about how to set up your Moss Router X1, or are you currently experiencing any connectivity issues with your own mesh network?",
+    "probable_causes": [
+      "Insufficient documentation evidence."
+    ],
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Learn more from the documentation",
+    "created_at": "2026-06-14T21:32:07.452176+00:00",
+    "updated_at": "2026-06-14T21:32:13.215529+00:00",
+    "investigation_reasoning": "Mesh networking is a system where multiple networking devices, such as your Moss Router X1 units, work together as a single, unified Wi-Fi network. Unlike a traditional router that broadcasts from one central point, a mesh system uses a primary router connected to your modem and one or more secondary nodes placed throughout your home. These nodes communicate with each other wirelessly to extend your coverage, ensuring that your devices can seamlessly switch to the strongest signal as you move from room to room. It essentially creates a 'blanket' of coverage rather than a single point of broadcast, which helps eliminate dead zones and provides more consistent speeds across your entire space."
+  },
+  "135a4e9d-24aa-4edd-9833-3d165962c903": {
+    "id": "135a4e9d-24aa-4edd-9833-3d165962c903",
+    "product_id": "moss-router-x1",
+    "issue_description": "What is Moss Router X1?",
+    "answers": [],
+    "latest_question": "Are you currently setting up your Moss Router X1, or are you experiencing a specific connectivity issue that I can help you troubleshoot?",
+    "probable_causes": [
+      "Insufficient documentation evidence."
+    ],
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Learn more from the documentation",
+    "created_at": "2026-06-14T21:32:23.720196+00:00",
+    "updated_at": "2026-06-14T21:32:27.913012+00:00",
+    "investigation_reasoning": "The Moss Router X1 is a high-performance networking device designed to provide robust Wi-Fi coverage throughout your home or office. It utilizes mesh networking technology, which allows you to pair multiple units together to create a seamless, unified wireless network. This system is designed to be user-friendly, featuring simple sync-button pairing and an intuitive LED status system to help you monitor your connection health. Whether you are setting up a new network or expanding your existing coverage with additional nodes, the Moss Router X1 is engineered to handle high-bandwidth tasks and minimize interference for a stable, reliable internet experience."
+  },
+  "cca9571d-72c2-4394-8624-bd64ca8cea61": {
+    "id": "cca9571d-72c2-4394-8624-bd64ca8cea61",
+    "product_id": "moss-router-x1",
+    "issue_description": "Teach me mesh networking.",
+    "answers": [],
+    "latest_question": "Are you looking to set up a mesh system with your Moss Router X1, or are you currently experiencing a connection issue with your nodes?",
+    "probable_causes": [],
+    "possible_causes": [],
+    "eliminated_causes": [],
+    "most_likely_cause": "Insufficient information",
+    "confidence": "low",
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Recommendation: To learn more about setting up your specific hardware, refer to the Mesh Pairing Guide provided with your device.\n\nEvidence: The documentation outlines specific procedures for pairing nodes wirelessly and troubleshooting synchronization.\n\nSource:\nMesh Pairing Guide\nPage 8\nSection 2.2: Wireless Node Pairing",
+    "created_at": "2026-06-14T22:22:43.600817+00:00",
+    "updated_at": "2026-06-14T22:22:51.665252+00:00",
+    "investigation_reasoning": "Mesh networking is a system where multiple networking devices, such as your Moss Router X1 units, work together as a single, unified Wi-Fi network. Unlike a traditional router that broadcasts from one point, a mesh system uses a main router connected to your modem and one or more 'nodes' placed throughout your home. These nodes communicate with each other to extend the signal, allowing your devices to roam seamlessly from room to room without dropping the connection or needing to switch networks manually. Think of it as a blanket of coverage rather than a single spotlight."
+  },
+  "e791f063-b0e3-4bae-94d9-3c4273a4308e": {
+    "id": "e791f063-b0e3-4bae-94d9-3c4273a4308e",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect.",
+    "answers": [
+      {
+        "question": "What is the current color and behavior of the LED light on the secondary node?",
+        "answer": "The light is pulsing amber slowly",
+        "image_attached": false,
+        "answered_at": "2026-06-14T22:22:56.401185+00:00"
+      }
+    ],
+    "latest_question": "Have you pressed the sync button on the back of the main Moss Router X1 for 3 seconds until its LED flashes blue, and then pressed the sync button on the secondary node?",
+    "probable_causes": [
+      "Node is in pairing mode and has not yet been triggered to sync",
+      "Sync process not initiated on the primary router"
+    ],
+    "possible_causes": [
+      {
+        "cause": "Node is in pairing mode and has not yet been triggered to sync",
+        "probability": 0.8,
+        "status": "possible",
+        "evidence": "The LED is pulsing amber slowly, which indicates the node is ready for pairing.",
+        "source": "Mesh Pairing Guide, Page 22, Section 4.3",
+        "elimination_reason": null
+      },
+      {
+        "cause": "Sync process not initiated on the primary router",
+        "probability": 0.2,
+        "status": "possible",
+        "evidence": "The node is ready, but the primary router may not have been put into sync mode.",
+        "source": "Mesh Pairing Guide, Page 8, Section 2.2",
+        "elimination_reason": null
+      }
+    ],
+    "eliminated_causes": [
+      {
+        "cause": "Hardware synchronization failure",
+        "probability": 0.0,
+        "status": "eliminated",
+        "evidence": "The LED is pulsing amber slowly, not rapidly.",
+        "source": "Mesh Pairing Guide, Page 12, Section 2.5",
+        "elimination_reason": "Rapid pulsing indicates sync failure; slow pulsing indicates readiness for pairing."
+      }
+    ],
+    "most_likely_cause": "Node is in pairing mode and has not yet been triggered to sync",
+    "confidence": "high",
+    "next_step": "Initiate the sync process on the primary router as described in the pairing guide.",
+    "recommended_action": "Recommendation: Place the secondary node within 5-10 feet of the primary router. Press the sync button on the back of the main router for 3 seconds until its LED flashes blue, then press the sync button on the secondary node. If successful, the secondary node LED will flash green.\n\nEvidence: The node is currently in the 'ready for pairing' state (slow pulsing amber).\n\nSource:\nMesh Pairing Guide\nPage 8\nSection 2.2: Wireless Node Pairing",
+    "created_at": "2026-06-14T22:22:51.706007+00:00",
+    "updated_at": "2026-06-14T22:23:01.165984+00:00",
+    "investigation_reasoning": "Current Understanding:\nThe secondary node is currently pulsing amber slowly, which confirms it is in the 'ready for pairing' state and is not experiencing a hardware synchronization failure.\n\nMost Likely Causes:\n1. The node is waiting for the primary router to be placed into sync mode.\n\nNext Diagnostic Question:\nHave you pressed the sync button on the back of the main Moss Router X1 for 3 seconds until its LED flashes blue, and then pressed the sync button on the secondary node?"
+  },
+  "2b61946c-87d4-4986-b699-6239d8bfe92a": {
+    "id": "2b61946c-87d4-4986-b699-6239d8bfe92a",
+    "product_id": "moss-router-x1",
+    "issue_description": "What is Moss Router X1?",
+    "answers": [],
+    "latest_question": "Are you currently trying to set up a new Moss Router X1 system, or are you experiencing a specific connectivity issue with one you already have?",
+    "probable_causes": [],
+    "possible_causes": [],
+    "eliminated_causes": [],
+    "most_likely_cause": "Insufficient information",
+    "confidence": "low",
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Recommendation: The Moss Router X1 is a networking device used for mesh Wi-Fi coverage. If you are setting one up, ensure you follow the pairing procedures outlined in the Mesh Pairing Guide.\n\nEvidence: The documentation identifies the Moss Router X1 as a networking product capable of mesh synchronization and wireless management.\n\nSource:\nMesh Pairing Guide\nPage 8\nSection 2.2: Wireless Node Pairing",
+    "created_at": "2026-06-14T22:23:06.611580+00:00",
+    "updated_at": "2026-06-14T22:23:11.401740+00:00",
+    "investigation_reasoning": "The Moss Router X1 is a networking device designed to function as part of a mesh Wi-Fi system. It allows you to create a seamless wireless network throughout your home or office by connecting a primary router with secondary nodes. It features specific LED status indicators to help you manage its state\u2014such as pulsing amber for pairing mode or solid amber during initialization\u2014and provides an administrative portal for advanced configuration like channel optimization to ensure stable connectivity. Essentially, it is the central hub or node that manages your internet traffic and wireless coverage."
+  },
+  "24c0c92d-9418-4b65-a8a1-6a9dbb2537a1": {
+    "id": "24c0c92d-9418-4b65-a8a1-6a9dbb2537a1",
+    "product_id": "hp-laserjet-pro-m404n",
+    "issue_description": "The print output is faded and has white vertical streaks even after redistributing toner.",
+    "answers": [],
+    "latest_question": "Does the printer's LCD panel currently display a 'Toner Low' warning, or is the orange status light flashing?",
+    "probable_causes": [
+      "Depleted toner cartridge",
+      "Defective toner cartridge (internal component failure)"
+    ],
+    "possible_causes": [
+      {
+        "cause": "Depleted toner cartridge",
+        "probability": 0.9,
+        "status": "possible",
+        "evidence": "Faded output and white vertical streaks are classic symptoms of low toner, as noted in the User Guide.",
+        "source": "User Guide, Page 12, Section 1.5",
+        "elimination_reason": null
+      },
+      {
+        "cause": "Defective toner cartridge (internal component failure)",
+        "probability": 0.1,
+        "status": "possible",
+        "evidence": "If the cartridge is not empty, internal components like the developer roller or drum may be failing.",
+        "source": "User Guide, Page 12, Section 1.5",
+        "elimination_reason": null
+      }
+    ],
+    "eliminated_causes": [],
+    "most_likely_cause": "Depleted toner cartridge",
+    "confidence": "medium",
+    "next_step": "Check the printer's LCD panel for status messages or warning lights.",
+    "recommended_action": "Recommendation: If the issue persists after redistributing toner, the cartridge is likely exhausted and requires replacement with a new HP 58A or 58X cartridge.\n\nEvidence: Faded output and white vertical streaks are identified as symptoms of low toner. If these persist after shaking the cartridge, replacement is the required corrective action.\n\nSource:\nUser Guide\nPage 12\nSection 1.5: Print Quality Issues",
+    "created_at": "2026-06-14T22:23:21.179194+00:00",
+    "updated_at": "2026-06-14T22:23:26.136828+00:00",
+    "investigation_reasoning": "Current Understanding:\nThe printer is producing faded output with white vertical streaks. You have already attempted to redistribute the toner, which is the standard initial troubleshooting step for this issue, but the problem persists.\n\nMost Likely Causes:\n1. Depleted toner cartridge\n2. Defective toner cartridge\n\nNext Diagnostic Question:\nDoes the printer's LCD panel currently display a 'Toner Low' warning, or is the orange status light flashing?\n\nReason:\nThis will confirm if the printer's internal sensors detect a low toner state, which aligns with the symptoms described in the documentation."
+  },
+  "efb3cfbd-b0fe-425c-8f65-43c9ea9434f6": {
+    "id": "efb3cfbd-b0fe-425c-8f65-43c9ea9434f6",
+    "product_id": "moss-router-x1",
+    "issue_description": "How do I pair a secondary wireless node?",
+    "answers": [],
+    "latest_question": "Are you currently seeing the LED on your secondary node pulse amber, or are you encountering a specific error during the process?",
+    "probable_causes": [],
+    "possible_causes": [],
+    "eliminated_causes": [],
+    "most_likely_cause": "Insufficient information",
+    "confidence": "low",
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Recommendation: Follow the manual pairing procedure by placing the node 5-10 feet from the main router, waiting for a slow amber pulse, and using the sync buttons on both units.\n\nEvidence: The pairing process requires the secondary node to be in a 'ready' state (pulsing amber) before initiating the sync sequence.\n\nSource:\nMesh Pairing Guide\nPage 8\nSection 2.2: Wireless Node Pairing",
+    "created_at": "2026-06-14T22:23:28.159891+00:00",
+    "updated_at": "2026-06-14T22:23:32.125217+00:00",
+    "investigation_reasoning": "To pair a secondary Moss Router X1 node, you should place the secondary unit within 5-10 feet of your primary router. Once powered on, wait for the secondary node's LED to pulse amber slowly, which indicates it is ready for pairing. Press the sync button on the back of your main router for 3 seconds until its LED flashes blue, then immediately press the sync button on the secondary node. A successful connection is confirmed when the secondary node's LED flashes green."
+  },
+  "82969580-5396-4101-9d43-d43fd34ca651": {
+    "id": "82969580-5396-4101-9d43-d43fd34ca651",
+    "product_id": "moss-router-x1",
+    "issue_description": "Teach me mesh networking.",
+    "answers": [],
+    "latest_question": "That is the basic concept! Are you currently trying to set up a mesh network with your Moss Router X1, or are you experiencing connectivity issues with an existing setup?",
+    "probable_causes": [],
+    "possible_causes": [],
+    "eliminated_causes": [],
+    "most_likely_cause": "Insufficient information",
+    "confidence": "low",
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Recommendation: To learn more about the specific pairing process for your Moss Router X1, refer to the Mesh Pairing Guide.\n\nEvidence: The documentation outlines specific steps for wireless node pairing, including proximity requirements and LED status indicators.\n\nSource:\nMesh Pairing Guide\nPage 8\nSection 2.2: Wireless Node Pairing",
+    "created_at": "2026-06-14T22:31:23.304657+00:00",
+    "updated_at": "2026-06-14T22:31:30.283435+00:00",
+    "investigation_reasoning": "Mesh networking is a system where multiple networking devices, such as your Moss Router X1 units, work together as a single, unified Wi-Fi network. Unlike a traditional router that broadcasts from one point, a mesh system uses a main router connected to your modem and one or more 'nodes' placed throughout your home. These nodes communicate with each other to extend the coverage area, ensuring that your devices stay connected to the strongest signal as you move from room to room. Because they share the same network name and password, your devices transition seamlessly between nodes without needing to reconnect. It is an excellent way to eliminate 'dead zones' in larger homes or areas with thick walls."
+  },
+  "e40005e4-e2f5-4e1a-92cf-6c8847323967": {
+    "id": "e40005e4-e2f5-4e1a-92cf-6c8847323967",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect.",
+    "answers": [
+      {
+        "question": "What color is the LED on the secondary node, and is it pulsing slowly, pulsing rapidly, or solid?",
+        "answer": "The light is pulsing amber slowly",
+        "image_attached": false,
+        "answered_at": "2026-06-14T22:31:35.134722+00:00"
+      }
+    ],
+    "latest_question": "Have you attempted to press the sync button on the back of the main router for 3 seconds until its LED flashes blue, followed by pressing the sync button on the secondary node?",
+    "probable_causes": [
+      "Node is in pairing mode and has not yet been triggered to sync"
+    ],
+    "possible_causes": [
+      {
+        "cause": "Node is in pairing mode and has not yet been triggered to sync",
+        "probability": 0.9,
+        "status": "possible",
+        "evidence": "The LED is pulsing amber slowly, which indicates the node is ready for pairing.",
+        "source": "Mesh Pairing Guide, Page 22, Section 4.3",
+        "elimination_reason": null
+      }
+    ],
+    "eliminated_causes": [
+      {
+        "cause": "Hardware synchronization failure",
+        "probability": 0.0,
+        "status": "eliminated",
+        "evidence": "Rapidly pulsing amber indicates failure; slowly pulsing amber indicates readiness.",
+        "source": "Mesh Pairing Guide, Page 12, Section 2.5; Page 22, Section 4.3",
+        "elimination_reason": "The user reported a slow pulse, not a rapid pulse."
+      }
+    ],
+    "most_likely_cause": "Node is in pairing mode and has not yet been triggered to sync",
+    "confidence": "high",
+    "next_step": "Initiate the sync process by pressing the sync button on the main router.",
+    "recommended_action": "Recommendation: Place the secondary node within 5-10 feet of the main router. Press the sync button on the back of the main router for 3 seconds until its LED flashes blue, then press the sync button on the secondary node.\n\nEvidence: A slowly pulsing amber LED indicates the node is ready for pairing. The pairing process requires triggering the main router first.\n\nSource:\nMesh Pairing Guide\nPage 8\nSection 2.2: Wireless Node Pairing",
+    "created_at": "2026-06-14T22:31:30.307198+00:00",
+    "updated_at": "2026-06-14T22:31:39.771271+00:00",
+    "investigation_reasoning": "Current Understanding:\nThe secondary node is displaying a slowly pulsing amber LED, which confirms it is currently in pairing mode and awaiting a signal from the primary router.\n\nMost Likely Causes:\n1. The node is ready for pairing but the sync process has not been initiated on the main router.\n\nNext Diagnostic Question:\nHave you attempted to press the sync button on the back of the main router for 3 seconds until its LED flashes blue, followed by pressing the sync button on the secondary node?\n\nReason:\nThis is the required sequence to transition the node from 'ready' mode to 'paired' mode as defined in the official pairing documentation."
+  },
+  "83a3ffff-2715-4baa-a5d4-4104ac70c350": {
+    "id": "83a3ffff-2715-4baa-a5d4-4104ac70c350",
+    "product_id": "moss-router-x1",
+    "issue_description": "What is Moss Router X1?",
+    "answers": [],
+    "latest_question": "Are you currently trying to set up your Moss Router X1, or are you experiencing a specific connectivity issue with it?",
+    "probable_causes": [],
+    "possible_causes": [],
+    "eliminated_causes": [],
+    "most_likely_cause": "Insufficient information",
+    "confidence": "low",
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Recommendation: Use the Moss Router X1 as the central hub or a secondary node in your home mesh network. If you are setting up a new system, ensure you follow the pairing procedures outlined in the Mesh Pairing Guide.\n\nEvidence: The documentation identifies the Moss Router X1 as a networking product capable of wireless node pairing and mesh synchronization.\n\nSource:\nMesh Pairing Guide\nPage 8\nSection 2.2: Wireless Node Pairing",
+    "created_at": "2026-06-14T22:31:44.648682+00:00",
+    "updated_at": "2026-06-14T22:31:49.025420+00:00",
+    "investigation_reasoning": "The Moss Router X1 is a networking device designed to function as part of a mesh Wi-Fi system. It allows you to create a seamless wireless network throughout your home by pairing a primary router with secondary nodes. It features specific LED status indicators to help you manage its state\u2014such as pulsing amber for pairing mode or solid amber during initialization\u2014and provides an administrative portal for advanced configuration like channel optimization to ensure stable connectivity."
+  },
+  "c88c7adc-67a2-45ee-a06b-6db8b103fb69": {
+    "id": "c88c7adc-67a2-45ee-a06b-6db8b103fb69",
+    "product_id": "hp-laserjet-pro-m404n",
+    "issue_description": "The print output is faded and has white vertical streaks even after redistributing toner.",
+    "answers": [],
+    "latest_question": "Does the printer's LCD panel currently display a 'Toner Low' warning, or is the orange status light flashing?",
+    "probable_causes": [
+      "Depleted toner cartridge",
+      "Defective toner cartridge (internal drum damage)"
+    ],
+    "possible_causes": [
+      {
+        "cause": "Depleted toner cartridge",
+        "probability": 0.9,
+        "status": "possible",
+        "evidence": "Faded output and white vertical streaks are classic symptoms of low toner, as noted in the User Guide.",
+        "source": "User Guide, Page 12, Section 1.5",
+        "elimination_reason": null
+      },
+      {
+        "cause": "Defective toner cartridge (internal drum damage)",
+        "probability": 0.1,
+        "status": "possible",
+        "evidence": "If the cartridge is not empty, internal components may be failing.",
+        "source": "User Guide, Page 12, Section 1.5",
+        "elimination_reason": null
+      }
+    ],
+    "eliminated_causes": [],
+    "most_likely_cause": "Depleted toner cartridge",
+    "confidence": "medium",
+    "next_step": "Check the printer's LCD panel for a 'Toner Low' message or a flashing orange status light.",
+    "recommended_action": "Recommendation: If the issue persists after redistributing toner, the toner cartridge must be replaced.\n\nEvidence: The User Guide explicitly states that if fading persists after shaking the cartridge, the cartridge should be replaced.\n\nSource:\nUser Guide\nPage 12\nSection 1.5: Print Quality Issues",
+    "created_at": "2026-06-14T22:31:54.063460+00:00",
+    "updated_at": "2026-06-14T22:31:59.628864+00:00",
+    "investigation_reasoning": "Current Understanding:\nThe user is experiencing faded print output and white vertical streaks. The user has already attempted to redistribute the toner by shaking the cartridge, which is the standard initial troubleshooting step for this issue, but the problem persists.\n\nMost Likely Causes:\n1. Depleted toner cartridge\n2. Defective toner cartridge\n\nNext Diagnostic Question:\nDoes the printer's LCD panel currently display a 'Toner Low' warning, or is the orange status light flashing?\n\nReason:\nThis confirms if the printer's internal sensors have detected the low toner state, which would definitively point to the need for a replacement cartridge."
+  },
+  "2d822b78-e3f3-420b-afb8-893c25ea21b6": {
+    "id": "2d822b78-e3f3-420b-afb8-893c25ea21b6",
+    "product_id": "moss-router-x1",
+    "issue_description": "How do I pair a secondary wireless node?",
+    "answers": [],
+    "latest_question": "Are you currently seeing the pulsing amber light on your secondary node, or are you encountering an error during the sync process?",
+    "probable_causes": [],
+    "possible_causes": [],
+    "eliminated_causes": [],
+    "most_likely_cause": "Insufficient information",
+    "confidence": "low",
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Recommendation: Follow the manual pairing procedure by placing the node 5-10 feet from the main router, waiting for a slow amber pulse, and using the sync buttons on both devices.\n\nEvidence: The pairing process requires the secondary node to be in close proximity to the main router and for the LED to indicate readiness (slow amber pulse) before initiating the sync sequence.\n\nSource:\nMesh Pairing Guide\nPage 8\nSection 2.2: Wireless Node Pairing",
+    "created_at": "2026-06-14T22:32:01.656875+00:00",
+    "updated_at": "2026-06-14T22:32:06.024926+00:00",
+    "investigation_reasoning": "To pair your secondary Moss Router X1 node, you should first ensure both the main router and the secondary node are powered on. Place the secondary node within 5-10 feet of the main router during the setup process. Wait for the secondary node's LED to pulse amber slowly, which indicates it is ready for pairing. Once ready, press the sync button on the back of your main router for 3 seconds until its LED flashes blue, then press the sync button on the secondary node. A successful pairing is confirmed when the secondary node's LED flashes green."
   }
 }

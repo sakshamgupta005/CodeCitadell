@@ -55,14 +55,46 @@ export type DiagnosticReference = {
   snippet?: string | null;
 };
 
+export type DiagnosticCause = {
+  cause: string;
+  probability: number;
+  status: "possible" | "eliminated" | "confirmed" | string;
+  evidence?: string | null;
+  source?: string | null;
+  elimination_reason?: string | null;
+};
+
+export type DiagnosticVisualAnalysis = {
+  visible_items: string[];
+  confidence: "low" | "medium" | "high" | string;
+  relevance_to_issue?: string | null;
+  additional_photos_required: string[];
+  safety_notes: string[];
+};
+
+export type DiagnosticSparePart = {
+  part_name: string;
+  part_number: string;
+  compatibility: string;
+  reason_replacement_may_be_needed: string;
+  documentation_source?: string | null;
+  source_index?: number | null;
+};
+
 export type DiagnosticResponse = {
   session_id: string;
   probable_causes: string[];
+  possible_causes?: DiagnosticCause[];
+  eliminated_causes?: DiagnosticCause[];
+  most_likely_cause?: string | null;
+  confidence?: "low" | "medium" | "high" | string;
   investigation_reasoning: string;
   follow_up_question: string;
   next_step: string;
   recommended_action: string;
   documentation_references: DiagnosticReference[];
+  visual_analysis?: DiagnosticVisualAnalysis | null;
   detected_product_id?: string | null;
   detected_product_name?: string | null;
+  spare_parts?: DiagnosticSparePart[];
 };

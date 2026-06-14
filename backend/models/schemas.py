@@ -145,6 +145,8 @@ class DiagnosticRequest(BaseModel):
     session_id: str | None = Field(default=None, min_length=1)
     answer: str | None = Field(default=None, min_length=1)
     top_k: int = Field(default=8, ge=1, le=25)
+    image_data: str | None = Field(default=None, min_length=1)
+    image_mime_type: str | None = Field(default=None, min_length=1)
 
 
 class DiagnosticReference(BaseModel):
@@ -159,14 +161,46 @@ class DiagnosticReference(BaseModel):
     snippet: str | None = None
 
 
+class DiagnosticCause(BaseModel):
+    cause: str
+    probability: float = Field(default=0.0, ge=0.0, le=1.0)
+    status: str = Field(default="possible")
+    evidence: str | None = None
+    source: str | None = None
+    elimination_reason: str | None = None
+
+
+class DiagnosticVisualAnalysis(BaseModel):
+    visible_items: list[str] = Field(default_factory=list)
+    confidence: str = "low"
+    relevance_to_issue: str | None = None
+    additional_photos_required: list[str] = Field(default_factory=list)
+    safety_notes: list[str] = Field(default_factory=list)
+
+
+class DiagnosticSparePart(BaseModel):
+    part_name: str
+    part_number: str
+    compatibility: str
+    reason_replacement_may_be_needed: str
+    documentation_source: str | None = None
+    source_index: int | None = None
+
+
 class DiagnosticResponse(BaseModel):
     session_id: str
     probable_causes: list[str]
+    possible_causes: list[DiagnosticCause] = Field(default_factory=list)
+    eliminated_causes: list[DiagnosticCause] = Field(default_factory=list)
+    most_likely_cause: str | None = None
+    confidence: str = "low"
     investigation_reasoning: str
     follow_up_question: str
     next_step: str
     recommended_action: str
     documentation_references: list[DiagnosticReference]
+    visual_analysis: DiagnosticVisualAnalysis | None = None
+    spare_parts: list[DiagnosticSparePart] = Field(default_factory=list)
     detected_product_id: str | None = None
     detected_product_name: str | None = None
 

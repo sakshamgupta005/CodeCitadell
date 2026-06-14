@@ -154,6 +154,10 @@ class ProductStore:
             "answers": [],
             "latest_question": None,
             "probable_causes": [],
+            "possible_causes": [],
+            "eliminated_causes": [],
+            "most_likely_cause": None,
+            "confidence": "low",
             "next_step": None,
             "recommended_action": None,
             "created_at": self._now(),
@@ -173,7 +177,7 @@ class ProductStore:
             raise NotFoundError(f"Diagnostic session not found: {session_id}")
         return session
 
-    def add_diagnostic_answer(self, session_id: str, answer: str) -> dict[str, object]:
+    def add_diagnostic_answer(self, session_id: str, answer: str, image_attached: bool = False) -> dict[str, object]:
         with self._lock:
             sessions = self._read_json_unlocked(self.sessions_path, {})
             session = sessions.get(session_id)
@@ -185,6 +189,7 @@ class ProductStore:
                 {
                     "question": str(session.get("latest_question") or ""),
                     "answer": answer.strip(),
+                    "image_attached": image_attached,
                     "answered_at": self._now(),
                 }
             )
@@ -202,6 +207,10 @@ class ProductStore:
         next_step: str,
         recommended_action: str,
         investigation_reasoning: str | None = None,
+        possible_causes: list[dict[str, object]] | None = None,
+        eliminated_causes: list[dict[str, object]] | None = None,
+        most_likely_cause: str | None = None,
+        confidence: str | None = None,
     ) -> dict[str, object]:
         with self._lock:
             sessions = self._read_json_unlocked(self.sessions_path, {})
@@ -209,6 +218,14 @@ class ProductStore:
             if not isinstance(session, dict):
                 raise NotFoundError(f"Diagnostic session not found: {session_id}")
             session["probable_causes"] = probable_causes
+            if possible_causes is not None:
+                session["possible_causes"] = possible_causes
+            if eliminated_causes is not None:
+                session["eliminated_causes"] = eliminated_causes
+            if most_likely_cause is not None:
+                session["most_likely_cause"] = most_likely_cause
+            if confidence is not None:
+                session["confidence"] = confidence
             session["latest_question"] = latest_question
             session["next_step"] = next_step
             session["recommended_action"] = recommended_action

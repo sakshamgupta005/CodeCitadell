@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import type { DiagnosticResponse, ProductView, DiagnosticReference } from "@/lib/types";
+import type { DiagnosticResponse, ProductView, DiagnosticReference, DiagnosticVisualAnalysis } from "@/lib/types";
 
 type Message = {
   role: "ai" | "user";
@@ -15,6 +15,16 @@ type Message = {
   followUp?: string;
   detectedProductId?: string | null;
   detectedProductName?: string | null;
+  visualAnalysis?: DiagnosticVisualAnalysis | null;
+  imageName?: string | null;
+};
+
+type CauseView = {
+  name: string;
+  confidence: number;
+  color: string;
+  eliminated: boolean;
+  evidence?: string | null;
 };
 
 const defaultQuickReplies = ["Horizontal bands", "Random light patches", "Faded edges only"];
@@ -33,6 +43,97 @@ export function DiagnosticAssistant({
   const [isLoading, setIsLoading] = useState(false);
   const [diagnostic, setDiagnostic] = useState<DiagnosticResponse | null>(null);
   const [dynamicDocs, setDynamicDocs] = useState<any[]>([]);
+  const [imageData, setImageData] = useState<string | null>(null);
+  const [imageMimeType, setImageMimeType] = useState<string | null>(null);
+  const [imageName, setImageName] = useState<string | null>(null);
+
+  // Voice integration states
+  const [isVoiceActive, setIsVoiceActive] = useState(false);
+  const [voiceMode, setVoiceMode] = useState<"continuous" | "ptt">("continuous");
+  const [isMuted, setIsMuted] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  const recognitionRef = useRef<any>(null);
+  const isVoiceActiveRef = useRef(false);
+  const voiceModeRef = useRef<"continuous" | "ptt">("continuous");
+  const isSpeakingRef = useRef(false);
+  const isLoadingRef = useRef(false);
+
+  useEffect(() => {
+    isVoiceActiveRef.current = isVoiceActive;
+  }, [isVoiceActive]);
+
+  useEffect(() => {
+    voiceModeRef.current = voiceMode;
+  }, [voiceMode]);
+
+  useEffect(() => {
+    isSpeakingRef.current = isSpeaking;
+  }, [isSpeaking]);
+
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  // Speech Recognition Initializer
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+
+    const rec = new SpeechRecognition();
+    rec.continuous = false;
+    rec.interimResults = false;
+    rec.lang = "en-US";
+
+    rec.onstart = () => {
+      setIsListening(true);
+    };
+
+    rec.onend = () => {
+      setIsListening(false);
+      // Continuous mode restart logic
+      if (
+        isVoiceActiveRef.current &&
+        voiceModeRef.current === "continuous" &&
+        !isSpeakingRef.current &&
+        !isLoadingRef.current
+      ) {
+        try {
+          rec.start();
+        } catch (e) {}
+      }
+    };
+
+    rec.onresult = (event: any) => {
+      const result = event.results[event.resultIndex];
+      if (result.isFinal) {
+        const transcript = result[0].transcript;
+        if (transcript && transcript.trim()) {
+          void submit(transcript);
+        }
+      }
+    };
+
+    rec.onerror = (event: any) => {
+      console.error("Speech recognition error:", event.error);
+      setIsListening(false);
+    };
+
+    recognitionRef.current = rec;
+
+    return () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch (e) {}
+      }
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
   
   // Load dynamic knowledge documents for this product
   useEffect(() => {
@@ -55,12 +156,27 @@ export function DiagnosticAssistant({
   }, [initialIssue]);
 
   const causes = useMemo(() => {
-    if (!product) {
+    if (!product && !diagnostic) {
       return [
         { name: "Awaiting symptom analysis...", confidence: 0, color: "var(--text-muted)", eliminated: false }
       ];
     }
     if (diagnostic) {
+      const possibleCauses = diagnostic.possible_causes ?? [];
+      const eliminatedCauses = diagnostic.eliminated_causes ?? [];
+      if (possibleCauses.length > 0 || eliminatedCauses.length > 0) {
+        return [...possibleCauses, ...eliminatedCauses].map((cause, index) => {
+          const eliminated = cause.status === "eliminated";
+          const confidence = Math.round((cause.probability || 0) * 100);
+          return {
+            name: cause.cause,
+            confidence,
+            color: eliminated ? "var(--red)" : index === 0 ? "var(--amber)" : index === 1 ? "var(--indigo)" : "var(--text-muted)",
+            eliminated,
+            evidence: eliminated ? cause.elimination_reason || cause.evidence : cause.evidence,
+          };
+        });
+      }
       if (diagnostic.probable_causes && diagnostic.probable_causes.length > 0) {
         return diagnostic.probable_causes.map((cause, index) => ({
           name: cause,
@@ -80,11 +196,18 @@ export function DiagnosticAssistant({
 
   async function submit(text: string) {
     const trimmed = text.trim();
-    if (!trimmed || isLoading) return;
+    if ((!trimmed && !imageData) || isLoading) return;
 
     setIsLoading(true);
     setInput("");
-    setMessages((current) => [...current, { role: "user", text: trimmed }]);
+    const submittedImageName = imageName;
+    const submittedImageData = imageData;
+    const submittedImageMimeType = imageMimeType;
+    const submittedText = trimmed || "Uploaded diagnostic photo";
+    setImageData(null);
+    setImageMimeType(null);
+    setImageName(null);
+    setMessages((current) => [...current, { role: "user", text: submittedText, imageName: submittedImageName }]);
 
     try {
       let payload: DiagnosticResponse;
@@ -97,8 +220,10 @@ export function DiagnosticAssistant({
           body: JSON.stringify({
             productId: product.id,
             sessionId,
-            issue: sessionId ? undefined : trimmed,
-            answer: sessionId ? trimmed : undefined,
+            issue: sessionId ? undefined : submittedText,
+            answer: sessionId ? submittedText : undefined,
+            imageData: submittedImageData,
+            imageMimeType: submittedImageMimeType,
           }),
         });
 
@@ -114,7 +239,9 @@ export function DiagnosticAssistant({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             sessionId,
-            issue_description: trimmed,
+            issue_description: submittedText,
+            imageData: submittedImageData,
+            imageMimeType: submittedImageMimeType,
           }),
         });
 
@@ -140,6 +267,7 @@ export function DiagnosticAssistant({
           followUp: payload.follow_up_question,
           detectedProductId: payload.detected_product_id,
           detectedProductName: payload.detected_product_name,
+          visualAnalysis: payload.visual_analysis,
         },
       ]);
     } catch (error) {
@@ -155,6 +283,30 @@ export function DiagnosticAssistant({
     } finally {
       setIsLoading(false);
     }
+  }
+
+  function handleImageSelect(file: File | null) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setMessages((current) => [
+        ...current,
+        {
+          role: "ai",
+          text: "Please attach an image file for visual inspection.",
+        },
+      ]);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setImageData(reader.result);
+        setImageMimeType(file.type);
+        setImageName(file.name);
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
   const quickReplies = product 
@@ -556,7 +708,7 @@ function AnalysisPanel({
   diagnostic,
   isGlobal,
 }: {
-  causes: Array<{ name: string; confidence: number; color: string; eliminated: boolean }>;
+  causes: CauseView[];
   diagnostic: DiagnosticResponse | null;
   isGlobal: boolean;
 }) {
@@ -609,6 +761,11 @@ function AnalysisPanel({
                   </>
                 )}
               </div>
+              {cause.evidence && (
+                <div style={{ color: "var(--text-muted)", fontSize: "10.5px", lineHeight: 1.35, marginTop: "4px" }}>
+                  {cause.evidence}
+                </div>
+              )}
             </div>
           ))
         )}
@@ -657,6 +814,43 @@ function AnalysisPanel({
           ))
         )}
       </div>
+
+      {diagnostic?.spare_parts && diagnostic.spare_parts.length > 0 && (
+        <div className="mock-panel-section" style={{ borderTop: "1px solid var(--border)", paddingTop: "12px", marginTop: "12px" }}>
+          <div className="mock-panel-title">🔧 Recommended Spare Parts</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {diagnostic.spare_parts.map((part, index) => (
+              <div
+                key={`${part.part_name}-${index}`}
+                style={{
+                  padding: "10px",
+                  border: "1px solid var(--border)",
+                  borderRadius: "var(--radius-sm)",
+                  background: "var(--bg-elevated)",
+                  fontSize: "11px",
+                  lineHeight: "1.4",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700, color: "var(--text-primary)", marginBottom: "4px" }}>
+                  <span>🛠️ {part.part_name}</span>
+                  <span style={{ color: "var(--teal)", fontFamily: "var(--font-mono)", fontSize: "10px" }}>{part.part_number}</span>
+                </div>
+                <div style={{ color: "var(--text-secondary)", marginBottom: "4px" }}>
+                  <strong>Compatibility:</strong> {part.compatibility}
+                </div>
+                <div style={{ color: "var(--text-muted)", fontSize: "10.5px" }}>
+                  <strong>Reason:</strong> {part.reason_replacement_may_be_needed}
+                </div>
+                {part.documentation_source && (
+                  <div style={{ marginTop: "6px", fontSize: "9.5px", color: "var(--violet-light)", fontStyle: "italic", borderTop: "1px dashed var(--border)", paddingTop: "4px" }}>
+                    📖 Source: {part.documentation_source}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </aside>
   );
 }
