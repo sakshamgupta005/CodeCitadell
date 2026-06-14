@@ -46,47 +46,10 @@ export function DiagnosticAssistant({
     }
   }, [product]);
 
-  const [messages, setMessages] = useState<Message[]>(() => {
-    if (product) {
-      if (initialIssue) {
-        return [
-          {
-            role: "ai",
-            text: `I'm analyzing the ${product.name}. Tell me exactly what you're seeing: when it happens, what the output looks like, and any error lights.`,
-          },
-        ];
-      } else {
-        return [
-          {
-            role: "ai",
-            text: `I'm analyzing the ${product.name}. Tell me exactly what you're seeing: when it happens, what the output looks like, and any error lights.`,
-          },
-          {
-            role: "ai",
-            text: "Intermittent symptoms narrow this significantly. I am tracking likely causes against indexed product documentation and will ask targeted follow-up questions.",
-            citation: "📄 Service Manual · Troubleshooting",
-            followUp: "Describe the symptom in as much detail as you can.",
-          },
-        ];
-      }
-    } else {
-      // Global diagnostic mode initial messages
-      return [
-        {
-          role: "ai",
-          text: "I am FixPilot's Global Support Router. Describe the symptoms or product you are having trouble with, and I will search our comprehensive support manuals to diagnose the issue.",
-        },
-        {
-          role: "ai",
-          text: "I scan across all registered products to match your problem with the correct technical troubleshooting guide.",
-          followUp: "Please describe the problem you are experiencing in detail.",
-        },
-      ];
-    }
-  });
+  const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    if (initialIssue && !sessionId && messages.length === 1) {
+    if (initialIssue && !sessionId && messages.length === 0) {
       void submit(initialIssue);
     }
   }, [initialIssue]);
@@ -97,30 +60,21 @@ export function DiagnosticAssistant({
         { name: "Awaiting symptom analysis...", confidence: 0, color: "var(--text-muted)", eliminated: false }
       ];
     }
-    if (diagnostic?.probable_causes.length) {
-      return diagnostic.probable_causes.map((cause, index) => ({
-        name: cause,
-        confidence: [72, 58, 31, 18][index] ?? Math.max(12, 72 - index * 14),
-        color: index === 0 ? "var(--amber)" : index === 1 ? "var(--indigo)" : "var(--text-muted)",
-        eliminated: false,
-      }));
+    if (diagnostic) {
+      if (diagnostic.probable_causes && diagnostic.probable_causes.length > 0) {
+        return diagnostic.probable_causes.map((cause, index) => ({
+          name: cause,
+          confidence: [72, 58, 31, 18][index] ?? Math.max(12, 72 - index * 14),
+          color: index === 0 ? "var(--amber)" : index === 1 ? "var(--indigo)" : "var(--text-muted)",
+          eliminated: false,
+        }));
+      } else {
+        return [];
+      }
     }
 
-    // Default placeholders matching product categories
-    const isPrinter = product.id.includes("printer") || product.id.includes("laserjet");
-    if (isPrinter) {
-      return [
-        { name: "Drum contamination", confidence: 72, color: "var(--amber)", eliminated: false },
-        { name: "Fuser temperature", confidence: 58, color: "var(--indigo)", eliminated: false },
-        { name: "Toner defect", confidence: 31, color: "var(--text-muted)", eliminated: false },
-        { name: "Paper moisture", confidence: 5, color: "var(--text-muted)", eliminated: true },
-      ];
-    }
-    
     return [
-      { name: "Connection backhaul drop", confidence: 64, color: "var(--amber)", eliminated: false },
-      { name: "IP lease collision", confidence: 45, color: "var(--indigo)", eliminated: false },
-      { name: "Firmware mismatch", confidence: 22, color: "var(--text-muted)", eliminated: false },
+      { name: "Awaiting symptom analysis...", confidence: 0, color: "var(--text-muted)", eliminated: false }
     ];
   }, [diagnostic, product]);
 
@@ -233,6 +187,31 @@ export function DiagnosticAssistant({
         />
         
         <section className="mock-diag-chat">
+          <div style={{
+            padding: "8px 16px",
+            borderBottom: "1px solid var(--border)",
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            background: product ? "rgba(12, 184, 172, 0.08)" : "rgba(124, 58, 237, 0.08)",
+            color: product ? "var(--teal)" : "var(--violet-light)",
+          }}>
+            {product ? (
+              <>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--teal)", boxShadow: "0 0 8px var(--teal)" }} />
+                ISO PRODUCT MODE: strictly grounded in {product.name} manuals
+              </>
+            ) : (
+              <>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--violet-light)", boxShadow: "0 0 8px var(--violet-light)" }} />
+                GLOBAL ROUTER MODE: searching all corporate knowledge
+              </>
+            )}
+          </div>
           <div className="mock-diag-chat-header">
             <div className="mock-diag-product-badge">
               <div className="mock-diag-product-icon">
@@ -255,9 +234,36 @@ export function DiagnosticAssistant({
           </div>
 
           <div className="mock-chat-msgs">
-            {messages.map((message, index) => (
-              <ChatMessage message={message} key={`${message.role}-${index}`} />
-            ))}
+            {messages.length === 0 ? (
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                minHeight: "280px",
+                textAlign: "center",
+                color: "var(--text-secondary)",
+                padding: "20px"
+              }}>
+                <div style={{ fontSize: "40px", marginBottom: "16px", animation: "float 4s ease-in-out infinite" }}>👋</div>
+                <h3 style={{ color: "var(--text-primary)", fontWeight: 700, fontSize: "16px", marginBottom: "8px" }}>
+                  {product ? `Need help with your ${product.name}?` : "How can I help today?"}
+                </h3>
+                <p style={{ fontSize: "13px", maxWidth: "420px", lineHeight: "1.55", margin: 0, color: "var(--text-secondary)" }}>
+                  {product 
+                    ? "Describe your issue or ask an educational question about this product. I will search the indexed manuals to assist you."
+                    : "Describe your hardware symptoms or ask a conceptual question, and I will search across all registered product guides."}
+                </p>
+                <div style={{ marginTop: "24px", fontSize: "11px", color: "var(--text-muted)", fontStyle: "italic" }}>
+                  Type a question below to start a diagnostic or learning session
+                </div>
+              </div>
+            ) : (
+              messages.map((message, index) => (
+                <ChatMessage message={message} key={`${message.role}-${index}`} />
+              ))
+            )}
             {isLoading && (
               <ChatMessage
                 message={{
@@ -572,6 +578,10 @@ function AnalysisPanel({
           <div style={{ color: "var(--text-muted)", fontSize: "12px", padding: "8px 0" }}>
             Awaiting symptom description to cross-reference guides.
           </div>
+        ) : causes.length === 0 ? (
+          <div style={{ color: "var(--text-secondary)", fontSize: "11.5px", padding: "8px 0", fontStyle: "italic" }}>
+            Educational Session · No active hardware fault detected.
+          </div>
         ) : (
           causes.map((cause) => (
             <div className="mock-cause-item" key={cause.name} style={{ opacity: cause.eliminated ? 0.5 : 1 }}>
@@ -606,12 +616,18 @@ function AnalysisPanel({
 
       <div className="mock-panel-section">
         <div className="mock-panel-title">Recommended Inspections</div>
-        {inspections.map((inspection, index) => (
-          <div className="mock-inspect-item" key={inspection}>
-            <div className="mock-inspect-num">{index + 1}</div>
-            <div className="mock-inspect-text">{inspection}</div>
+        {diagnostic && diagnostic.probable_causes.length === 0 ? (
+          <div style={{ color: "var(--text-secondary)", fontSize: "11.5px", padding: "8px 0", fontStyle: "italic" }}>
+            No diagnostic inspections required.
           </div>
-        ))}
+        ) : (
+          inspections.map((inspection, index) => (
+            <div className="mock-inspect-item" key={inspection}>
+              <div className="mock-inspect-num">{index + 1}</div>
+              <div className="mock-inspect-text">{inspection}</div>
+            </div>
+          ))
+        )}
       </div>
 
       <div className="mock-panel-section">

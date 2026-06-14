@@ -82,7 +82,7 @@ class DiagnosticService:
             follow_up_question=diagnosis["follow_up_question"],
             next_step=diagnosis["next_step"],
             recommended_action=diagnosis["recommended_action"],
-            documentation_references=self._references(documents),
+            documentation_references=self._references(documents, diagnosis.get("cited_sources")),
         )
 
     async def diagnose_global(self, payload: DiagnosticRequest) -> DiagnosticResponse:
@@ -126,7 +126,7 @@ class DiagnosticService:
             follow_up_question=diagnosis["follow_up_question"],
             next_step=diagnosis["next_step"],
             recommended_action=diagnosis["recommended_action"],
-            documentation_references=self._references(documents),
+            documentation_references=self._references(documents, diagnosis.get("cited_sources")),
             detected_product_id=diagnosis.get("detected_product_id"),
             detected_product_name=diagnosis.get("detected_product_name"),
         )
@@ -180,10 +180,32 @@ class DiagnosticService:
         return history
 
     @staticmethod
-    def _references(documents: list[SearchResultItem]) -> list[DiagnosticReference]:
+    def _references(documents: list[SearchResultItem], cited_sources: list[int] | None = None) -> list[DiagnosticReference]:
         references = []
-        for document in documents:
+        seen_titles = set()
+        
+        # If the LLM returned cited_sources, filter documents accordingly
+        filtered_docs = []
+        if cited_sources is not None:
+            for idx in cited_sources:
+                try:
+                    doc_idx = int(idx) - 1
+                    if 0 <= doc_idx < len(documents):
+                        filtered_docs.append(documents[doc_idx])
+                except (ValueError, TypeError):
+                    continue
+        else:
+            filtered_docs = documents
+
+        for document in filtered_docs:
             metadata = document.metadata
+            title = metadata.get("title") or "Document"
+            
+            # Avoid duplicate evidence by title
+            if title in seen_titles:
+                continue
+            seen_titles.add(title)
+
             clean_text = document.text
             if "\n\n" in clean_text:
                 parts = clean_text.split("\n\n", 1)
@@ -195,7 +217,7 @@ class DiagnosticService:
                     source=metadata.get("source", ""),
                     type=metadata.get("type", ""),
                     id=document.id,
-                    title=metadata.get("title"),
+                    title=title,
                     section=metadata.get("section"),
                     page=metadata.get("page"),
                     url=metadata.get("url"),

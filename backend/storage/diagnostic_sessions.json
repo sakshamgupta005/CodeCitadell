@@ -859,5 +859,136 @@
     "created_at": "2026-06-14T20:38:25.664150+00:00",
     "updated_at": "2026-06-14T20:38:29.358070+00:00",
     "investigation_reasoning": "The green blinking light on the hhh device corresponds to error code E10, which is explicitly documented as a low memory state. My diagnostic process focuses on clearing the current volatile memory state to restore normal operation, as this is the standard recovery procedure for this specific error code."
+  },
+  "8010cbce-8235-4dbb-b50c-e0475b5bead5": {
+    "id": "8010cbce-8235-4dbb-b50c-e0475b5bead5",
+    "product_id": "moss-router-x1",
+    "issue_description": "What is Moss?",
+    "answers": [],
+    "latest_question": "Are you currently setting up a new Moss system, or are you experiencing any connectivity issues with your existing nodes?",
+    "probable_causes": [
+      "Insufficient documentation evidence."
+    ],
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Learn more from the documentation",
+    "created_at": "2026-06-14T21:07:21.531448+00:00",
+    "updated_at": "2026-06-14T21:07:40.758153+00:00",
+    "investigation_reasoning": "The Moss Router X1 is a high-performance mesh networking system designed to provide seamless Wi-Fi coverage throughout your home. Unlike traditional routers that rely on a single access point, the Moss system uses multiple nodes that communicate with each other to create a unified, reliable network. This allows your devices to maintain a strong connection as you move from room to room. You can easily expand your coverage by adding secondary nodes, which pair with your main router to extend the signal range and improve stability."
+  },
+  "c5efb7e0-2e13-4685-9e43-f29c7bf99ab3": {
+    "id": "c5efb7e0-2e13-4685-9e43-f29c7bf99ab3",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect.",
+    "answers": [],
+    "latest_question": "What is the status light on the secondary node doing right now? Is it pulsing amber slowly, pulsing amber rapidly, or showing another color?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Firmware version mismatch",
+      "Node placed too far from the main router during setup"
+    ],
+    "next_step": "Observe the LED status light on the secondary node.",
+    "recommended_action": "Check the LED status light pattern to identify if the node is ready for pairing or if it has encountered a synchronization failure.",
+    "created_at": "2026-06-14T21:07:40.801207+00:00",
+    "updated_at": "2026-06-14T21:07:44.514631+00:00",
+    "investigation_reasoning": "I am sorry to hear you are having trouble connecting your mesh node. To help me narrow down the cause, I need to check the status light on the secondary node, as the pattern it displays tells us exactly what is happening with the connection."
+  },
+  "da77e332-ab69-4205-8791-cfe385745e3d": {
+    "id": "da77e332-ab69-4205-8791-cfe385745e3d",
+    "product_id": "moss-router-x1",
+    "issue_description": "What is Moss?",
+    "answers": [],
+    "latest_question": "Are you currently experiencing any connectivity issues with your Moss Router X1, or would you like to know more about how to set up your mesh network?",
+    "probable_causes": [
+      "Insufficient documentation evidence."
+    ],
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Learn more from the documentation",
+    "created_at": "2026-06-14T21:08:08.280744+00:00",
+    "updated_at": "2026-06-14T21:08:21.056145+00:00",
+    "investigation_reasoning": "The Moss Router X1 is a high-performance mesh networking system designed to provide seamless Wi-Fi coverage throughout your home. Unlike traditional routers that rely on a single access point, the Moss system uses multiple nodes that communicate with each other to create a unified, reliable network. This allows your devices to maintain a strong connection as you move from room to room. You can easily expand your coverage by adding secondary nodes, which pair wirelessly with your main router to extend the signal range."
+  },
+  "29bacbbd-0b93-4bf9-8c0f-1b1f270f0171": {
+    "id": "29bacbbd-0b93-4bf9-8c0f-1b1f270f0171",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect.",
+    "answers": [],
+    "latest_question": "What is the current behavior of the LED status light on the secondary node? For example, is it pulsing amber slowly, pulsing amber rapidly, or showing a different color?",
+    "probable_causes": [
+      "Hardware synchronization failure",
+      "Firmware version mismatch",
+      "Node placed too far from the main router during setup"
+    ],
+    "next_step": "Observe the LED status light on the secondary node.",
+    "recommended_action": "Check the LED status light and report its behavior to determine if this is a simple pairing issue or a synchronization failure.",
+    "created_at": "2026-06-14T21:08:21.080137+00:00",
+    "updated_at": "2026-06-14T21:08:24.560658+00:00",
+    "investigation_reasoning": "I am sorry to hear you are having trouble connecting your mesh node. To help me narrow down the cause, I need to check the status light on the secondary node, as it provides the most direct information about the connection state."
+  },
+  "6d7b7689-756a-46ac-98b5-88d08919fc4d": {
+    "id": "6d7b7689-756a-46ac-98b5-88d08919fc4d",
+    "product_id": "moss-router-x1",
+    "issue_description": "Teach me mesh networking.",
+    "answers": [],
+    "latest_question": "That is the core concept of how your Moss Router X1 creates a unified network. Are you currently trying to set up a new mesh node, or are you experiencing any connectivity issues with your existing system?",
+    "probable_causes": [
+      "Insufficient documentation evidence."
+    ],
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Learn more from the documentation",
+    "created_at": "2026-06-14T21:10:37.288962+00:00",
+    "updated_at": "2026-06-14T21:10:49.702157+00:00",
+    "investigation_reasoning": "Mesh networking is a system where multiple nodes work together to create a single, seamless Wi-Fi network throughout your home, rather than relying on a single router. In the Moss Router X1 system, these nodes communicate using 'backhaul'\u2014the connection that links secondary nodes back to the main router. You can use wireless backhaul, which utilizes a dedicated 5GHz channel, or Ethernet backhaul, which uses physical RJ45 cables for a more stable connection, especially in larger or multi-story environments. By using multiple nodes, you eliminate dead zones and ensure consistent coverage as you move between rooms."
+  },
+  "56e84323-1d0c-496c-8490-8b0c1a2ac04e": {
+    "id": "56e84323-1d0c-496c-8490-8b0c1a2ac04e",
+    "product_id": "moss-router-x1",
+    "issue_description": "My mesh node won't connect.",
+    "answers": [
+      {
+        "question": "What is the current behavior of the status LED on the secondary node?",
+        "answer": "The light is pulsing amber slowly",
+        "answered_at": "2026-06-14T21:10:57.532829+00:00"
+      }
+    ],
+    "latest_question": "Are you currently near the main router to perform the sync button sequence?",
+    "probable_causes": [
+      "The node is currently in pairing mode and has not yet been triggered to sync with the main router.",
+      "The sync process was initiated but failed to complete the handshake."
+    ],
+    "next_step": "Press the sync button on the back of the main router for 3 seconds until its LED flashes blue, then immediately press the sync button on the secondary node.",
+    "recommended_action": "Follow the pairing sequence outlined in the Mesh Pairing Guide (Section 2.2).",
+    "created_at": "2026-06-14T21:10:49.738778+00:00",
+    "updated_at": "2026-06-14T21:11:00.708894+00:00",
+    "investigation_reasoning": "A slowly pulsing amber light on your Moss Router X1 indicates that the node is currently in pairing mode and is ready to connect to your primary router. Since you haven't successfully paired it yet, we need to initiate the synchronization process manually."
+  },
+  "24005454-efce-4a7f-910d-ed14e3a084a6": {
+    "id": "24005454-efce-4a7f-910d-ed14e3a084a6",
+    "product_id": "moss-router-x1",
+    "issue_description": "What is Moss Router X1?",
+    "answers": [],
+    "latest_question": "Are you currently setting up your Moss Router X1, or are you experiencing any connectivity issues with your network?",
+    "probable_causes": [
+      "Insufficient documentation evidence."
+    ],
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Learn more from the documentation",
+    "created_at": "2026-06-14T21:11:05.116888+00:00",
+    "updated_at": "2026-06-14T21:11:08.819349+00:00",
+    "investigation_reasoning": "The Moss Router X1 is a high-performance networking device designed to provide robust Wi-Fi coverage through a mesh system. By utilizing mesh technology, the X1 allows you to connect multiple nodes together to create a seamless, unified network throughout your home or office. It features intuitive status indicators, such as pulsing amber lights to signal pairing readiness or synchronization status, and offers advanced administrative controls to manage wireless channels and firmware for optimal stability."
+  },
+  "8ef51062-7cc4-4982-9337-93b9292521f8": {
+    "id": "8ef51062-7cc4-4982-9337-93b9292521f8",
+    "product_id": "hhh",
+    "issue_description": "tell me what it might be about",
+    "answers": [],
+    "latest_question": "Are you looking for information regarding Manas Gupta's professional background, or did you have a specific technical question about one of the projects listed in these documents?",
+    "probable_causes": [
+      "Insufficient documentation evidence."
+    ],
+    "next_step": "Conceptual inquiry",
+    "recommended_action": "Learn more from the documentation",
+    "created_at": "2026-06-14T21:16:41.809791+00:00",
+    "updated_at": "2026-06-14T21:16:51.561103+00:00",
+    "investigation_reasoning": "Based on the documentation provided, 'hhh' is not a physical electronic device or consumer product. Instead, the documents associated with this ID contain the professional portfolio, resume, and academic application materials of a software engineer named Manas Gupta. The files include his employment history at Statusbrew, his academic background at Guru Nanak Dev University, his project experience (such as vital signs monitoring systems and web-based form builders), and letters of recommendation. It appears this ID was used to categorize these personal documents for digital storage or reference."
   }
 }

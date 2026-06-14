@@ -47,5 +47,12 @@
     "category": "Networking",
     "description": "A testing switch device for routing verification.",
     "image_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64"
+  },
+  {
+    "id": "hhh",
+    "name": "hhh",
+    "category": "Electronics",
+    "description": "hi",
+    "image_url": "https://res.cloudinary.com/dyxlavy0j/image/upload/v1772021155/main-sample.png"
   }
 ]
