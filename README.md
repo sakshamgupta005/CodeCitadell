@@ -1,5 +1,4 @@
 # CodeCitadel
 
-Moss Product Support Platform backend lives in `backend/`.
+Here is my project link: https://codecitadel-fixpilot.vercel.app/
 
-See `backend/README.md` for setup, run commands, and example API requests.
