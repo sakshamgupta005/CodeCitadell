@@ -12,8 +12,9 @@ type RequestBody = {
 };
 
 export async function POST(request: Request) {
+  let body: RequestBody | undefined;
   try {
-    const body = (await request.json()) as RequestBody;
+    body = (await request.json()) as RequestBody;
     const response = await fetch(`${API_BASE_URL}/products/global/diagnose`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
     return NextResponse.json(payload);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json(fallbackGlobalDiagnostic(undefined, message));
+    return NextResponse.json(fallbackGlobalDiagnostic(body, message));
   }
 }
 
