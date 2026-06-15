@@ -114,7 +114,7 @@ function cleanProduct(product: Product): Product {
     name: String(product.name).trim(),
     category: String(product.category).trim(),
     description: String(product.description).trim(),
-    image_url: String(product.image_url || "https://images.unsplash.com/photo-1558618666-fcd25c85cd64").trim(),
+    image_url: String(product.image_url || "").trim(),
   };
 }
 

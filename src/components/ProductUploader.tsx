@@ -38,7 +38,7 @@ export function ProductUploader() {
         name: name.trim(),
         category,
         description: description.trim(),
-        image_url: imageUrl.trim() || "https://images.unsplash.com/photo-1558618666-fcd25c85cd64",
+        image_url: imageUrl.trim() || "",
       });
 
       reset();
@@ -117,13 +117,64 @@ export function ProductUploader() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Image URL (Optional)</label>
-                <input 
-                  className="form-input" 
-                  onChange={(event) => setImageUrl(event.target.value)} 
-                  placeholder="https://images.unsplash.com/photo-..."
-                  value={imageUrl} 
-                />
+                <label className="form-label">Product Image</label>
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <label 
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "80px",
+                      height: "80px",
+                      border: "2px dashed var(--border)",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                      background: "var(--bg-elevated)",
+                      fontSize: "12px",
+                      color: "var(--text-secondary)",
+                      flexShrink: 0,
+                      position: "relative",
+                      overflow: "hidden"
+                    }}
+                  >
+                    {imageUrl ? (
+                      <img 
+                        src={imageUrl} 
+                        alt="Preview" 
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                      />
+                    ) : (
+                      <div style={{ textAlign: "center" }}>
+                        <span style={{ fontSize: "20px", display: "block" }}>📷</span>
+                        <span>Browse</span>
+                      </div>
+                    )}
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      style={{ display: "none" }} 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          handleImageUpload(file, setImageUrl);
+                        }
+                      }}
+                    />
+                  </label>
+                  <div style={{ flexGrow: 1 }}>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      onChange={(event) => setImageUrl(event.target.value)} 
+                      placeholder="Or paste an image URL..."
+                      value={imageUrl.startsWith("data:") ? "" : imageUrl} 
+                    />
+                    <p style={{ fontSize: "10.5px", color: "var(--text-muted)", marginTop: "4px", margin: 0 }}>
+                      Upload any image (PNG, WebP, JPG, GIF) or paste a link.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div className="modal-actions">
@@ -141,4 +192,38 @@ export function ProductUploader() {
       )}
     </>
   );
+}
+
+function handleImageUpload(file: File, callback: (base64: string) => void) {
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const maxDim = 500;
+      let width = img.width;
+      let height = img.height;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+        callback(compressedBase64);
+      } else {
+        callback(event.target?.result as string);
+      }
+    };
+    img.src = event.target?.result as string;
+  };
+  reader.readAsDataURL(file);
 }

@@ -11,7 +11,17 @@ export function ProductCard({ product }: { product: ProductView }) {
         href={`/products/${product.id}`}
         style={{ textDecoration: "none", color: "inherit", display: "block", flexGrow: 1 }}
       >
-        <div className="mock-product-img">{product.emoji}</div>
+        <div className="mock-product-img">
+          {product.image_url ? (
+            <img 
+              src={product.image_url} 
+              alt={product.name} 
+              style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+            />
+          ) : (
+            product.emoji
+          )}
+        </div>
         <div className="mock-product-body">
           <div className="mock-product-cat">{product.category}</div>
           <div className="mock-product-name">{product.name}</div>

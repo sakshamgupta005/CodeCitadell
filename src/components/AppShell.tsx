@@ -21,12 +21,27 @@ const mobileItems = [
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [sessionUser, setSessionUser] = useState<string | null>(null);
 
-  // Sync theme from localStorage on mount
+  // Sync theme and session from localStorage on mount
   useEffect(() => {
     try {
       const stored = localStorage.getItem("fp-theme") as "dark" | "light" | null;
       if (stored) setTheme(stored);
+    } catch { /* ignore */ }
+
+    try {
+      const session = localStorage.getItem("fixpilot-session");
+      if (session) {
+        const accountsRaw = localStorage.getItem("fixpilot-accounts");
+        const accounts = accountsRaw ? JSON.parse(accountsRaw) : [];
+        const account = accounts.find((a: any) => a.identifier === session);
+        if (account && account.username) {
+          setSessionUser(account.username);
+        } else {
+          setSessionUser(session);
+        }
+      }
     } catch { /* ignore */ }
   }, []);
 
@@ -42,7 +57,16 @@ export function AppShell({ children }: { children: ReactNode }) {
       <main className="app-main">
         <nav className="mock-nav" aria-label="Primary navigation">
           <Link className="mock-nav-logo" href="/marketplace">
-            <span className="mock-logo-mark">⚡</span>
+            <img 
+              src="/logo.png" 
+              alt="FixPilot Logo" 
+              style={{ 
+                width: "28px", 
+                height: "28px", 
+                objectFit: "contain",
+                animation: "float 4s ease-in-out infinite"
+              }} 
+            />
             FixPilot
           </Link>
 
@@ -67,9 +91,41 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               {theme === "dark" ? "☀️" : "🌙"}
             </button>
-            <Link className="mock-nav-cta" href="/login">
-              Sign in
-            </Link>
+            {sessionUser ? (
+              <span 
+                className="mock-nav-username" 
+                style={{
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  color: "var(--violet-light)",
+                  padding: "5px 12px",
+                  background: "var(--bg-elevated)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "20px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  cursor: "pointer",
+                  marginLeft: "12px",
+                  userSelect: "none",
+                  transition: "all 0.2s"
+                }} 
+                onClick={() => {
+                  if (confirm("Would you like to sign out?")) {
+                    localStorage.removeItem("fixpilot-session");
+                    setSessionUser(null);
+                    window.location.reload();
+                  }
+                }} 
+                title="Click to Sign Out"
+              >
+                👤 {sessionUser}
+              </span>
+            ) : (
+              <Link className="mock-nav-cta" href="/login">
+                Sign in
+              </Link>
+            )}
           </div>
         </nav>
 
@@ -77,16 +133,20 @@ export function AppShell({ children }: { children: ReactNode }) {
       </main>
 
       <nav className="mock-mobile-nav" aria-label="Mobile navigation">
-        {mobileItems.map((item) => (
-          <Link
-            className={`mock-mobile-nav-item ${pathname.startsWith(item.href) ? "active" : ""}`}
-            href={item.href}
-            key={`${item.href}-${item.label}`}
-          >
-            <span className="mock-mobile-nav-icon">{item.icon}</span>
-            <span>{item.label}</span>
-          </Link>
-        ))}
+        {mobileItems.map((item) => {
+          const isAccount = item.href === "/login";
+          const label = (isAccount && sessionUser) ? sessionUser : item.label;
+          return (
+            <Link
+              className={`mock-mobile-nav-item ${pathname.startsWith(item.href) ? "active" : ""}`}
+              href={item.href}
+              key={`${item.href}-${item.label}`}
+            >
+              <span className="mock-mobile-nav-icon">{item.icon}</span>
+              <span>{label}</span>
+            </Link>
+          );
+        })}
       </nav>
     </div>
   );

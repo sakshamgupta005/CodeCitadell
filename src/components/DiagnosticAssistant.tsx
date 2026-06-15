@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import Link from "next/link";
 import type { DiagnosticResponse, ProductView, DiagnosticReference, DiagnosticVisualAnalysis } from "@/lib/types";
 
@@ -46,6 +46,13 @@ export function DiagnosticAssistant({
   const [imageData, setImageData] = useState<string | null>(null);
   const [imageMimeType, setImageMimeType] = useState<string | null>(null);
   const [imageName, setImageName] = useState<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (!input && textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
+  }, [input]);
 
   // Voice integration states
   const [isVoiceActive, setIsVoiceActive] = useState(false);
@@ -76,11 +83,21 @@ export function DiagnosticAssistant({
     isLoadingRef.current = isLoading;
   }, [isLoading]);
 
+  const [isSpeechSupported, setIsSpeechSupported] = useState(false);
+  const pttHoldActiveRef = useRef(false);
+  const pttStartTimeRef = useRef(0);
+  const accumulatedTranscriptRef = useRef("");
+  const currentSpeechTextRef = useRef("");
+
   // Speech Recognition Initializer
   useEffect(() => {
     if (typeof window === "undefined") return;
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) return;
+    if (!SpeechRecognition) {
+      setIsSpeechSupported(false);
+      return;
+    }
+    setIsSpeechSupported(true);
 
     const rec = new SpeechRecognition();
     rec.continuous = false;
@@ -93,6 +110,16 @@ export function DiagnosticAssistant({
 
     rec.onend = () => {
       setIsListening(false);
+      
+      // If we are in PTT mode, submit the accumulated transcript upon end
+      if (voiceModeRef.current === "ptt" && isVoiceActiveRef.current) {
+        const text = accumulatedTranscriptRef.current.trim();
+        if (text) {
+          void submit(text);
+        }
+      }
+      accumulatedTranscriptRef.current = "";
+      
       // Continuous mode restart logic
       if (
         isVoiceActiveRef.current &&
@@ -107,11 +134,18 @@ export function DiagnosticAssistant({
     };
 
     rec.onresult = (event: any) => {
-      const result = event.results[event.resultIndex];
-      if (result.isFinal) {
-        const transcript = result[0].transcript;
-        if (transcript && transcript.trim()) {
-          void submit(transcript);
+      let finalTranscript = "";
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        }
+      }
+      
+      if (finalTranscript) {
+        if (voiceModeRef.current === "continuous") {
+          void submit(finalTranscript);
+        } else {
+          accumulatedTranscriptRef.current += (accumulatedTranscriptRef.current ? " " : "") + finalTranscript;
         }
       }
     };
@@ -134,6 +168,117 @@ export function DiagnosticAssistant({
       }
     };
   }, []);
+
+  // Voice activation / mode changes trigger recognition control
+  useEffect(() => {
+    if (!isVoiceActive) {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch (e) {}
+      }
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      return;
+    }
+
+    if (voiceMode === "continuous") {
+      if (recognitionRef.current && !isSpeaking && !isLoading && !isListening) {
+        try {
+          recognitionRef.current.start();
+        } catch (e) {}
+      }
+    } else {
+      // In PTT mode, we only start recognition when the user holds down the mic button.
+      if (recognitionRef.current && !isListening) {
+        // do nothing
+      }
+    }
+  }, [isVoiceActive, voiceMode, isSpeaking, isLoading]);
+
+  // Control SpeechSynthesis pause/resume and play when unmuted
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    if (isMuted) {
+      // If currently speaking, pause it
+      if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+        window.speechSynthesis.pause();
+      }
+      setIsSpeaking(false);
+    } else {
+      // If paused, resume it
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+        setIsSpeaking(true);
+      } else if (!window.speechSynthesis.speaking && currentSpeechTextRef.current) {
+        // If not speaking at all but we have a pending text (e.g. received while muted), start speaking it
+        speak(currentSpeechTextRef.current, () => {
+          if (isVoiceActiveRef.current && voiceModeRef.current === "continuous" && recognitionRef.current) {
+            try {
+              recognitionRef.current.start();
+            } catch (e) {}
+          }
+        });
+      }
+    }
+  }, [isMuted]);
+
+  const handleMouseDownOrTouchStart = (e: React.MouseEvent | React.TouchEvent) => {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+
+    if (!isVoiceActive) {
+      setIsVoiceActive(true);
+      return;
+    }
+
+    if (voiceMode === "continuous") {
+      setIsVoiceActive(false);
+      return;
+    }
+
+    // Stop any active speaking
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    setIsSpeaking(false);
+    
+    pttHoldActiveRef.current = true;
+    pttStartTimeRef.current = Date.now();
+    accumulatedTranscriptRef.current = "";
+    
+    if (recognitionRef.current && !isListening) {
+      try {
+        recognitionRef.current.start();
+      } catch (err) {
+        console.error("PTT start failed:", err);
+      }
+    }
+  };
+
+  const handleMouseUpOrTouchEnd = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!pttHoldActiveRef.current) return;
+    pttHoldActiveRef.current = false;
+    
+    const duration = Date.now() - pttStartTimeRef.current;
+    
+    // Stop recognition
+    if (recognitionRef.current && isListening) {
+      try {
+        recognitionRef.current.stop();
+      } catch (err) {
+        console.error("PTT stop failed:", err);
+      }
+    }
+
+    // If it was a quick tap (duration < 250ms) in PTT mode, toggle voice mode off
+    if (duration < 250) {
+      setIsVoiceActive(false);
+    }
+  };
   
   // Load dynamic knowledge documents for this product
   useEffect(() => {
@@ -194,7 +339,57 @@ export function DiagnosticAssistant({
     ];
   }, [diagnostic, product]);
 
+  function speak(text: string, callback?: () => void) {
+    if (typeof window === "undefined" || !window.speechSynthesis) {
+      callback?.();
+      return;
+    }
+    
+    currentSpeechTextRef.current = text;
+    window.speechSynthesis.cancel();
+    
+    if (isMuted) {
+      setIsSpeaking(false);
+      callback?.();
+      return;
+    }
+
+    // Clean markdown/JSON citations from the text for TTS reading
+    const cleanText = text
+      .replace(/\*\*|\[.*?\]|`|#|---|1\.|2\.|3\./g, "")
+      .replace(/Source:[\s\S]*$/, "")
+      .replace(/Evidence:[\s\S]*$/, "")
+      .replace(/Document Name:[\s\S]*$/, "");
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+    };
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      currentSpeechTextRef.current = "";
+      callback?.();
+    };
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+      callback?.();
+    };
+
+    window.speechSynthesis.speak(utterance);
+  }
+
   async function submit(text: string) {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch (e) {}
+    }
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    currentSpeechTextRef.current = "";
+    setIsSpeaking(false);
+
     const trimmed = text.trim();
     if ((!trimmed && !imageData) || isLoading) return;
 
@@ -224,6 +419,7 @@ export function DiagnosticAssistant({
             answer: sessionId ? submittedText : undefined,
             imageData: submittedImageData,
             imageMimeType: submittedImageMimeType,
+            top_k: 8,
           }),
         });
 
@@ -254,11 +450,14 @@ export function DiagnosticAssistant({
 
       setDiagnostic(payload);
       setSessionId(payload.session_id);
+
+      const responseText = payload.investigation_reasoning || payload.next_step || payload.recommended_action;
+
       setMessages((current) => [
         ...current,
         {
           role: "ai",
-          text: payload.investigation_reasoning || payload.next_step || payload.recommended_action,
+          text: responseText,
           citation: payload.documentation_references[0]?.title || undefined,
           snippet: payload.documentation_references[0]?.snippet || null,
           section: payload.documentation_references[0]?.section || null,
@@ -270,6 +469,16 @@ export function DiagnosticAssistant({
           visualAnalysis: payload.visual_analysis,
         },
       ]);
+
+      if (isVoiceActiveRef.current) {
+        speak(responseText, () => {
+          if (isVoiceActiveRef.current && voiceModeRef.current === "continuous" && recognitionRef.current) {
+            try {
+              recognitionRef.current.start();
+            } catch (e) {}
+          }
+        });
+      }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : "Connection failed";
       setMessages((current) => [
@@ -441,13 +650,99 @@ export function DiagnosticAssistant({
                 </button>
               ))}
             </div>
-            <div className="mock-chat-input-row">
+
+            {isVoiceActive && (
+              <div className="voice-status-bar">
+                <div className="voice-status-info">
+                  <span className={`voice-indicator-dot ${isListening ? "listening" : isSpeaking ? "speaking" : ""}`} />
+                  <span className="voice-status-text">
+                    {isListening 
+                      ? (voiceMode === "ptt" ? "Push-to-Talk: Hold microphone button to speak..." : "Continuous Mode: Listening... Speak now") 
+                      : isSpeaking 
+                        ? "Speaking AI response..." 
+                        : isLoading 
+                          ? "Analyzing response..." 
+                          : "Voice ready"}
+                  </span>
+                </div>
+                {(isListening || isSpeaking) && (
+                  <div className="voice-visualizer">
+                    <span className="voice-bar bar-1" />
+                    <span className="voice-bar bar-2" />
+                    <span className="voice-bar bar-3" />
+                    <span className="voice-bar bar-4" />
+                    <span className="voice-bar bar-5" />
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className={`mock-chat-input-row ${isVoiceActive ? "voice-status-active-input-row" : ""}`}>
+              {/* Voice controls left side */}
+              {isSpeechSupported && (
+                <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                  <button
+                    type="button"
+                    className={`voice-ctrl-btn ${isVoiceActive ? "active" : ""} ${isListening && voiceMode === "ptt" ? "listening-ptt" : ""}`}
+                    onMouseDown={handleMouseDownOrTouchStart}
+                    onMouseUp={handleMouseUpOrTouchEnd}
+                    onMouseLeave={handleMouseUpOrTouchEnd}
+                    onTouchStart={handleMouseDownOrTouchStart}
+                    onTouchEnd={handleMouseUpOrTouchEnd}
+                    title={
+                      !isVoiceActive 
+                        ? "Enable Voice Mode" 
+                        : voiceMode === "continuous" 
+                          ? "Voice Mode Active: Listening continuously. Click to disable." 
+                          : "Voice Mode Active: Hold to Speak. Click to disable."
+                    }
+                  >
+                    🎙️
+                  </button>
+                  {isVoiceActive && (
+                    <>
+                      <button
+                        type="button"
+                        className="voice-ctrl-btn active"
+                        onClick={() => setVoiceMode(voiceMode === "continuous" ? "ptt" : "continuous")}
+                        title={voiceMode === "continuous" ? "Switch to Push-to-Talk" : "Switch to Continuous Mode"}
+                      >
+                        {voiceMode === "continuous" ? "🔁" : "👇"}
+                      </button>
+                      <button
+                        type="button"
+                        className={`voice-ctrl-btn ${isMuted ? "" : "active"}`}
+                        onClick={() => setIsMuted(!isMuted)}
+                        title={isMuted ? "Unmute AI Speaker" : "Mute AI Speaker"}
+                      >
+                        {isMuted ? "🔇" : "🔊"}
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+
               <textarea
+                ref={textareaRef}
                 className="mock-chat-input"
-                onChange={(event) => setInput(event.target.value)}
+                onChange={(event) => {
+                  setInput(event.target.value);
+                  const el = event.target;
+                  el.style.height = "auto";
+                  el.style.height = `${el.scrollHeight}px`;
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    if (input.trim() && !isLoading) {
+                      void submit(input);
+                    }
+                  }
+                }}
                 placeholder={product ? "Describe symptom in detail..." : "Describe symptoms or enter product name..."}
                 rows={1}
                 value={input}
+                style={{ overflow: "hidden", maxHeight: "150px" }}
               />
               <span style={{ color: "var(--text-muted)", fontSize: 14 }}>📎</span>
               <button className="mock-send-btn" disabled={isLoading} type="submit">
@@ -505,7 +800,15 @@ function InvestigationThread({
           gap: "8px"
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <div style={{ fontSize: "28px" }}>{product.emoji}</div>
+            {product.image_url ? (
+              <img 
+                src={product.image_url} 
+                alt={product.name} 
+                style={{ width: "28px", height: "28px", objectFit: "cover", borderRadius: "6px" }} 
+              />
+            ) : (
+              <div style={{ fontSize: "28px" }}>{product.emoji}</div>
+            )}
             <div>
               <h3 style={{ margin: 0, fontSize: "13.5px", fontWeight: 700, color: "var(--text-primary)" }}>{product.name}</h3>
               <span style={{ fontSize: "10px", color: "var(--text-muted)", background: "rgba(255,255,255,0.05)", padding: "1px 5px", borderRadius: "3px" }}>

@@ -390,9 +390,16 @@ export function DashboardView({
       <div className="mock-dashboard">
         <aside className="mock-dash-sidebar">
           <div className="mock-dash-brand">
-            <div className="mock-logo-mark" style={{ fontSize: 10, height: 20, width: 20 }}>
-              ⚡
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="FixPilot Logo" 
+              style={{ 
+                width: "24px", 
+                height: "24px", 
+                objectFit: "contain",
+                animation: "float 4s ease-in-out infinite"
+              }} 
+            />
             FixPilot
           </div>
           
@@ -469,7 +476,15 @@ export function DashboardView({
                   return (
                     <div className="mock-table-row" key={product.id}>
                       <div className="mock-table-name">
-                        <span style={{ fontSize: 16 }}>{product.emoji}</span>
+                        {product.image_url ? (
+                          <img 
+                            src={product.image_url} 
+                            alt={product.name} 
+                            style={{ width: "24px", height: "24px", objectFit: "cover", borderRadius: "4px" }} 
+                          />
+                        ) : (
+                          <span style={{ fontSize: 16 }}>{product.emoji}</span>
+                        )}
                         <Link href={`/products/${product.id}`} style={{ color: "inherit", textDecoration: "none" }} className="hover-underline">
                           {product.name}
                         </Link>
@@ -526,7 +541,15 @@ export function DashboardView({
                 {productList.map((product) => (
                   <div key={product.id} className="mock-product-card selected" style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "16px", display: "flex", flexDirection: "column", gap: "10px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                      <span style={{ fontSize: "36px" }}>{product.emoji}</span>
+                      {product.image_url ? (
+                        <img 
+                          src={product.image_url} 
+                          alt={product.name} 
+                          style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "8px" }} 
+                        />
+                      ) : (
+                        <span style={{ fontSize: "36px" }}>{product.emoji}</span>
+                      )}
                       <span style={{ fontSize: "11px", color: "var(--text-muted)", background: "rgba(255,255,255,0.05)", padding: "2px 8px", borderRadius: "4px", fontWeight: 600 }}>
                         {product.category}
                       </span>
@@ -896,14 +919,64 @@ export function DashboardView({
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Image URL (Optional)</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="https://images.unsplash.com/photo-..."
-                  value={prodImageUrl}
-                  onChange={(e) => setProdImageUrl(e.target.value)}
-                />
+                <label className="form-label">Product Image</label>
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <label 
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "80px",
+                      height: "80px",
+                      border: "2px dashed var(--border)",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                      background: "var(--bg-elevated)",
+                      fontSize: "12px",
+                      color: "var(--text-secondary)",
+                      flexShrink: 0,
+                      position: "relative",
+                      overflow: "hidden"
+                    }}
+                  >
+                    {prodImageUrl ? (
+                      <img 
+                        src={prodImageUrl} 
+                        alt="Preview" 
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                      />
+                    ) : (
+                      <div style={{ textAlign: "center" }}>
+                        <span style={{ fontSize: "20px", display: "block" }}>📷</span>
+                        <span>Browse</span>
+                      </div>
+                    )}
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      style={{ display: "none" }} 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          handleImageUpload(file, setProdImageUrl);
+                        }
+                      }}
+                    />
+                  </label>
+                  <div style={{ flexGrow: 1 }}>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      onChange={(event) => setProdImageUrl(event.target.value)} 
+                      placeholder="Or paste an image URL..."
+                      value={prodImageUrl.startsWith("data:") ? "" : prodImageUrl} 
+                    />
+                    <p style={{ fontSize: "10.5px", color: "var(--text-muted)", marginTop: "4px", margin: 0 }}>
+                      Upload any image (PNG, WebP, JPG, GIF) or paste a link.
+                    </p>
+                  </div>
+                </div>
               </div>
               <div className="modal-actions">
                 <button type="button" className="btn-secondary" onClick={() => setActiveModal(null)}>Cancel</button>
@@ -967,14 +1040,64 @@ export function DashboardView({
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Image URL (Optional)</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="https://images.unsplash.com/photo-..."
-                  value={prodImageUrl}
-                  onChange={(e) => setProdImageUrl(e.target.value)}
-                />
+                <label className="form-label">Product Image</label>
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <label 
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "80px",
+                      height: "80px",
+                      border: "2px dashed var(--border)",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                      background: "var(--bg-elevated)",
+                      fontSize: "12px",
+                      color: "var(--text-secondary)",
+                      flexShrink: 0,
+                      position: "relative",
+                      overflow: "hidden"
+                    }}
+                  >
+                    {prodImageUrl ? (
+                      <img 
+                        src={prodImageUrl} 
+                        alt="Preview" 
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                      />
+                    ) : (
+                      <div style={{ textAlign: "center" }}>
+                        <span style={{ fontSize: "20px", display: "block" }}>📷</span>
+                        <span>Browse</span>
+                      </div>
+                    )}
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      style={{ display: "none" }} 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          handleImageUpload(file, setProdImageUrl);
+                        }
+                      }}
+                    />
+                  </label>
+                  <div style={{ flexGrow: 1 }}>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      onChange={(event) => setProdImageUrl(event.target.value)} 
+                      placeholder="Or paste an image URL..."
+                      value={prodImageUrl.startsWith("data:") ? "" : prodImageUrl} 
+                    />
+                    <p style={{ fontSize: "10.5px", color: "var(--text-muted)", marginTop: "4px", margin: 0 }}>
+                      Upload any image (PNG, WebP, JPG, GIF) or paste a link.
+                    </p>
+                  </div>
+                </div>
               </div>
               <div className="modal-actions">
                 <button type="button" className="btn-secondary" onClick={() => setActiveModal(null)}>Cancel</button>
@@ -1127,4 +1250,38 @@ function Stat({
       <div className="mock-stat-label">{label}</div>
     </div>
   );
+}
+
+function handleImageUpload(file: File, callback: (base64: string) => void) {
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const maxDim = 500;
+      let width = img.width;
+      let height = img.height;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+        callback(compressedBase64);
+      } else {
+        callback(event.target?.result as string);
+      }
+    };
+    img.src = event.target?.result as string;
+  };
+  reader.readAsDataURL(file);
 }

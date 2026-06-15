@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { formatNumber } from "@/lib/design-data";
 import type { ProductView } from "@/lib/types";
+import { updateProduct, deleteProduct } from "@/lib/api";
 
 export function ProductDetailView({ product }: { product: ProductView }) {
+  const router = useRouter();
   const [dynamicDocs, setDynamicDocs] = useState<any[]>([]);
-  const [activeModal, setActiveModal] = useState<"upload" | null>(null);
+  const [activeModal, setActiveModal] = useState<"upload" | "edit-product" | null>(null);
   const [viewDoc, setViewDoc] = useState<any | null>(null);
   const [reindexingId, setReindexingId] = useState<string | null>(null);
   const [uploadType, setUploadType] = useState<"pdf" | "text" | "url">("pdf");
@@ -20,6 +23,14 @@ export function ProductDetailView({ product }: { product: ProductView }) {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [formError, setFormError] = useState("");
+
+  // Edit Product Form States
+  const [prodName, setProdName] = useState("");
+  const [prodCategory, setProdCategory] = useState("");
+  const [prodDescription, setProdDescription] = useState("");
+  const [prodImageUrl, setProdImageUrl] = useState("");
+  const [isSubmittingProd, setIsSubmittingProd] = useState(false);
+  const [prodError, setProdError] = useState("");
 
   const fetchDocs = async () => {
     try {
@@ -157,6 +168,52 @@ export function ProductDetailView({ product }: { product: ProductView }) {
     }
   };
 
+  const handleOpenEditModal = () => {
+    setProdName(product.name);
+    setProdCategory(product.category);
+    setProdDescription(product.description || "");
+    setProdImageUrl(product.image_url || "");
+    setProdError("");
+    setActiveModal("edit-product");
+  };
+
+  const handleEditProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!prodName.trim() || !prodDescription.trim()) {
+      setProdError("Name and description are required.");
+      return;
+    }
+
+    setProdError("");
+    setIsSubmittingProd(true);
+    try {
+      const finalImg = prodImageUrl.trim();
+      await updateProduct(product.id, {
+        name: prodName.trim(),
+        category: prodCategory,
+        description: prodDescription.trim(),
+        image_url: finalImg,
+      });
+
+      setActiveModal(null);
+      window.location.reload();
+    } catch (err) {
+      setProdError(err instanceof Error ? err.message : "An error occurred.");
+    } finally {
+      setIsSubmittingProd(false);
+    }
+  };
+
+  const handleDeleteProduct = async () => {
+    if (!confirm("Are you sure you want to delete this product? All its custom knowledge documents will also be dereferenced.")) return;
+    try {
+      await deleteProduct(product.id);
+      router.push("/marketplace");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete product.");
+    }
+  };
+
   const totalDocsCount = allDocs.filter(d => d.type === "pdf" || d.type === "text").length;
   const totalUrlsCount = allDocs.filter(d => d.type === "url").length;
 
@@ -168,7 +225,15 @@ export function ProductDetailView({ product }: { product: ProductView }) {
       <div className="mock-product-detail">
         <div className="mock-detail-main">
           <div className="mock-detail-img-area">
-            {product.emoji}
+            {product.image_url ? (
+              <img 
+                src={product.image_url} 
+                alt={product.name} 
+                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }} 
+              />
+            ) : (
+              product.emoji
+            )}
             <div className="mock-detail-img-badge">✓ Verified Docs</div>
           </div>
           <div className="mock-detail-cat">{product.category} · {product.productType}</div>
@@ -347,6 +412,26 @@ export function ProductDetailView({ product }: { product: ProductView }) {
             <div className="mock-trouble-title">Start Diagnostic</div>
             <div className="mock-trouble-sub">AI technician ready · Avg. 3 min to root cause</div>
           </Link>
+
+          <div className="resource-panel" style={{ marginTop: "16px" }}>
+            <div className="mock-info-key">Product Actions</div>
+            <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+              <button 
+                className="btn-secondary" 
+                onClick={handleOpenEditModal} 
+                style={{ flex: 1, padding: "8px", fontSize: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
+              >
+                ✏️ Edit
+              </button>
+              <button 
+                className="btn-secondary" 
+                onClick={handleDeleteProduct} 
+                style={{ flex: 1, padding: "8px", fontSize: "12px", borderColor: "rgba(244,63,94,0.3)", color: "var(--red)", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
+              >
+                🗑️ Delete
+              </button>
+            </div>
+          </div>
 
           <div className="resource-panel">
             <div className="mock-info-key">Indexed Resources</div>
@@ -610,8 +695,166 @@ export function ProductDetailView({ product }: { product: ProductView }) {
         </div>,
         document.body
       )}
+
+      {/* Edit Product Modal */}
+      {activeModal === "edit-product" && typeof window !== "undefined" && createPortal(
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: "550px" }}>
+            <div className="modal-header">
+              <h2 className="modal-title">⚡ Edit Product</h2>
+              <button className="modal-close" onClick={() => setActiveModal(null)}>✕</button>
+            </div>
+            <form onSubmit={handleEditProduct}>
+              {prodError && (
+                <div style={{ color: "var(--red)", fontSize: 12, marginBottom: 12, border: "1px solid rgba(239,68,68,0.2)", padding: 8, borderRadius: 6, background: "rgba(239,68,68,0.05)" }}>
+                  {prodError}
+                </div>
+              )}
+              <div className="form-group">
+                <label className="form-label">Product Name</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. Moss Router X1"
+                  value={prodName}
+                  onChange={(e) => setProdName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Category</label>
+                <select
+                  className="form-select"
+                  value={prodCategory}
+                  onChange={(e) => setProdCategory(e.target.value)}
+                >
+                  <option value="Industrial">Industrial</option>
+                  <option value="Appliances">Appliances</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Automotive">Automotive</option>
+                  <option value="HVAC">HVAC</option>
+                  <option value="Networking">Networking</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Description</label>
+                <textarea
+                  className="form-textarea"
+                  placeholder="Enter a brief product overview..."
+                  value={prodDescription}
+                  onChange={(e) => setProdDescription(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label">Product Image</label>
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <label 
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "80px",
+                      height: "80px",
+                      border: "2px dashed var(--border)",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                      background: "var(--bg-elevated)",
+                      fontSize: "12px",
+                      color: "var(--text-secondary)",
+                      flexShrink: 0,
+                      position: "relative",
+                      overflow: "hidden"
+                    }}
+                  >
+                    {prodImageUrl ? (
+                      <img 
+                        src={prodImageUrl} 
+                        alt="Preview" 
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                      />
+                    ) : (
+                      <div style={{ textAlign: "center" }}>
+                        <span style={{ fontSize: "20px", display: "block" }}>📷</span>
+                        <span>Browse</span>
+                      </div>
+                    )}
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      style={{ display: "none" }} 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          handleImageUpload(file, setProdImageUrl);
+                        }
+                      }}
+                    />
+                  </label>
+                  <div style={{ flexGrow: 1 }}>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      onChange={(event) => setProdImageUrl(event.target.value)} 
+                      placeholder="Or paste an image URL..."
+                      value={prodImageUrl.startsWith("data:") ? "" : prodImageUrl} 
+                    />
+                    <p style={{ fontSize: "10.5px", color: "var(--text-muted)", marginTop: "4px", margin: 0 }}>
+                      Upload any image (PNG, WebP, JPG, GIF) or paste a link.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="btn-secondary" onClick={() => setActiveModal(null)}>Cancel</button>
+                <button type="submit" className="btn-primary" disabled={isSubmittingProd}>
+                  {isSubmittingProd ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body
+      )}
     </>
   );
+}
+
+function handleImageUpload(file: File, callback: (base64: string) => void) {
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const maxDim = 500;
+      let width = img.width;
+      let height = img.height;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+        callback(compressedBase64);
+      } else {
+        callback(event.target?.result as string);
+      }
+    };
+    img.src = event.target?.result as string;
+  };
+  reader.readAsDataURL(file);
 }
 
 function Info({

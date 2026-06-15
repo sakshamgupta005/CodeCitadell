@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Mode = "signin" | "signup";
 type Account = {
   identifier: string;
+  username: string;
   password: string;
   createdAt: string;
 };
@@ -17,10 +18,27 @@ export function LoginView() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("signin");
   const [identifier, setIdentifier] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [activeSession, setActiveSession] = useState<{ identifier: string; username: string } | null>(null);
+
+  useEffect(() => {
+    try {
+      const session = localStorage.getItem(SESSION_KEY);
+      if (session) {
+        const accountsRaw = localStorage.getItem(STORAGE_KEY);
+        const accounts: Account[] = accountsRaw ? JSON.parse(accountsRaw) : [];
+        const account = accounts.find((a) => a.identifier === session);
+        setActiveSession({
+          identifier: session,
+          username: (account && account.username) || session,
+        });
+      }
+    } catch { /* ignore */ }
+  }, []);
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -34,6 +52,11 @@ export function LoginView() {
     }
 
     if (mode === "signup") {
+      const cleanUsername = username.trim();
+      if (!cleanUsername) {
+        setError("Username is required.");
+        return;
+      }
       if (password.length < 6) {
         setError("Password must be at least 6 characters.");
         return;
@@ -48,11 +71,16 @@ export function LoginView() {
         setError("An account already exists for this email or mobile number.");
         return;
       }
+      if (accounts.some((account) => account.username && account.username.toLowerCase() === cleanUsername.toLowerCase())) {
+        setError("Username is already taken.");
+        return;
+      }
 
       const next = [
         ...accounts,
         {
           identifier: normalizedIdentifier,
+          username: cleanUsername,
           password,
           createdAt: new Date().toISOString(),
         },
@@ -77,6 +105,43 @@ export function LoginView() {
     localStorage.setItem(SESSION_KEY, normalizedIdentifier);
     setMessage("Signed in successfully.");
     setTimeout(() => router.push("/dashboard"), 500);
+  }
+
+  if (activeSession) {
+    return (
+      <div className="auth-layout">
+        <section className="auth-panel" style={{ textAlign: "center" }}>
+          <div className="page-kicker">FixPilot Account</div>
+          <h1 className="auth-title">Welcome, {activeSession.username}</h1>
+          <p className="auth-copy" style={{ marginBottom: "24px" }}>
+            You are currently signed in as <strong>{activeSession.identifier}</strong>.
+          </p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", maxWidth: "320px", margin: "0 auto" }}>
+            <button
+              className="btn-primary"
+              onClick={() => router.push("/dashboard")}
+              type="button"
+            >
+              Go to Dashboard
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => {
+                if (confirm("Are you sure you want to sign out?")) {
+                  localStorage.removeItem(SESSION_KEY);
+                  setActiveSession(null);
+                  window.location.reload();
+                }
+              }}
+              type="button"
+            >
+              Sign out
+            </button>
+          </div>
+        </section>
+      </div>
+    );
   }
 
   return (
@@ -116,6 +181,18 @@ export function LoginView() {
         <form onSubmit={handleSubmit}>
           {error && <div className="form-error">{error}</div>}
           {message && <div className="form-success">{message}</div>}
+
+          {mode === "signup" && (
+            <div className="form-group">
+              <label className="form-label">Username</label>
+              <input
+                className="form-input"
+                onChange={(event) => setUsername(event.target.value)}
+                placeholder="e.g. johndoe"
+                value={username}
+              />
+            </div>
+          )}
 
           <div className="form-group">
             <label className="form-label">Email or mobile number</label>

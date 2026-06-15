@@ -212,3 +212,106 @@ def clean_metadata(metadata: dict[str, Any]) -> dict[str, str]:
             continue
         cleaned[str(key)] = str(value)
     return cleaned
+
+
+class FlowEquipment(BaseModel):
+    manufacturer: str | None = None
+    model: str | None = None
+    model_variants: list[str] = Field(default_factory=list)
+    subsystem: str | None = None
+
+
+class FlowTrigger(BaseModel):
+    type: str  # symptom, error_code, dtc, top_event, sensor_alarm
+    code: str | None = None
+    description: str
+
+
+class FlowMetadata(BaseModel):
+    version: str | None = None
+    source: str | None = None
+    last_updated: str | None = None
+    safety_warnings: list[str] = Field(default_factory=list)
+    required_tools: list[str] = Field(default_factory=list)
+    skill_level: str | None = None  # diy, trained_technician, certified_specialist
+
+
+class FlowNodeMedia(BaseModel):
+    type: str  # image, video, diagram, pdf_page
+    url: str
+    caption: str | None = None
+
+
+class FlowNodeContent(BaseModel):
+    text: str
+    expected_result: str | None = None
+    media: list[FlowNodeMedia] = Field(default_factory=list)
+    tools_required: list[str] = Field(default_factory=list)
+    estimated_time_minutes: float | None = None
+    safety_note: str | None = None
+
+
+class FlowNodeTest(BaseModel):
+    measurement_type: str | None = None  # voltage, resistance, pressure, temperature, code_read, visual, signal, flow, other
+    component: str | None = None
+    expected_value: str | None = None
+    comparison: str | None = None
+
+
+class FlowNodeGate(BaseModel):
+    gate_type: str  # AND, OR, XOR, PRIORITY_AND, VOTING
+    voting_threshold: int | None = None
+    children: list[str] = Field(default_factory=list)
+
+
+class FlowNodeCause(BaseModel):
+    failure_mode: str | None = None
+    probability: float | None = None
+    frequency_rank: int | None = None
+
+
+class FlowNodeBranch(BaseModel):
+    condition: str
+    label: str | None = None
+    next_node_id: str
+
+
+class FlowNodeRepair(BaseModel):
+    action: str  # replace, repair, adjust, clean, reset, reseat, reprogram
+    part_number: str | None = None
+    verification_step: str | None = None
+
+
+class FlowNodeEscalation(BaseModel):
+    escalate_to: str  # certified_technician, safety_team, engineering_review, manufacturer_support
+    reason: str | None = None
+
+
+class FlowNodeSubRoutine(BaseModel):
+    target_flow_id: str
+    target_node_id: str | None = None
+
+
+class FlowNode(BaseModel):
+    node_id: str
+    node_type: str  # question, test_step, instruction, gate, cause, repair_action, escalation, sub_routine_reference, end
+    content: FlowNodeContent
+    test: FlowNodeTest | None = None
+    gate: FlowNodeGate | None = None
+    cause: FlowNodeCause | None = None
+    branches: list[FlowNodeBranch] = Field(default_factory=list)
+    repair: FlowNodeRepair | None = None
+    escalation: FlowNodeEscalation | None = None
+    sub_routine: FlowNodeSubRoutine | None = None
+    resolution_status: str | None = None
+
+
+class TroubleshootingFlow(BaseModel):
+    flow_id: str
+    title: str
+    domain: str  # automotive, scooter, appliance, hvac, industrial, other
+    equipment: FlowEquipment | None = None
+    trigger: FlowTrigger
+    root_node_id: str
+    nodes: dict[str, FlowNode]
+    metadata: FlowMetadata | None = None

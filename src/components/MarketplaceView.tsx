@@ -37,7 +37,7 @@ export function MarketplaceView({
           <input
             name="q"
             defaultValue={query}
-            placeholder="Search 2,400+ products..."
+            placeholder="Search"
             aria-label="Search products"
           />
         </label>
